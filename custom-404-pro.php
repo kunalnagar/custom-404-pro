@@ -13,16 +13,16 @@
  * @package           Custom_404_Pro
  *
  * @wordpress-plugin
- * Plugin Name:       Custom 404 Pro
- * Plugin URI:        http://kunalnagar.in
- * Description:       Override the default 404 page with any page from the Admin Panel.
- * Version:           1.0.0
- * Author:            Kunal Nagar
- * Author URI:        http://kunalnagar.in
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       custom-404-pro
- * Domain Path:       /languages
+ * Plugin Name: Custom 404 Pro
+ * Plugin URI: https://github.com/kunalnagar/custom-404-pro
+ * Description: Override the default 404 page with any page from the Admin Panel.
+ * Version: 1.0.0
+ * Author: Kunal Nagar
+ * Author URI: http://kunalnagar.in
+ * License: GPL-2.0+
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain: custom-404-pro
+ * Domain Path: /languages
  */
 
 // If this file is called directly, abort.
