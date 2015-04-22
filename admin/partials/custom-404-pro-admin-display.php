@@ -116,7 +116,7 @@ $plugin_data = get_plugin_data($plugin_main_file);
 					<h3 class="hndle ui-sortable-handle">Issues</h3>
 					<div class="inside">
 						<div class="misc-pub-section">
-							For any issues regarding this plugin, please open an issue on <a href="#">Github</a>.
+							For any issues regarding this plugin, please open an issue on <a href="https://github.com/kunalnagar/custom-404-pro/issues" target="blank">Github</a>.
 						</div>
 					</div>
 				</div>
