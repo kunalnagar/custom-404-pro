@@ -39,3 +39,6 @@ Just select the desired page from the drop-down list and Save! And that's it!
 = 1.0.2 =
 * Fixed README on Github
 * Added more documentation
+
+= 1.0.5 =
+* Fixed Banner Image
