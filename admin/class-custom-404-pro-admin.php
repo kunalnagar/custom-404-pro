@@ -155,7 +155,8 @@ class Custom_404_Pro_Admin
     public function custom_404() {
         if (is_404()) {
             $c4p_404_data = array();
-            if (!empty(get_option('c4p_404_data'))) {
+            $temp_data = get_option('c4p_404_data');
+            if (!empty($temp_data)) {
                 $c4p_404_data = maybe_unserialize(get_option('c4p_404_data'));
             }
             if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
