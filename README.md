@@ -1,6 +1,6 @@
 ## Custom 404 Pro
 
-![Banner](banner-772x250.png "Banner")
+![Banner](assets/banner-772x250.png "Banner")
 
 ### Installation
 
@@ -13,7 +13,7 @@
 
 Here is a screenshot of the main Admin Panel where you can select a custom 404 page from the drop-down list.
 
-![Go to Settings > Custom 404 Pro to open up the Options Page](screenshot-2.png "Title")
+![Go to Settings > Custom 404 Pro to open up the Options Page](assets/screenshot-2.png "Title")
 
 ### Support
 

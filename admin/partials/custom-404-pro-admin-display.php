@@ -124,7 +124,7 @@ $plugin_data = get_plugin_data($plugin_main_file);
 					<h3 class="hndle ui-sortable-handle">Rate</h3>
 					<div class="inside">
 						<div class="misc-pub-section">
-							How many <a href="#">stars</a> would you give us?
+							How many <a href="https://wordpress.org/support/view/plugin-reviews/custom-404-pro">stars</a> would you give us?
 						</div>
 					</div>
 				</div>
