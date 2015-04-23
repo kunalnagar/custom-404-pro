@@ -153,8 +153,8 @@ class Custom_404_Pro_Admin {
 	 */
 	public function custom_404() {
 		if ( is_404() ) {
-			// record 404 data
-			$c4p_404_data = empty( get_option( 'c4p_404_data' ) ) ? array() : maybe_unserialize( get_option( 'c4p_404_data' ) );
+			$temp = maybe_unserialize( get_option( 'c4p_404_data' ) );
+			$c4p_404_data = empty( get_option( 'c4p_404_data' ) ) ? array() : $temp;
 			if ( !empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 				$ip = $_SERVER['HTTP_CLIENT_IP'];
 			} else if ( !empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
@@ -171,7 +171,6 @@ class Custom_404_Pro_Admin {
 			array_push( $c4p_404_data, $data );
 			update_option( 'c4p_404_data', maybe_serialize( $c4p_404_data ) );
 
-			// redirect according to chosen mode
 			$is_selected_page = get_option( 'c4p_selected_page' );
 			$url = get_option( 'c4p_selected_url' );
 			if ( !empty( $is_selected_page ) ) {
