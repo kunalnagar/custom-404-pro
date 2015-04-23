@@ -2,20 +2,32 @@
 
 ![Banner](assets/banner-772x250.png "Banner")
 
-Override the default 404 page with **any page** from the Admin Panel or a **Custom URL**.
+Override the default 404 page with **any page** from the Admin Panel or a **Custom URL** and get stats.
+
+### Features
+
+* Full 404 Page Control
+* Record 404 Page Data
+* Custom Page Redirect
+* Custom URL Redirect
+* Record Visitor Keywords that led to 404
+* Clean code
+* Awesome support
 
 ### Installation
 
 * Extract the downloaded ZIP file.
-* Copy the custom-404-pro folder to the wp-content/plugins directory.
+* Copy the ```custom-404-pro``` folder to the ```wp-content/plugins``` directory.
 * Activate from the Plugins Section.
-* Options are available under: Settings > Custom 404 Pro
+* Options are available under: ```Settings > Custom 404 Pro```
 
-### Screenshot
+### Screenshots
 
-Here is a screenshot of the main Admin Panel where you can select a custom 404 page from the drop-down list.
-
-![Go to Settings > Custom 404 Pro to open up the Options Page](assets/screenshot-2.png "Title")
+![Activate Plugin](assets/screenshot-1.png "Activate Plugin")
+![Go to Settings > Custom 404 Pro to open up the Options Page](assets/screenshot-2.png "Go to Settings > Custom 404 Pro to open up the Options Page")
+![Mode: WordPress Page (replace default 404 with custom WordPress Page)](assets/screenshot-3.png "Mode: WordPress Page (replace default 404 with custom WordPress Page)")
+![Mode: URL (replace default 404 with a custom redirect)](assets/screenshot-4.png "Mode: URL (replace default 404 with a custom redirect)")
+![Stats Record (List of all 404s)](assets/screenshot-5.png "Stats Record (List of all 404s)")
 
 ### Support
 

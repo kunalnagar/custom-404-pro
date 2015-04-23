@@ -14,36 +14,49 @@ Override the default 404 page with any page from the Admin Panel or a Custom URL
 
 Allows users to replace the default 404 page with a custom page from the Pages section in the Admin Panel. Or you can specify a complete URL to redirect on 404.
 
+= Features =
+
+* Full 404 Page Control
+* Record 404 Page Data
+* Custom Page Redirect
+* Custom URL Redirect
+* Record Visitor Keywords that led to 404
+* Clean code
+* Awesome support
+
+= How does it work? =
+
 Select Mode:
-1. WordPress Page: Choose a custom page from the Admin Panel.
-2. URL: Enter a custom URL for 404.
+* WordPress Page: Choose a custom page from the Admin Panel
+* URL: Enter a custom URL for 404
+* Stats: List of all 404s
 
 == Installation ==
 
-1. Extract the downloaded ZIP file.
-2. Copy the custom-404-pro folder to the wp-content/plugins directory.
-3. Activate from the Plugins Section.
-4. Options are available under: Settings > Custom 404 Pro
+* Extract the downloaded ZIP file.
+* Copy the custom-404-pro folder to the wp-content/plugins directory.
+* Activate from the Plugins Section.
+* Options are available under: Settings > Custom 404 Pro
 
 == Screenshots ==
 
 1. Activate the plugin from the WordPress Admin Panel
-2. Go to Settings > Custom 404 Pro to open up the Options Page
+2. Go to Settings > Custom 404 Pro to open up the Main Plugin Page
+3. Mode: WordPress Page (replace default 404 with custom WordPress Page)
+4. Mode: URL (replace default 404 with a custom redirect)
+5. Stats Record (List of all 404s)
 
 == Changelog ==
 
-= 1.0.0 =
-* Initial Release
-
-= 1.0.1 =
-* Fixed Screenshots
-
-= 1.0.2 =
-* Fixed README on Github
-* Added more documentation
-
-= 1.0.5 =
-* Fixed Banner Image
+= 1.1.0 =
+* Redesigned Plugin Page
+* Added Tabs for navigation
+* Split up functionality into General and Stats section
+* Basic Validation
+* Code Reformat
 
 = 1.0.8 =
 * Added 404 redirects via Custom URLs
+
+= 1.0.0 =
+* Initial Release

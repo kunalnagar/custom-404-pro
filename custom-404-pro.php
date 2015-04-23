@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die;
 }
 
@@ -56,6 +56,5 @@ function run_custom_404_pro() {
 
 	$plugin = new Custom_404_Pro();
 	$plugin->run();
-
 }
 run_custom_404_pro();

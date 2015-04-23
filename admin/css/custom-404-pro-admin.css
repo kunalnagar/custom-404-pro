@@ -2,3 +2,29 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+/* Notices */
+.updated,
+.error {
+	  margin: 15px 0 20px !important;
+}
+/* Stats Section */
+#c4p_stats_table th {
+	font-weight: bold;
+}
+#c4p_stats_table th.no {
+	width: 5% !important;
+}
+#c4p_stats_table th.ip {
+	width: 12% !important;
+}
+#c4p_stats_table th.path {
+	width: 25% !important;
+}
+#c4p_stats_table th.referer {
+	width: 25% !important;
+}
+#c4p_stats_table th.time {
+	width: 15% !important;
+}
+/* End Stats */
