@@ -27,6 +27,7 @@ Allows users to replace the default 404 page with a custom page from the Pages s
 = How does it work? =
 
 Select Mode:
+
 * WordPress Page: Choose a custom page from the Admin Panel
 * URL: Enter a custom URL for 404
 * Stats: List of all 404s
