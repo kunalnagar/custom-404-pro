@@ -49,6 +49,9 @@ Select Mode:
 
 == Changelog ==
 
+= 1.1.6 =
+* Added WordPress 4.2 Compatibility
+
 = 1.1.0 =
 * Redesigned Plugin Page
 * Added Tabs for navigation
