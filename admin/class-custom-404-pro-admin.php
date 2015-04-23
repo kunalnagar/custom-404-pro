@@ -154,7 +154,7 @@ class Custom_404_Pro_Admin {
 	public function custom_404() {
 		if ( is_404() ) {
 			// record 404 data
-			$c4p_404_data = ( empty( get_option( 'c4p_404_data' ) ) ) ? array() : maybe_unserialize( get_option( 'c4p_404_data' ) );
+			$c4p_404_data = empty( get_option( 'c4p_404_data' ) ) ? array() : maybe_unserialize( get_option( 'c4p_404_data' ) );
 			if ( !empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 				$ip = $_SERVER['HTTP_CLIENT_IP'];
 			} else if ( !empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
