@@ -4,7 +4,7 @@ Donate link: http://kunalnagar.in/donate/
 Tags: 404
 Requires at least: 3.0.1
 Tested up to: 4.1.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,3 +32,10 @@ Just select the desired page from the drop-down list and Save! And that's it!
 
 = 1.0.0 =
 * Initial Release
+
+= 1.0.1 =
+* Fixed Screenshots
+
+= 1.0.2 =
+* Fixed README on Github
+* Added more documentation
