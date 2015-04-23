@@ -1,6 +1,6 @@
 ## Custom 404 Pro
 
-Override the default 404 page with any page from the Admin Panel.
+![Banner](banner-772x250.png "Banner")
 
 ### Installation
 
