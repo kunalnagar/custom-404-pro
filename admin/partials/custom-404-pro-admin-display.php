@@ -29,10 +29,16 @@ $plugin_data = get_plugin_data($plugin_main_file);
 
 <div class="wrap">
 	<h2>Welcome to Custom 404 Pro</h2><hr>
-	<?php if($_GET['message'] == 'updated'): ?>
+	<?php if($_GET['message'] == 'updated-page'): ?>
 	<br>
 	<div class="updated">
         <p>Selected page has been saved as a 404 page!</p>
+    </div>
+	<?php endif; ?>
+	<?php if($_GET['message'] == 'updated-url'): ?>
+	<br>
+	<div class="updated">
+        <p>Saved URL as a 404 page!</p>
     </div>
 	<?php endif; ?>
 	<div id="poststuff">
@@ -43,9 +49,29 @@ $plugin_data = get_plugin_data($plugin_main_file);
 					<table class="form-table">
 						<tbody>
 							<tr>
+								<th>Mode</th>
+								<td>
+									<select id="c4p_mode" name="c4p_mode">
+										<option value="">None</option>
+										<option value="page" <?php echo (get_option('c4p_mode') == 'page') ? "selected" : "" ?>>
+											WordPress Page
+										</option>
+										<option value="url" <?php echo (get_option('c4p_mode') == 'url') ? "selected" : "" ?>>
+											URL
+										</option>
+									</select>
+									<p class="description">
+										<b>WordPress Page:</b> Select any WordPress page as a 404 page.
+									</p>
+									<p class="description">
+										<b>URL:</b> Redirect 404 requests to a specific URL
+									</p>
+								</td>
+							</tr>
+							<tr id="c4p_page" class="select-page">
 								<th>Select a Page</th>
 								<td>
-									<select name="selected_page">
+									<select name="c4p_page">
 										<option value="">None (Default 404 Page)</option>
 										<?php foreach($pages as $page): ?>
 											<?php if($page->ID == $selected_page->ID): ?>
@@ -64,9 +90,19 @@ $plugin_data = get_plugin_data($plugin_main_file);
 									</p>
 								</td>
 							</tr>
+							<tr id="c4p_url" class="select-url">
+								<th>Enter a URL</th>
+								<td>
+									<input name="c4p_url" type="text" class="regular-text" value="<?php echo get_option('c4p_selected_url'); ?>">
+									<p class="description">
+										For e.g.: http://google.com
+									</p>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 					<p class="submit">
+						<input type='hidden' id="mode" name="mode" value="<?php echo get_option('c4p_mode'); ?>" />
 						<input type='hidden' name='action' value='select-page-form' />
 						<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
 					</p>

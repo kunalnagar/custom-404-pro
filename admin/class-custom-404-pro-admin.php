@@ -127,9 +127,24 @@ class Custom_404_Pro_Admin {
 	 * @since    1.0.0
 	 */
 	public function select_page_submit() {
-		$page = get_post($_POST['selected_page']);
-		update_option('c4p_selected_page', maybe_serialize($page));
-		wp_redirect(admin_url('admin.php?page=c4p-main&message=updated'));
+		if($_POST['mode'] === 'page') {
+			$page = get_post($_POST['c4p_page']);
+			update_option('c4p_mode', 'page');
+			update_option('c4p_selected_page', maybe_serialize($page));
+			update_option('c4p_selected_url', '');
+			wp_redirect(admin_url('admin.php?page=c4p-main&message=updated-page'));
+		} else if($_POST['mode'] === 'url') {
+			$url = $_POST['c4p_url'];
+			update_option('c4p_mode', 'url');
+			update_option('c4p_selected_url', $url);
+			update_option('c4p_selected_page', '');
+			wp_redirect(admin_url('admin.php?page=c4p-main&message=updated-url'));
+		} else {
+			update_option('c4p_mode', '');
+			update_option('c4p_selected_url', '');
+			update_option('c4p_selected_page', '');
+			wp_redirect(admin_url('admin.php?page=c4p-main'));
+		}
 	}
 
 	/**
@@ -139,9 +154,13 @@ class Custom_404_Pro_Admin {
 	 */
 	public function custom_404() {
 		if(is_404()) {
-			$selected_page = maybe_unserialize(get_option('c4p_selected_page'));
-			if(!empty($selected_page)) {
+			$is_selected_page = get_option('c4p_selected_page');
+			$url = get_option('c4p_selected_url');
+			if(!empty($is_selected_page)) {
+				$selected_page = maybe_unserialize(get_option('c4p_selected_page'));	
 				wp_redirect(site_url() . '/' . $selected_page->post_name);	
+			} else if(!empty($url)) {
+				wp_redirect($url);
 			}
 		}
 	}
