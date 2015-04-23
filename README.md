@@ -2,6 +2,8 @@
 
 ![Banner](assets/banner-772x250.png "Banner")
 
+Override the default 404 page with **any page** from the Admin Panel or a **Custom URL**.
+
 ### Installation
 
 * Extract the downloaded ZIP file.

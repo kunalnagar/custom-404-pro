@@ -4,17 +4,19 @@ Donate link: http://kunalnagar.in/donate/
 Tags: wordpress, 404, 404 error page, 404 link, 404 page, broken link, custom 404, custom 404 error, custom 404 error page, custom 404 page, customize 404, customize 404 error page, customize 404 page, error, error page, missing, page, page not found, page not found error, seo, template
 Requires at least: 3.0.1
 Tested up to: 4.1.2
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Override the default 404 page with any page from the Admin Panel.
+Override the default 404 page with any page from the Admin Panel or a Custom URL.
 
 == Description ==
 
-Allows users to replace the default 404 page with a custom page from the Pages section in the Admin Panel.
+Allows users to replace the default 404 page with a custom page from the Pages section in the Admin Panel. Or you can specify a complete URL to redirect on 404.
 
-Just select the desired page from the drop-down list and Save! And that's it!
+Select Mode:
+1. WordPress Page: Choose a custom page from the Admin Panel.
+2. URL: Enter a custom URL for 404.
 
 == Installation ==
 
@@ -42,3 +44,6 @@ Just select the desired page from the drop-down list and Save! And that's it!
 
 = 1.0.5 =
 * Fixed Banner Image
+
+= 1.0.8 =
+* Added 404 redirects via Custom URLs
