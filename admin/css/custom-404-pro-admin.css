@@ -2,7 +2,21 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
-
+/* Utils */
+.c4p-full-card {
+	max-width: none;
+}
+.c4p-left {
+	float: left;
+}
+.c4p-right {
+	float: right;	
+}
+.c4p-clearfix:after {
+  	content: "";
+  	display: table;
+  	clear: both;
+}
 /* Notices */
 .updated,
 .error {
@@ -16,15 +30,22 @@
 	width: 5% !important;
 }
 #c4p_stats_table th.ip {
-	width: 12% !important;
+	width: 10% !important;
 }
-#c4p_stats_table th.path {
+/*#c4p_stats_table th.path {
 	width: 25% !important;
 }
 #c4p_stats_table th.referer {
-	width: 25% !important;
+	width: 20% !important;
 }
 #c4p_stats_table th.time {
 	width: 15% !important;
+}
+#c4p_stats_table th.user-agent {
+	width: 10% !important;
+}*/
+#c4p_stats_table td span.user-agent {
+	text-decoration: underline;
+	font-weight: bold;
 }
 /* End Stats */

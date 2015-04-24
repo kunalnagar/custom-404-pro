@@ -85,6 +85,23 @@
 			<!-- Plugin Meta -->
 			<div id="postbox-container-1" class="postbox-container">
 				<div class="postbox">
+					<h3 class="hndle ui-sortable-handle">Like our plugin?</h3>
+					<div class="inside">
+						<div class="misc-pub-section">
+							<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+								<input type="hidden" name="cmd" value="_donations" />
+								<input type="hidden" name="business" value="knlnagar@gmail.com">
+								<input type="hidden" name="item_name" value="Custom 404 Pro is awesome!">
+								<input type="hidden" name="currency_code" value="USD" />
+								<input type="hidden" name="first_name" value="Kunal">
+								<input type="hidden" name="last_name" value="Nagar">
+								<input type="hidden" name="email" value="knlnagar@gmail.com">
+								<input type="image" name="submit" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="PayPal - The safer, easier way to pay online">
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="postbox">
 					<h3 class="hndle ui-sortable-handle">Plugin Info</h3>
 					<div class="inside">
 						<div class="misc-pub-section">

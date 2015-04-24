@@ -155,6 +155,10 @@ class Custom_404_Pro {
 		// Custom
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'main_admin_menu' );
 		$this->loader->add_action( 'admin_post_select-page-form', $plugin_admin, 'select_page_submit' );
+
+		// settings tab form submit
+		$this->loader->add_action( 'admin_post_c4p-settings-form', $plugin_admin, 'c4p_settings_form' );
+
 		$this->loader->add_filter( 'template_redirect', $plugin_admin, 'custom_404' );
 	}
 

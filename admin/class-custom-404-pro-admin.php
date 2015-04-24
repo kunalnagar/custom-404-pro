@@ -79,7 +79,11 @@ class Custom_404_Pro_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
+		wp_enqueue_script( $this->plugin_name . '-jquery-base64', plugin_dir_url( __FILE__ ) . 'js/vendor/table-csv/jquery.base64.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name . '-table-csv', plugin_dir_url( __FILE__ ) . 'js/vendor/table-csv/tableExport.js', array( 'jquery' ), $this->version, false );
+		// wp_enqueue_script($this->plugin_name . '-jspdf-sprintf', plugin_dir_url(__FILE__) . 'js/vendor/table-csv/jspdf/libs/sprintf.js', array('jquery'), $this->version, false);
+		// wp_enqueue_script($this->plugin_name . '-jspdf-main', plugin_dir_url(__FILE__) . 'js/vendor/table-csv/jspdf/jspdf.js', array('jquery'), $this->version, false);
+		// wp_enqueue_script($this->plugin_name . '-jspdf-base64', plugin_dir_url(__FILE__) . 'js/vendor/table-csv/jspdf/libs/base64.js', array('jquery'), $this->version, false);
 		/**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -146,12 +150,48 @@ class Custom_404_Pro_Admin {
 		}
 	}
 
+	public function c4p_settings_form() {
+		if ( isset( $_POST['c4p_clear_logs'] ) ) {
+			update_option( 'c4p_404_data', '' );
+		}
+		wp_redirect( admin_url( 'admin.php?page=c4p-main&tab=c4p-settings&message=c4p-settings-updated' ) );
+	}
+
+	public static function getUserAgent() {
+		static $agent = null;
+
+		if ( empty( $agent ) ) {
+			$agent = $_SERVER['HTTP_USER_AGENT'];
+			if ( stripos( $agent, 'Firefox' ) !== false ) {
+				$agent = 'Firefox';
+			}
+			elseif ( stripos( $agent, 'MSIE' ) !== false ) {
+				$agent = 'IE';
+			}
+			elseif ( stripos( $agent, 'iPad' ) !== false ) {
+				$agent = 'iPad';
+			}
+			elseif ( stripos( $agent, 'Android' ) !== false ) {
+				$agent = 'Android';
+			}
+			elseif ( stripos( $agent, 'Chrome' ) !== false ) {
+				$agent = 'Chrome';
+			}
+			elseif ( stripos( $agent, 'Safari' ) !== false ) {
+				$agent = 'Safari';
+			}
+		}
+
+		return $agent;
+	}
+
 	/**
 	 * Custom 404 Hook to redirect users to chosen 404 Page
 	 *
 	 * @since    1.0.0
 	 */
 	public function custom_404() {
+		$user_agent_min = $this->getUserAgent();
 		if ( is_404() ) {
 			$c4p_404_data = array();
 			$temp_data = get_option( 'c4p_404_data' );
@@ -167,7 +207,7 @@ class Custom_404_Pro_Admin {
 			else {
 				$ip = $_SERVER['REMOTE_ADDR'];
 			}
-			$data = array( 'ip' => $ip, 'path' => $_SERVER['REQUEST_URI'], 'referrer' => $_SERVER['HTTP_REFERER'], 'time' => current_time( 'timestamp' ) );
+			$data = array( 'ip' => $ip, 'path' => $_SERVER['REQUEST_URI'], 'referrer' => $_SERVER['HTTP_REFERER'], 'time' => current_time( 'timestamp' ), 'user_agent' => $_SERVER['HTTP_USER_AGENT'], 'user_agent_min' => $user_agent_min );
 			array_push( $c4p_404_data, $data );
 			update_option( 'c4p_404_data', maybe_serialize( $c4p_404_data ) );
 

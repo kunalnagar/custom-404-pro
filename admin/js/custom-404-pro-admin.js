@@ -1,8 +1,22 @@
 (function($) {
     'use strict';
     $(function() {
+        $('#c4p_logs_download_options').change(function() {
+            var val = $(this).val();
+            if (val === '') {
+                $('#c4p_logs_download').attr('disabled', true);
+            } else {
+                $('#c4p_logs_download').removeAttr('disabled');
+            }
+            $('#c4p_logs_download_format').val(val);
+        })
+        $('#c4p_logs_download').click(function() {
+            $('#c4p_stats_table').tableExport({
+                type: $('#c4p_logs_download_format').val(),
+                escape: 'false'
+            });
+        });
         var mode = $('#mode').val();
-        console.log(mode);
         if (mode === '') {
             $('#c4p_page, #c4p_url').hide();
         } else if (mode === 'page') {
