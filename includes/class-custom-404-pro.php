@@ -153,11 +153,11 @@ class Custom_404_Pro {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		// Custom
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'main_admin_menu');
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'main_admin_menu' );
 		$this->loader->add_action( 'init', $plugin_admin, 'logs_register_cpt' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'logs_add_metaboxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'logs_save_meta', 1, 2 );
-		
+
 		$this->loader->add_filter( 'manage_edit-c4p_log_columns', $plugin_admin, 'logs_manage_columns' );
 		$this->loader->add_filter( 'manage_edit-c4p_log_sortable_columns', $plugin_admin, 'logs_manage_sortable_columns' );
 		$this->loader->add_filter( 'manage_c4p_log_posts_custom_column', $plugin_admin, 'logs_manage_custom_columns', 10, 2 );
