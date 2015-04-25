@@ -1,19 +1,19 @@
 <?php
 /**
-* Provide a admin area view for the plugin
-*
-* This file is used to markup the admin-facing aspects of the plugin.
-*
-    * @link       http://kunalnagar.in
-    * @since      1.0.0
-*
-    * @package    Custom_404_Pro
-* @subpackage Custom_404_Pro/admin/partials
-*/
+ * Provide a admin area view for the plugin
+ *
+ * This file is used to markup the admin-facing aspects of the plugin.
+ *
+ * @link       http://kunalnagar.in
+ * @since      1.0.0
+ *
+ * @package    Custom_404_Pro
+ * @subpackage Custom_404_Pro/admin/partials
+ */
 // Get All Pubished Pages
 $args = array(
-'post_type' => 'page',
-'post_status' => 'publish'
+	'post_type' => 'page',
+	'post_status' => 'publish'
 );
 $pages = get_pages( $args );
 // Get Selected Page
@@ -42,13 +42,13 @@ $active_tab = ( !isset( $_GET['tab'] ) ) ? 'settings-global-redirect' : $_GET['t
 <?php
 switch ( $active_tab ) {
 case 'settings-global-redirect':
-include 'custom-404-pro-admin-settings-global-redirect.php';
-break;
-// case 'c4p-stats':
-// include 'custom-404-pro-admin-tab-stats.php';
-// break;
+	include 'custom-404-pro-admin-settings-global-redirect.php';
+	break;
+	// case 'c4p-stats':
+	// include 'custom-404-pro-admin-tab-stats.php';
+	// break;
 case 'settings-general':
-include 'custom-404-pro-admin-settings-general.php';
-break;
+	include 'custom-404-pro-admin-settings-general.php';
+	break;
 }
 ?>
