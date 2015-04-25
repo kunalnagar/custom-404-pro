@@ -4,7 +4,16 @@
  */
 
 /* Utils */
-
+.c4p-center {
+	text-align: center;
+}
+.c4p-author-image {
+	height: 10em;
+	margin-top: 1em;
+	margin-left: 1em;
+	margin-right: 2em;
+	/*margin: 2em 1.5em;*/
+}
 .c4p-full-card {
     max-width: none;
 }
