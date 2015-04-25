@@ -173,7 +173,8 @@ class Custom_404_Pro_Admin
 
             case 'redirect_to':
                 $redirect_to = get_post_meta($id, 'c4p_log_redirect_to', true);
-                if(empty(trim($redirect_to))) {
+                $temp = trim($redirect_to);
+                if(empty($temp)) {
                 	$is_selected_page = get_option('c4p_selected_page');
 	                $url = get_option('c4p_selected_url');
 	                if (!empty($is_selected_page)) {
