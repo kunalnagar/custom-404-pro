@@ -22,6 +22,11 @@
 .error {
 	  margin: 15px 0 20px !important;
 }
+.c4p-update-nag {
+	padding: 0px 15px;
+	width: 96%;
+	margin: 15px 15px 0 2px;
+}
 /* Stats Section */
 #c4p_stats_table th {
 	font-weight: bold;
