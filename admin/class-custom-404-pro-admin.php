@@ -123,7 +123,8 @@ class Custom_404_Pro_Admin
         // $logs_meta['c4p_log_404_path'] = $_POST['c4p_log_404_path'];
         // $logs_meta['c4p_log_time'] = $_POST['c4p_log_time'];
         // $logs_meta['c4p_log_user_agent'] = $_POST['c4p_log_user_agent'];
-        if (!empty(trim($_POST['c4p_log_redirect_to']))) {
+        $temp = trim($_POST['c4p_log_redirect_to']);
+        if (!empty($temp)) {
             $logs_meta['c4p_log_redirect_to'] = $_POST['c4p_log_redirect_to'];
         }
         foreach ($logs_meta as $key => $value) {
