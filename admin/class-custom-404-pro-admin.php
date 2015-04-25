@@ -74,6 +74,7 @@ class Custom_404_Pro_Admin {
 	public function create_admin_menu() {
 		add_menu_page( 'Custom 404 Pro', 'Custom 404 Pro', 'manage_options', 'c4p-main', null, 'dashicons-chart-bar' );
 		add_submenu_page( 'c4p-main', 'Settings', 'Settings', 'manage_options', 'c4p-main', array( $this, 'main_admin_menu_settings' ) );
+		add_submenu_page( 'c4p-main', 'More Info', 'More Info', 'manage_options', 'c4p-more-info', array( $this, 'main_admin_menu_more_info' ) );
 	}
 
 	// Register 404 Logs CPT
@@ -196,6 +197,11 @@ class Custom_404_Pro_Admin {
 	// Custom 404 Pro Main Settings Tab
 	public function main_admin_menu_settings() {
 		include 'partials/settings/custom-404-pro-admin-settings.php';
+	}
+
+	// Custom 404 Pro More Info Tab
+	public function main_admin_menu_more_info() {
+		include 'partials/more-info/custom-404-pro-admin-more-info.php';
 	}
 
 	// Save options for Global Redirect Settings (Mode)
