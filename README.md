@@ -1,6 +1,6 @@
 ## Custom 404 Pro
 
-![Banner](assets/banner-772x250.png "Banner")
+![Banner](banner-772x250.png "Banner")
 
 Override the default 404 page with **any page** from the Admin Panel or a **Custom URL**.
 
@@ -11,8 +11,6 @@ Override the default 404 page with **any page** from the Admin Panel or a **Cust
 * Custom Page Redirect
 * Custom URL Redirect
 * Record Visitor Keywords that led to 404
-* Download Log Stats in JSON, XML, CSV, TXT, SQL, MS-WORD (.docx), MS-EXCEL (.xlsx) and MS-POWERPOINT (.pptx) formats
-* Clear Logs
 * Clean code
 * Awesome support
 
@@ -21,27 +19,17 @@ Override the default 404 page with **any page** from the Admin Panel or a **Cust
 * Extract the downloaded ZIP file.
 * Copy the ```custom-404-pro``` folder to the ```wp-content/plugins``` directory.
 * Activate from the Plugins Section.
-* Options are available under: ```Settings > Custom 404 Pro```
 
 ### Screenshots
 
-![Activate Plugin](assets/screenshot-1.png "Activate Plugin")
+![Activate Plugin](screenshot-1.png "Activate Plugin")
 _Activate Plugin_
 
-![Go to Settings > Custom 404 Pro to open up the Options Page](assets/screenshot-2.png "Go to Settings > Custom 404 Pro to open up the Options Page")
-_Go to Settings > Custom 404 Pro to open up the Options Page_
+![404 Logs](screenshot-2.png "404 Logs")
+_404 Logs_
 
-![Mode: WordPress Page (replace default 404 with custom WordPress Page)](assets/screenshot-3.png "Mode: WordPress Page (replace default 404 with custom WordPress Page)")
-_Mode: WordPress Page (replace default 404 with custom WordPress Page)_
-
-![Mode: URL (replace default 404 with a custom redirect)](assets/screenshot-4.png "Mode: URL (replace default 404 with a custom redirect)")
-_Mode: URL (replace default 404 with a custom redirect)_
-
-![Stats Record (List of all 404s)](assets/screenshot-5.png "Stats Record (List of all 404s)")
-_Stats Record (List of all 404s), various Download Formats and Formatter User Agents_
-
-![Settings (Work in Progress)](assets/screenshot-6.png "Settings (Work in Progress)")
-_Settings (Work in Progress)_
+![Global Settings](screenshot-3.png "Global Settings")
+_Global Settings_
 
 ### Support
 
