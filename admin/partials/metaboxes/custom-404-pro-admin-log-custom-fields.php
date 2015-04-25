@@ -1,11 +1,13 @@
 <?php
+
 global $post;
 $c4p_log_ip = get_post_meta( $post->ID, 'c4p_log_ip', true );
 $c4p_log_404_path = get_post_meta( $post->ID, 'c4p_log_404_path', true );
-// $c4p_log_time = get_post_meta($post->ID, 'c4p_log_time', true);
 $c4p_log_user_agent = get_post_meta( $post->ID, 'c4p_log_user_agent', true );
 $c4p_log_redirect_to = get_post_meta( $post->ID, 'c4p_log_redirect_to', true );
+
 ?>
+
 <table class="form-table">
 	<tbody>
 		<tr>
@@ -20,13 +22,7 @@ $c4p_log_redirect_to = get_post_meta( $post->ID, 'c4p_log_redirect_to', true );
 				<input type="text" name="c4p_log_404_path" value="<?php echo $c4p_log_404_path; ?>" placeholder="Path that led to 404" class="widefat" disabled />
 			</td>
 		</tr>
-		<!-- <tr>
-			<td>Time</td>
-			<td>
-				<input type="text" name="c4p_log_time" value="<?php echo $c4p_log_time; ?>" placeholder="Time" class="widefat" disabled />
-			</td>
-		</tr> -->
-		<tr>
+		†<tr>
 			<td>User Agent</td>
 			<td>
 				<textarea name="c4p_log_user_agent" rows="3" class="widefat" disabled><?php echo $c4p_log_user_agent; ?></textarea>
