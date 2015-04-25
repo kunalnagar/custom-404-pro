@@ -172,7 +172,21 @@ class Custom_404_Pro_Admin
 
             case 'redirect_to':
                 $redirect_to = get_post_meta($id, 'c4p_log_redirect_to', true);
-                echo $redirect_to;
+                if(empty(trim($redirect_to))) {
+                	$is_selected_page = get_option('c4p_selected_page');
+	                $url = get_option('c4p_selected_url');
+	                if (!empty($is_selected_page)) {
+	                    $selected_page = maybe_unserialize(get_option('c4p_selected_page'));
+	                    echo 'Global Settings Apply (<a href="' . $selected_page->post_name . '" target="blank" title="' . $selected_page->post_title . '">Page</a>)';
+	                    // echo 'wp_redirect(site_url() . '/' . $selected_page->post_name);
+	                } 
+	                else if (!empty($url)) {
+	                	echo 'Global Settings Apply (<a href="' . $url . '" target="blank">URL</a>)';
+	                    // wp_redirect($url);
+	                }
+                } else {
+                	echo $redirect_to;	
+                }
                 break;
         }
     }
