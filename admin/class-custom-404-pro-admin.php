@@ -58,18 +58,6 @@ class Custom_404_Pro_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Custom_404_Pro_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Custom_404_Pro_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/custom-404-pro-admin.css', array(), $this->version, 'all' );
 	}
 
@@ -79,49 +67,60 @@ class Custom_404_Pro_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_name . '-jquery-base64', plugin_dir_url( __FILE__ ) . 'js/vendor/table-csv/jquery.base64.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( $this->plugin_name . '-table-csv', plugin_dir_url( __FILE__ ) . 'js/vendor/table-csv/tableExport.js', array( 'jquery' ), $this->version, false );
-
-		// wp_enqueue_script($this->plugin_name . '-jspdf-sprintf', plugin_dir_url(__FILE__) . 'js/vendor/table-csv/jspdf/libs/sprintf.js', array('jquery'), $this->version, false);
-		// wp_enqueue_script($this->plugin_name . '-jspdf-main', plugin_dir_url(__FILE__) . 'js/vendor/table-csv/jspdf/jspdf.js', array('jquery'), $this->version, false);
-		// wp_enqueue_script($this->plugin_name . '-jspdf-base64', plugin_dir_url(__FILE__) . 'js/vendor/table-csv/jspdf/libs/base64.js', array('jquery'), $this->version, false);
-
-
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Custom_404_Pro_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Custom_404_Pro_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/custom-404-pro-admin.js', array( 'jquery' ), $this->version, false );
 	}
 
-	public function logs_register_cpt() {
-		$labels = array( 'name' => '404 Logs', 'singular_name' => 'Log', 'add_new' => 'Add New', 'add_new_item' => 'Add New Log', 'edit_item' => 'Edit Log', 'new_item' => 'New Log', 'all_items' => '404 Logs', 'view_item' => 'View Log', 'search_items' => 'Search Logs', 'not_found' => 'No logs found', 'not_found_in_trash' => 'No logs found in the Trash', 'parent_item_colon' => '', 'menu_name' => 'Logs' );
-		$args = array( 'labels' => $labels, 'description' => 'A List of 404 Logs', 'public' => 'true', 'show_ui' => 'true', 'menu_icon' => 'dashicons-chart-area', 'show_in_menu' => 'c4p-main', 'supports' => array( 'revisions' ), 'register_meta_box_cb' => array( $this, 'logs_add_metaboxes' ), 'capability_type' => 'post', 'capabilities' => array( 'create_posts' => false ), 'map_meta_cap' => true );
+	// Create Plugin Admin Menu
+	public function create_admin_menu() {
+		add_menu_page( 'Custom 404 Pro', 'Custom 404 Pro', 'manage_options', 'c4p-main', null, 'dashicons-chart-bar' );
+		add_submenu_page( 'c4p-main', 'Settings', 'Settings', 'manage_options', 'c4p-main', array( $this, 'main_admin_menu_settings' ) );
+	}
+
+	// Register 404 Logs CPT
+	public function register_logs_cpt() {
+		$labels = array(
+			'name' => '404 Logs',
+			'singular_name' => 'Log',
+			'add_new' => 'Add New',
+			'add_new_item' => 'Add New Log',
+			'edit_item' => 'Edit Log',
+			'new_item' => 'New Log',
+			'all_items' => '404 Logs',
+			'view_item' => 'View Log',
+			'search_items' => 'Search Logs',
+			'not_found' => 'No logs found',
+			'not_found_in_trash' => 'No logs found in the Trash',
+			'parent_item_colon' => '',
+			'menu_name' => 'Logs'
+		);
+		$args = array(
+			'labels' => $labels,
+			'description' => 'A List of 404 Logs',
+			'public' => 'true',
+			'show_ui' => 'true',
+			'menu_icon' => 'dashicons-chart-area',
+			'show_in_menu' => 'c4p-main',
+			'supports' => array( 'revisions' ),
+			'register_meta_box_cb' => array( $this, 'logs_add_metaboxes' ),
+			'capability_type' => 'post',
+			'capabilities' => array( 'create_posts' => false ),
+			'map_meta_cap' => true
+		);
 		register_post_type( 'c4p_log', $args );
 	}
 
-	public function logs_add_metaboxes() {
-		add_meta_box( 'c4p_log_custom_fields', 'Custom Fields', array( $this, 'c4p_log_custom_fields' ), 'c4p_log', 'normal', 'default' );
+	// Add Custom Fields to 404 Logs CPT
+	public function logs_add_custom_fields_metabox() {
+		add_meta_box( 'c4p_log_custom_fields', 'Custom Fields', array( $this, 'include_custom_fields_file' ), 'c4p_log', 'normal', 'default' );
 	}
 
-	public function c4p_log_custom_fields() {
+	// Include External File that contains Custom Fields Markup
+	public function include_custom_fields_file() {
 		include 'partials/metaboxes/custom-404-pro-admin-log-custom-fields.php';
 	}
 
-	public function logs_save_meta( $post_id, $post ) {
-
-		// $logs_meta['c4p_log_ip'] = $_POST['c4p_log_ip'];
-		// $logs_meta['c4p_log_404_path'] = $_POST['c4p_log_404_path'];
-		// $logs_meta['c4p_log_time'] = $_POST['c4p_log_time'];
-		// $logs_meta['c4p_log_user_agent'] = $_POST['c4p_log_user_agent'];
+	// Save Custom Fields Data to 404 Logs CPT
+	public function logs_save_custom_fields_data( $post_id, $post ) {
 		$temp = trim( $_POST['c4p_log_redirect_to'] );
 		if ( !empty( $temp ) ) {
 			$logs_meta['c4p_log_redirect_to'] = $_POST['c4p_log_redirect_to'];
@@ -132,9 +131,9 @@ class Custom_404_Pro_Admin {
 		}
 	}
 
-	public function logs_manage_columns( $gallery_columns ) {
+	// Recreate 404 Logs CPT Admin Table Columns for better control
+	public function recreate_admin_table_columns( $columns ) {
 		$new_columns['cb'] = '<input type="checkbox" />';
-		// $new_columns['title'] = 'Title';
 		$new_columns['ip'] = 'User IP';
 		$new_columns['404_path'] = '404 Path';
 		$new_columns['user_agent'] = 'User Agent';
@@ -143,7 +142,8 @@ class Custom_404_Pro_Admin {
 		return $new_columns;
 	}
 
-	public function logs_manage_sortable_columns( $sortable_columns ) {
+	// Add Sorting to 404 Logs CPT Admin Table Columns
+	public function add_sorting_to_admin_table_columns( $sortable_columns ) {
 		$sortable_columns['ip'] = 'c4p_log_ip';
 		$sortable_columns['404_path'] = 'c4p_log_404_path';
 		$sortable_columns['user_agent'] = 'c4p_log_user_agent';
@@ -151,7 +151,8 @@ class Custom_404_Pro_Admin {
 		return $sortable_columns;
 	}
 
-	public function logs_manage_custom_columns( $column_name, $id ) {
+	// Show 404 Logs CPT Values for Individual Columns
+	public function show_cpt_values_custom_columns( $column_name, $id ) {
 		global $wpdb;
 		switch ( $column_name ) {
 		case 'ip':
@@ -179,12 +180,12 @@ class Custom_404_Pro_Admin {
 				if ( !empty( $is_selected_page ) ) {
 					$selected_page = maybe_unserialize( get_option( 'c4p_selected_page' ) );
 					echo 'Global Settings Apply (<a href="' . $selected_page->post_name . '" target="blank" title="' . $selected_page->post_title . '">Page</a>)';
-					// echo 'wp_redirect(site_url() . '/' . $selected_page->post_name);
 				}
 				else if ( !empty( $url ) ) {
 						echo 'Global Settings Apply (<a href="' . $url . '" target="blank">URL</a>)';
-						// wp_redirect($url);
-					}
+					} else {
+					echo 'Default 404 Page';
+				}
 			} else {
 				echo $redirect_to;
 			}
@@ -192,31 +193,13 @@ class Custom_404_Pro_Admin {
 		}
 	}
 
-	/**
-	 * Create the Plugin Admin Menu
-	 *
-	 * @since    1.0.0
-	 */
-	public function main_admin_menu() {
-		add_menu_page( 'Custom 404 Pro', 'Custom 404 Pro', 'manage_options', 'c4p-main', null, 'dashicons-chart-bar' );
-		add_submenu_page( 'c4p-main', 'Settings', 'Settings', 'manage_options', 'c4p-main', array( $this, 'main_admin_menu_settings' ) );
-	}
-
-	/**
-	 * Plugin Main View
-	 *
-	 * @since    1.0.0
-	 */
+	// Custom 404 Pro Main Settings Tab
 	public function main_admin_menu_settings() {
 		include 'partials/settings/custom-404-pro-admin-settings.php';
 	}
 
-	/**
-	 * Save the Selected 404 Page
-	 *
-	 * @since    1.0.0
-	 */
-	public function select_page_submit() {
+	// Save options for Global Redirect Settings (Mode)
+	public function handle_settings_global_redirect_form() {
 		if ( isset( $_POST['mode'] ) && !empty( $_POST['mode'] ) ) {
 			$mode = $_POST['mode'];
 			switch ( $mode ) {
@@ -245,53 +228,64 @@ class Custom_404_Pro_Admin {
 		}
 	}
 
-	public function c4p_settings_form() {
-		if ( isset( $_POST['c4p_clear_logs'] ) ) {
-			update_option( 'c4p_404_data', '' );
+	// Save options for General Settings
+	public function handle_settings_general_form() {
+		if ( isset( $_POST['c4p_log_email'] ) ) {
+			update_option( 'c4p_log_email', true );
+		} else {
+			update_option( 'c4p_log_email', false );
 		}
-		wp_redirect( admin_url( 'admin.php?page=c4p-main&tab=c4p-settings&message=c4p-settings-updated' ) );
+		wp_redirect( admin_url( 'admin.php?page=c4p-main&tab=settings-general&message=settings_general_form-updated' ) );
 	}
 
-	public static function getUserAgent() {
-		static $agent = null;
-
-		if ( empty( $agent ) ) {
-			$agent = $_SERVER['HTTP_USER_AGENT'];
-			if ( stripos( $agent, 'Firefox' ) !== false ) {
-				$agent = 'Firefox';
-			}
-			elseif ( stripos( $agent, 'MSIE' ) !== false ) {
-				$agent = 'IE';
-			}
-			elseif ( stripos( $agent, 'iPad' ) !== false ) {
-				$agent = 'iPad';
-			}
-			elseif ( stripos( $agent, 'Android' ) !== false ) {
-				$agent = 'Android';
-			}
-			elseif ( stripos( $agent, 'Chrome' ) !== false ) {
-				$agent = 'Chrome';
-			}
-			elseif ( stripos( $agent, 'Safari' ) !== false ) {
-				$agent = 'Safari';
-			}
-		}
-
-		return $agent;
+	// Create the 404 Log Email to be sent
+	public function send_404_log_email( $log_meta ) {
+		$admin_email = get_option( 'admin_email' );
+		$headers[] = 'From: Site Admin <' . $admin_email . '>' . "\r\n";
+		$headers[] = 'Content-Type: text/html; charset=UTF-8';
+		$message  =  '<p>Here are the 404 Log Details:</p>';
+		$message  .=  '<table>';
+		$message .=  '<tr>';
+		$message .=   '<th>User IP</th>';
+		$message .=   '<td>' . $log_meta['ip'] . '</td>';
+		$message .=  '</tr>';
+		$message .=  '<tr>';
+		$message .=   '<th>404 Path</th>';
+		$message .=   '<td>' . $log_meta['404_path'] . '</td>';
+		$message .=  '</tr>';
+		$message .=  '<tr>';
+		$message .=   '<th>User Agent</th>';
+		$message .=   '<td>' . $log_meta['user_agent'] . '</td>';
+		$message .=  '</tr>';
+		$message .= '</table>';
+		$is_sent = wp_mail(
+			$admin_email,
+			'404 Error on Site',
+			$message,
+			$headers
+		);
 	}
 
-	/**
-	 * Custom 404 Hook to redirect users to chosen 404 Page
-	 *
-	 * @since    1.0.0
-	 */
+	// Main Hook to perform redirections on 404s
 	public function custom_404() {
 		// $user_agent_min = $this->getUserAgent();
 		if ( is_404() ) {
+			$is_email_send = get_option( 'c4p_log_email' );
 			$check_post_redirect_to_args = array( 'meta_key' => 'c4p_log_404_path', 'meta_value' => $_SERVER['REQUEST_URI'], 'post_type' => 'c4p_log', 'posts_per_page' => -1 );
 			$c4p_log_data = get_posts( $check_post_redirect_to_args );
 			if ( !empty( $c4p_log_data ) ) {
 				$redirect_uri = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_redirect_to', true );
+				if ( $is_email_send ) {
+					$log_meta_ip = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_ip', true );
+					$log_meta_404_path = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_404_path', true );
+					$log_meta_user_agent = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_user_agent', true );
+					$log_meta = array(
+						'ip' => $log_meta_ip,
+						'404_path' => $log_meta_404_path,
+						'user_agent' => $log_meta_user_agent
+					);
+					$this->send_404_log_email( $log_meta );
+				}
 				if ( !empty( $redirect_uri ) ) {
 					wp_redirect( $redirect_uri );
 				} else {
@@ -322,7 +316,17 @@ class Custom_404_Pro_Admin {
 				update_post_meta( $c4p_log_id, 'c4p_log_404_path', $_SERVER['REQUEST_URI'] );
 				update_post_meta( $c4p_log_id, 'c4p_log_user_agent', $_SERVER['HTTP_USER_AGENT'] );
 				update_post_meta( $c4p_log_id, 'c4p_log_redirect_to', '' );
-
+				if ( $is_email_send ) {
+					$log_meta_ip = get_post_meta( $c4p_log_id, 'c4p_log_ip', true );
+					$log_meta_404_path = get_post_meta( $c4p_log_id, 'c4p_log_404_path', true );
+					$log_meta_user_agent = get_post_meta( $c4p_log_id, 'c4p_log_user_agent', true );
+					$log_meta = array(
+						'ip' => $log_meta_ip,
+						'404_path' => $log_meta_404_path,
+						'user_agent' => $log_meta_user_agent
+					);
+					$this->send_404_log_email( $log_meta );
+				}
 				$is_selected_page = get_option( 'c4p_selected_page' );
 				$url = get_option( 'c4p_selected_url' );
 				if ( !empty( $is_selected_page ) ) {

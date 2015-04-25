@@ -146,28 +146,38 @@ class Custom_404_Pro {
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
-
 		$plugin_admin = new Custom_404_Pro_Admin( $this->get_plugin_name(), $this->get_version() );
-
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		// Custom
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'main_admin_menu' );
-		$this->loader->add_action( 'init', $plugin_admin, 'logs_register_cpt' );
-		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'logs_add_metaboxes' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'logs_save_meta', 1, 2 );
+		// Create Custom 404 Pro Admin Menu
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'create_admin_menu' );
 
-		$this->loader->add_filter( 'manage_edit-c4p_log_columns', $plugin_admin, 'logs_manage_columns' );
-		$this->loader->add_filter( 'manage_edit-c4p_log_sortable_columns', $plugin_admin, 'logs_manage_sortable_columns' );
-		$this->loader->add_filter( 'manage_c4p_log_posts_custom_column', $plugin_admin, 'logs_manage_custom_columns', 10, 2 );
-		// $this->loader->add_filter( 'post_row_actions', $plugin_admin, 'logs_custom_row_actions', 10, 2 );
+		// Register 404 Logs CPT
+		$this->loader->add_action( 'init', $plugin_admin, 'register_logs_cpt' );
 
-		$this->loader->add_action( 'admin_post_select-page-form', $plugin_admin, 'select_page_submit' );
+		// Add Custom Fields to 404 Logs CPT
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'logs_add_custom_fields_metabox' );
 
-		// settings tab form submit
-		$this->loader->add_action( 'admin_post_c4p-settings-form', $plugin_admin, 'c4p_settings_form' );
+		// Save Custom Fields Data to 404 Logs CPT
+		$this->loader->add_action( 'save_post', $plugin_admin, 'logs_save_custom_fields_data', 1, 2 );
 
+		// Recreate 404 Logs CPT Admin Table Columns for better control
+		$this->loader->add_filter( 'manage_edit-c4p_log_columns', $plugin_admin, 'recreate_admin_table_columns' );
+
+		// Add Sorting to 404 Logs CPT Admin Table Columns
+		$this->loader->add_filter( 'manage_edit-c4p_log_sortable_columns', $plugin_admin, 'add_sorting_to_admin_table_columns' );
+
+		// Show 404 Logs CPT Values for Individual Columns
+		$this->loader->add_filter( 'manage_c4p_log_posts_custom_column', $plugin_admin, 'show_cpt_values_custom_columns', 10, 2 );
+
+		// Save options for Global Redirect Settings (Mode)
+		$this->loader->add_action( 'admin_post_select-page-form', $plugin_admin, 'handle_settings_global_redirect_form' );
+
+		// Save options for General Settings
+		$this->loader->add_action( 'admin_post_settings-general-form', $plugin_admin, 'handle_settings_general_form' );
+
+		// Main Hook to perform redirections on 404s
 		$this->loader->add_filter( 'template_redirect', $plugin_admin, 'custom_404' );
 	}
 
