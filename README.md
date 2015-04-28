@@ -43,6 +43,10 @@ Please feel free to star on Github or [leave a rating](https://wordpress.org/plu
 
 Like the plugin? Show your support by donating [here](http://kunalnagar.in/donate) (PayPal)
 
+### Changelog
+
+You can find the full changelog [here](https://wordpress.org/plugins/custom-404-pro/changelog/)
+
 ### About Me
 
 My name is Kunal Nagar and I am a Freelance Web Developer from Jaipur, India. I build high quality websites using Core PHP, WordPress, Laravel etc. I also work on Hybrid Mobile Applications using Ionic. You can find out more about the services I provide on my [website](http://kunalnagar.in).

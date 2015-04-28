@@ -179,6 +179,10 @@ class Custom_404_Pro {
 
 		// Main Hook to perform redirections on 404s
 		$this->loader->add_filter( 'template_redirect', $plugin_admin, 'custom_404' );
+
+		// Filter Logs using Custom Fields (User Agents etc)
+		$this->loader->add_action('restrict_manage_posts', $plugin_admin, 'create_c4p_log_filters');
+		$this->loader->add_filter('pre_get_posts', $plugin_admin, 'get_c4p_log_filter_results');
 	}
 
 	/**
