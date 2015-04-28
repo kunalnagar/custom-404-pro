@@ -345,4 +345,49 @@ class Custom_404_Pro_Admin {
 			}
 		}
 	}
+
+	public static function get_user_agent($agent) {
+		if (stripos($agent, 'Firefox') !== false) {
+			$agent = 'Firefox';
+		}
+		elseif (stripos($agent, 'MSIE') !== false) {
+			$agent = 'IE';
+		}
+		elseif (stripos($agent, 'iPad') !== false) {
+			$agent = 'iPad';
+		}
+		elseif (stripos($agent, 'Android') !== false) {
+			$agent = 'Android';
+		}
+		elseif (stripos($agent, 'Chrome') !== false) {
+			$agent = 'Chrome';
+		}
+		elseif (stripos($agent, 'Safari') !== false) {
+			$agent = 'Safari';
+		}
+		return $agent;
+	}
+
+	// Create Filter Dropdown
+	public function create_c4p_log_filters() {
+		global $wpdb;
+		$data = array(
+			'c4p_log_user_agent'
+		);
+		foreach($data as $filter) {
+			$sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "' . $filter . '"';
+			$fields = $wpdb->get_results($sql, ARRAY_A);
+			if($filter == 'c4p_log_user_agent')
+				include 'partials/filters/filter-user-agent.php';
+		}
+	}
+
+	// Get Filter Results
+	public function get_c4p_log_filter_results($query) {
+		global $pagenow;
+		if(is_admin() && $pagenow === 'edit.php' && isset($_GET['c4p_user_agent']) && $_GET['c4p_user_agent'] !== '') {
+			$query->set('meta_key', 'c4p_log_user_agent');
+			$query->set('meta_value', $_GET['c4p_user_agent']);
+		}
+	}
 }
