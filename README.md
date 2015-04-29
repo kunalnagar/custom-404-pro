@@ -11,6 +11,7 @@ Override the default 404 page with **any page** from the Admin Panel or a **Cust
 * Custom Page Redirect
 * Custom URL Redirect
 * Record Visitor Keywords that led to 404
+* Custom Log Filters
 * Clean code
 * Awesome support
 

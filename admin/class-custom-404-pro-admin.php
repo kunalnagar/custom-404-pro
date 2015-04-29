@@ -272,6 +272,13 @@ class Custom_404_Pro_Admin {
 		);
 	}
 
+	public function get_user_agent_from_api($user_agent) {
+		$url = 'http://www.useragentstring.com/?uas=' . urlencode($user_agent) . '&getJSON=all';
+		$temp = file_get_contents($url);
+		$result = json_decode($temp);
+		return $result;
+	}
+
 	// Main Hook to perform redirections on 404s
 	public function custom_404() {
 		// $user_agent_min = $this->getUserAgent();
@@ -321,6 +328,22 @@ class Custom_404_Pro_Admin {
 				update_post_meta( $c4p_log_id, 'c4p_log_ip', $ip );
 				update_post_meta( $c4p_log_id, 'c4p_log_404_path', $_SERVER['REQUEST_URI'] );
 				update_post_meta( $c4p_log_id, 'c4p_log_user_agent', $_SERVER['HTTP_USER_AGENT'] );
+
+				$user_agent_meta = (array)$this->get_user_agent_from_api($_SERVER['HTTP_USER_AGENT']);
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_type', $user_agent_meta['agent_type'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_name', $user_agent_meta['agent_name'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_version', $user_agent_meta['agent_version'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_type', $user_agent_meta['os_type'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_name', $user_agent_meta['os_name'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_version_name', $user_agent_meta['os_versionName'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_version_number', $user_agent_meta['os_versionNumber'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_producer', $user_agent_meta['os_producer'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_producer_url', $user_agent_meta['os_producerURL'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_linux_distribution', $user_agent_meta['linux_distribution'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_language', $user_agent_meta['agent_language'] );
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_language_tag', $user_agent_meta['agent_languageTag'] );
+
+				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta', maybe_serialize($user_agent_meta) );
 				update_post_meta( $c4p_log_id, 'c4p_log_redirect_to', '' );
 				if ( $is_email_send ) {
 					$log_meta_ip = get_post_meta( $c4p_log_id, 'c4p_log_ip', true );
@@ -346,48 +369,74 @@ class Custom_404_Pro_Admin {
 		}
 	}
 
-	public static function get_user_agent($agent) {
-		if (stripos($agent, 'Firefox') !== false) {
-			$agent = 'Firefox';
-		}
-		elseif (stripos($agent, 'MSIE') !== false) {
-			$agent = 'IE';
-		}
-		elseif (stripos($agent, 'iPad') !== false) {
-			$agent = 'iPad';
-		}
-		elseif (stripos($agent, 'Android') !== false) {
-			$agent = 'Android';
-		}
-		elseif (stripos($agent, 'Chrome') !== false) {
-			$agent = 'Chrome';
-		}
-		elseif (stripos($agent, 'Safari') !== false) {
-			$agent = 'Safari';
-		}
-		return $agent;
-	}
+//	public static function get_user_agent($agent) {
+//		if (stripos($agent, 'Firefox') !== false) {
+//			$agent = 'Firefox';
+//		}
+//		elseif (stripos($agent, 'MSIE') !== false) {
+//			$agent = 'IE';
+//		}
+//		elseif (stripos($agent, 'iPad') !== false) {
+//			$agent = 'iPad';
+//		}
+//		elseif (stripos($agent, 'Android') !== false) {
+//			$agent = 'Android';
+//		}
+//		elseif (stripos($agent, 'Chrome') !== false) {
+//			$agent = 'Chrome';
+//		}
+//		elseif (stripos($agent, 'Safari') !== false) {
+//			$agent = 'Safari';
+//		}
+//		return $agent;
+//	}
 
 	// Create Filter Dropdown
-	public function create_c4p_log_filters() {
+	public function create_log_filters() {
 		global $wpdb;
-		$data = array(
-			'c4p_log_user_agent'
-		);
-		foreach($data as $filter) {
-			$sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "' . $filter . '"';
-			$fields = $wpdb->get_results($sql, ARRAY_A);
-			if($filter == 'c4p_log_user_agent')
-				include 'partials/filters/filter-user-agent.php';
-		}
+		$agent_name_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_agent_name"';
+		$agent_name_fields = $wpdb->get_results($agent_name_sql, ARRAY_A);
+		$agent_version_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_agent_version"';
+		$agent_version_fields = $wpdb->get_results($agent_version_sql, ARRAY_A);
+		$os_type_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_os_type"';
+		$os_type_fields = $wpdb->get_results($os_type_sql, ARRAY_A);
+		include 'partials/filters/filter-user-agent.php';
 	}
 
 	// Get Filter Results
-	public function get_c4p_log_filter_results($query) {
+	public function get_filter_results($query) {
 		global $pagenow;
-		if(is_admin() && $pagenow === 'edit.php' && isset($_GET['c4p_user_agent']) && $_GET['c4p_user_agent'] !== '') {
-			$query->set('meta_key', 'c4p_log_user_agent');
-			$query->set('meta_value', $_GET['c4p_user_agent']);
+		if(is_admin() && $pagenow === 'edit.php') {
+			if($_GET['filter_reset'] === 'Reset') {
+				wp_redirect(admin_url() . 'edit.php?post_type=c4p_log');
+				exit;
+			}
+			$meta_query_array = [];
+			if(!empty($_GET['ua_browser_names'])) {
+				$temp = array(
+					'key' => 'c4p_log_user_agent_meta_agent_name',
+					'value' => $_GET['ua_browser_names'],
+					'compare' => '='
+				);
+				array_push($meta_query_array, $temp);
+			}
+			if(!empty($_GET['ua_browser_versions'])) {
+				$temp = array(
+					'key' => 'c4p_log_user_agent_meta_agent_version',
+					'value' => $_GET['ua_browser_versions'],
+					'compare' => '='
+				);
+				array_push($meta_query_array, $temp);
+			}
+			if(!empty($_GET['ua_os_types'])) {
+				$temp = array(
+					'key' => 'c4p_log_user_agent_meta_os_type',
+					'value' => $_GET['ua_os_types'],
+					'compare' => '='
+				);
+				array_push($meta_query_array, $temp);
+			}
+			$query->set('meta_query', $meta_query_array);
 		}
 	}
 }
