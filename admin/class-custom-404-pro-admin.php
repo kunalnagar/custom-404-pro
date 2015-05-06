@@ -411,7 +411,7 @@ class Custom_404_Pro_Admin {
 				wp_redirect(admin_url() . 'edit.php?post_type=c4p_log');
 				exit;
 			}
-			$meta_query_array = [];
+			$meta_query_array = array();
 			if(!empty($_GET['ua_browser_names'])) {
 				$temp = array(
 					'key' => 'c4p_log_user_agent_meta_agent_name',
