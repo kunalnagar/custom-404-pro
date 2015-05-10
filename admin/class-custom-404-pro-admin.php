@@ -102,7 +102,7 @@ class Custom_404_Pro_Admin {
 			'menu_icon' => 'dashicons-chart-area',
 			'show_in_menu' => 'c4p-main',
 			'supports' => array( 'revisions' ),
-			'register_meta_box_cb' => array( $this, 'logs_add_metaboxes' ),
+			'register_meta_box_cb' => array( $this, 'logs_add_custom_fields_metabox' ),
 			'capability_type' => 'post',
 			'capabilities' => array( 'create_posts' => false ),
 			'map_meta_cap' => true
@@ -123,13 +123,7 @@ class Custom_404_Pro_Admin {
 	// Save Custom Fields Data to 404 Logs CPT
 	public function logs_save_custom_fields_data( $post_id, $post ) {
 		$temp = trim( $_POST['c4p_log_redirect_to'] );
-		if ( !empty( $temp ) ) {
-			$logs_meta['c4p_log_redirect_to'] = $_POST['c4p_log_redirect_to'];
-		}
-		foreach ( $logs_meta as $key => $value ) {
-			if ( $post->post_type === 'revision' ) return;
-			update_post_meta( $post->ID, $key, $value );
-		}
+		update_post_meta($post->ID, 'c4p_log_redirect_to', $_POST['c4p_log_redirect_to']);
 	}
 
 	// Recreate 404 Logs CPT Admin Table Columns for better control
