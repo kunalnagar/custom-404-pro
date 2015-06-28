@@ -377,14 +377,14 @@ class Custom_404_Pro_Admin {
 						);
 						$this->send_404_log_email($log_meta);
 					}
-					$is_selected_page = get_option('c4p_selected_page');
-					$url = get_option('c4p_selected_url');
-					if (!empty($is_selected_page)) {
-						$selected_page = maybe_unserialize(get_option('c4p_selected_page'));
-						wp_redirect(site_url() . '/' . $selected_page->post_name);
-					} else if (!empty($url)) {
-						wp_redirect($url);
-					}
+				}
+				$is_selected_page = get_option('c4p_selected_page');
+				$url = get_option('c4p_selected_url');
+				if (!empty($is_selected_page)) {
+					$selected_page = maybe_unserialize(get_option('c4p_selected_page'));
+					wp_redirect(site_url() . '/' . $selected_page->post_name);
+				} else if (!empty($url)) {
+					wp_redirect($url);
 				}
 			}
 		}
