@@ -156,6 +156,8 @@ class Custom_404_Pro {
 		// Register 404 Logs CPT
 		$this->loader->add_action( 'init', $plugin_admin, 'register_logs_cpt' );
 
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'init_options' );
+
 		// Add Custom Fields to 404 Logs CPT
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'logs_add_custom_fields_metabox' );
 

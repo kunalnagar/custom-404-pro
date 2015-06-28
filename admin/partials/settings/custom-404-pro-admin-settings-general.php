@@ -17,6 +17,27 @@
 						</p>
 					</td>
 				</tr>
+				<tr>
+					<th>Clear Logs</th>
+					<td>
+						<input type="checkbox" id="c4p_clear_logs" name="c4p_clear_logs" <?php echo get_option( 'c4p_clear_logs' ) == true ? 'checked' : '' ?>  />
+						<p class="description">
+							Check this to clear all logs
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<th>Logging Status</th>
+					<td>
+						<select name="c4p_logging_status">
+							<option value="enabled" <?php echo get_option( 'c4p_logging_status' ) == 'enabled' ? 'selected' : '' ?>>Enabled</option>
+							<option value="disabled" <?php echo get_option( 'c4p_logging_status' ) == 'disabled' ? 'selected' : '' ?>>Disabled</option>
+						</select>
+						<p class="description">
+							Enable/Disable Logging
+						</p>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 		<p class="submit">

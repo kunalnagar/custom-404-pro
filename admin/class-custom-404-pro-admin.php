@@ -110,6 +110,12 @@ class Custom_404_Pro_Admin {
 		register_post_type( 'c4p_log', $args );
 	}
 
+	public function init_options() {
+		if(get_option('c4p_logging_status') == '' || get_option('c4p_logging_status') == null) {
+			update_option('c4p_logging_status', 'enabled');
+		}
+	}
+
 	// Add Custom Fields to 404 Logs CPT
 	public function logs_add_custom_fields_metabox() {
 		add_meta_box( 'c4p_log_custom_fields', 'Custom Fields', array( $this, 'include_custom_fields_file' ), 'c4p_log', 'normal', 'default' );
@@ -228,12 +234,33 @@ class Custom_404_Pro_Admin {
 		}
 	}
 
+	public function clear_logs() {
+		$args = array(
+			'numberposts' => -1,
+			'post_type' => 'c4p_log'
+		);
+		$logs = get_posts($args);
+		if(is_array($logs)) {
+			foreach($logs as $log) {
+				wp_delete_post($log->ID, true);
+			}
+		}
+	}
+
 	// Save options for General Settings
 	public function handle_settings_general_form() {
 		if ( isset( $_POST['c4p_log_email'] ) ) {
 			update_option( 'c4p_log_email', true );
 		} else {
 			update_option( 'c4p_log_email', false );
+		}
+		if(isset($_POST['c4p_clear_logs'])) {
+			$this->clear_logs();
+		}
+		if($_POST['c4p_logging_status'] === 'enabled') {
+			update_option( 'c4p_logging_status', 'enabled' );
+		} else {
+			update_option( 'c4p_logging_status', 'disabled' );
 		}
 		wp_redirect( admin_url( 'admin.php?page=c4p-main&tab=settings-general&message=settings_general_form-updated' ) );
 	}
@@ -308,57 +335,57 @@ class Custom_404_Pro_Admin {
 				}
 			}
 			else {
-				if ( !empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-					$ip = $_SERVER['HTTP_CLIENT_IP'];
-				}
-				else if ( !empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+				$logging_status = get_option('c4p_logging_status');
+				if($logging_status == 'enabled') {
+					if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+						$ip = $_SERVER['HTTP_CLIENT_IP'];
+					} else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 						$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+					} else {
+						$ip = $_SERVER['REMOTE_ADDR'];
 					}
-				else {
-					$ip = $_SERVER['REMOTE_ADDR'];
-				}
-				$c4p_log_args = array( 'post_title' => 'Log', 'post_status' => 'publish', 'post_type' => 'c4p_log', 'post_author' => 1 );
-				$c4p_log_id = wp_insert_post( $c4p_log_args );
-				update_post_meta( $c4p_log_id, 'c4p_log_ip', $ip );
-				update_post_meta( $c4p_log_id, 'c4p_log_404_path', $_SERVER['REQUEST_URI'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent', $_SERVER['HTTP_USER_AGENT'] );
+					$c4p_log_args = array('post_title' => 'Log', 'post_status' => 'publish', 'post_type' => 'c4p_log', 'post_author' => 1);
+					$c4p_log_id = wp_insert_post($c4p_log_args);
+					update_post_meta($c4p_log_id, 'c4p_log_ip', $ip);
+					update_post_meta($c4p_log_id, 'c4p_log_404_path', $_SERVER['REQUEST_URI']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent', $_SERVER['HTTP_USER_AGENT']);
 
-				$user_agent_meta = (array)$this->get_user_agent_from_api($_SERVER['HTTP_USER_AGENT']);
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_type', $user_agent_meta['agent_type'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_name', $user_agent_meta['agent_name'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_version', $user_agent_meta['agent_version'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_type', $user_agent_meta['os_type'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_name', $user_agent_meta['os_name'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_version_name', $user_agent_meta['os_versionName'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_version_number', $user_agent_meta['os_versionNumber'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_producer', $user_agent_meta['os_producer'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_os_producer_url', $user_agent_meta['os_producerURL'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_linux_distribution', $user_agent_meta['linux_distribution'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_language', $user_agent_meta['agent_language'] );
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta_agent_language_tag', $user_agent_meta['agent_languageTag'] );
+					$user_agent_meta = (array)$this->get_user_agent_from_api($_SERVER['HTTP_USER_AGENT']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_agent_type', $user_agent_meta['agent_type']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_agent_name', $user_agent_meta['agent_name']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_agent_version', $user_agent_meta['agent_version']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_os_type', $user_agent_meta['os_type']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_os_name', $user_agent_meta['os_name']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_os_version_name', $user_agent_meta['os_versionName']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_os_version_number', $user_agent_meta['os_versionNumber']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_os_producer', $user_agent_meta['os_producer']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_os_producer_url', $user_agent_meta['os_producerURL']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_linux_distribution', $user_agent_meta['linux_distribution']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_agent_language', $user_agent_meta['agent_language']);
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta_agent_language_tag', $user_agent_meta['agent_languageTag']);
 
-				update_post_meta( $c4p_log_id, 'c4p_log_user_agent_meta', maybe_serialize($user_agent_meta) );
-				update_post_meta( $c4p_log_id, 'c4p_log_redirect_to', '' );
-				if ( $is_email_send ) {
-					$log_meta_ip = get_post_meta( $c4p_log_id, 'c4p_log_ip', true );
-					$log_meta_404_path = get_post_meta( $c4p_log_id, 'c4p_log_404_path', true );
-					$log_meta_user_agent = get_post_meta( $c4p_log_id, 'c4p_log_user_agent', true );
-					$log_meta = array(
-						'ip' => $log_meta_ip,
-						'404_path' => $log_meta_404_path,
-						'user_agent' => $log_meta_user_agent
-					);
-					$this->send_404_log_email( $log_meta );
-				}
-				$is_selected_page = get_option( 'c4p_selected_page' );
-				$url = get_option( 'c4p_selected_url' );
-				if ( !empty( $is_selected_page ) ) {
-					$selected_page = maybe_unserialize( get_option( 'c4p_selected_page' ) );
-					wp_redirect( site_url() . '/' . $selected_page->post_name );
-				}
-				else if ( !empty( $url ) ) {
-						wp_redirect( $url );
+					update_post_meta($c4p_log_id, 'c4p_log_user_agent_meta', maybe_serialize($user_agent_meta));
+					update_post_meta($c4p_log_id, 'c4p_log_redirect_to', '');
+					if ($is_email_send) {
+						$log_meta_ip = get_post_meta($c4p_log_id, 'c4p_log_ip', true);
+						$log_meta_404_path = get_post_meta($c4p_log_id, 'c4p_log_404_path', true);
+						$log_meta_user_agent = get_post_meta($c4p_log_id, 'c4p_log_user_agent', true);
+						$log_meta = array(
+							'ip' => $log_meta_ip,
+							'404_path' => $log_meta_404_path,
+							'user_agent' => $log_meta_user_agent
+						);
+						$this->send_404_log_email($log_meta);
 					}
+					$is_selected_page = get_option('c4p_selected_page');
+					$url = get_option('c4p_selected_url');
+					if (!empty($is_selected_page)) {
+						$selected_page = maybe_unserialize(get_option('c4p_selected_page'));
+						wp_redirect(site_url() . '/' . $selected_page->post_name);
+					} else if (!empty($url)) {
+						wp_redirect($url);
+					}
+				}
 			}
 		}
 	}
@@ -387,14 +414,16 @@ class Custom_404_Pro_Admin {
 
 	// Create Filter Dropdown
 	public function create_log_filters() {
-		global $wpdb;
-		$agent_name_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_agent_name"';
-		$agent_name_fields = $wpdb->get_results($agent_name_sql, ARRAY_A);
-		$agent_version_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_agent_version"';
-		$agent_version_fields = $wpdb->get_results($agent_version_sql, ARRAY_A);
-		$os_type_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_os_type"';
-		$os_type_fields = $wpdb->get_results($os_type_sql, ARRAY_A);
-		include 'partials/filters/filter-user-agent.php';
+		global $wpdb, $typenow;
+		if($typenow == 'c4p_log') {
+			$agent_name_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_agent_name"';
+			$agent_name_fields = $wpdb->get_results($agent_name_sql, ARRAY_A);
+			$agent_version_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_agent_version"';
+			$agent_version_fields = $wpdb->get_results($agent_version_sql, ARRAY_A);
+			$os_type_sql = 'SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = "c4p_log_user_agent_meta_os_type"';
+			$os_type_fields = $wpdb->get_results($os_type_sql, ARRAY_A);
+			include 'partials/filters/filter-user-agent.php';
+		}
 	}
 
 	// Get Filter Results
