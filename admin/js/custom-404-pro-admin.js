@@ -43,5 +43,24 @@
                 $('#c4p_page, #c4p_url').hide();
             }
         })
+        $('#clear_logs').click(function() {
+        	var $that = $(this);
+        	$(this).html('Clearing logs...Please wait');
+        	$(this).attr('disabled', true);
+        	$.ajax({
+        		url: ajaxurl,
+        		type: 'POST',
+        		data: {
+        			action: 'c4p_clear_logs'
+        		},
+        		success: function(data) {
+        			if(data == 'done') {
+        				$that.html('Clear Logs');
+        				$that.removeAttr('disabled');
+        				alert('Logs deleted!');
+        			}
+        		}
+        	})
+        });
     })
 })(jQuery);

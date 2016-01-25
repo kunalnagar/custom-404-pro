@@ -20,10 +20,8 @@
 				<tr>
 					<th>Clear Logs</th>
 					<td>
-						<input type="checkbox" id="c4p_clear_logs" name="c4p_clear_logs" <?php echo get_option( 'c4p_clear_logs' ) == true ? 'checked' : '' ?>  />
-						<p class="description">
-							Check this to clear all logs
-						</p>
+						<input type="button" name="clear_logs" id="clear_logs" class="button button-default" value="Clear Logs">
+
 					</td>
 				</tr>
 				<tr>

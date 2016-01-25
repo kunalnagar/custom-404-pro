@@ -185,6 +185,8 @@ class Custom_404_Pro {
 		// Filter Logs using Custom Fields (User Agents etc)
 		$this->loader->add_action('restrict_manage_posts', $plugin_admin, 'create_log_filters');
 		$this->loader->add_filter('pre_get_posts', $plugin_admin, 'get_filter_results');
+
+		$this->loader->add_action('wp_ajax_c4p_clear_logs', $plugin_admin, 'c4p_clear_logs');
 	}
 
 	/**

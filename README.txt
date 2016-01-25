@@ -3,8 +3,8 @@ Contributors: kunalnagar
 Donate link: http://kunalnagar.in/donate/
 Tags: wordpress, 404, 404 error page, 404 link, 404 page, broken link, custom 404, custom 404 error, custom 404 error page, custom 404 page, customize 404, customize 404 error page, customize 404 page, error, error page, missing, page, page not found, page not found error
 Requires at least: 3.0.1
-Tested up to: 4.4
-Stable tag: 1.4.2
+Tested up to: 4.4.1
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

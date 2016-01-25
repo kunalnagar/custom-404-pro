@@ -84,6 +84,24 @@ class Custom_404_Pro_Admin {
 		) );
 	}
 
+	public function c4p_clear_logs() {
+		$args = array(
+			'numberposts' => 500,
+			'post_type'   => 'c4p_log'
+		);
+		$logs = array('abc');
+		while(count($logs) > 0) {
+			$logs = get_posts( $args );
+			if ( is_array( $logs ) ) {
+				foreach ( $logs as $log ) {
+					wp_delete_post( $log->ID, true );
+				}
+			}
+		}
+		echo 'done';
+		die();
+	}
+
 	// Register 404 Logs CPT
 	public function register_logs_cpt() {
 		$labels = array(
