@@ -89,8 +89,8 @@ class Custom_404_Pro_Admin {
 			'numberposts' => 500,
 			'post_type'   => 'c4p_log'
 		);
-		$logs = array('abc');
-		while(count($logs) > 0) {
+		$logs = array( 'abc' );
+		while ( count( $logs ) > 0 ) {
 			$logs = get_posts( $args );
 			if ( is_array( $logs ) ) {
 				foreach ( $logs as $log ) {
@@ -122,7 +122,8 @@ class Custom_404_Pro_Admin {
 		$args   = array(
 			'labels'               => $labels,
 			'description'          => 'A List of 404 Logs',
-			'public'               => 'true',
+			'public'               => 'false',
+			'publicly_queryable'   => 'false',
 			'show_ui'              => 'true',
 			'menu_icon'            => 'dashicons-chart-area',
 			'show_in_menu'         => 'c4p-main',
@@ -285,6 +286,9 @@ class Custom_404_Pro_Admin {
 		if ( isset( $_POST['c4p_clear_logs'] ) ) {
 			$this->clear_logs();
 		}
+		if ( isset( $_POST['c4p_log_type'] ) ) {
+			update_option( 'c4p_log_type', (int) sanitize_text_field( $_POST['c4p_log_type'] ) );
+		}
 		if ( $_POST['c4p_logging_status'] === 'enabled' ) {
 			update_option( 'c4p_logging_status', 'enabled' );
 		} else {
@@ -322,9 +326,27 @@ class Custom_404_Pro_Admin {
 	}
 
 	public function get_user_agent_from_api( $user_agent ) {
-		$url    = 'http://www.useragentstring.com/?uas=' . urlencode( $user_agent ) . '&getJSON=all';
-		$temp   = file_get_contents( $url );
-		$result = json_decode( $temp );
+		$url = 'http://www.useragentstring.com/?uas=' . urlencode( $user_agent ) . '&getJSON=all';
+
+		if ( function_exists( 'curl_version' ) ) {
+			$ch = curl_init();
+			curl_setopt( $ch, CURLOPT_URL, $url );
+			curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 5 );
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+			$contents = curl_exec( $ch );
+			if ( curl_errno( $ch ) ) {
+				$contents = '';
+			} else {
+				curl_close( $ch );
+			}
+			if ( ! is_string( $contents ) || ! strlen( $contents ) ) {
+				$contents = '';
+			}
+			$result = json_decode( $contents );
+		} else {
+			$temp   = @file_get_contents( $url );
+			$result = json_decode( $temp );
+		}
 
 		return $result;
 	}
@@ -359,7 +381,7 @@ class Custom_404_Pro_Admin {
 				$redirect_uri = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_redirect_to', true );
 
 				if ( ! empty( $redirect_uri ) ) {
-					wp_redirect( $redirect_uri );
+					wp_redirect( $redirect_uri, get_option( 'c4p_log_type' ) );
 				} else {
 					$selected_page_option = get_option( 'c4p_selected_page' );
 					$url                  = get_option( 'c4p_selected_url' );
@@ -368,9 +390,9 @@ class Custom_404_Pro_Admin {
 						$selected_page  = maybe_unserialize( $selected_page_option );
 						$translated_url = Custom_404_Pro_Admin::get_translated_url( $selected_page );
 
-						wp_redirect( $translated_url );
+						wp_redirect( $translated_url, get_option( 'c4p_log_type' ) );
 					} else if ( ! empty( $url ) ) {
-						wp_redirect( $url );
+						wp_redirect( $url, get_option( 'c4p_log_type' ) );
 					}
 				}
 			} else {
@@ -428,9 +450,9 @@ class Custom_404_Pro_Admin {
 					$selected_page  = maybe_unserialize( get_option( 'c4p_selected_page' ) );
 					$translated_url = Custom_404_Pro_Admin::get_translated_url( $selected_page );
 
-					wp_redirect( $translated_url );
+					wp_redirect( $translated_url, get_option( 'c4p_log_type' ) );
 				} else if ( ! empty( $url ) ) {
-					wp_redirect( $url );
+					wp_redirect( $url, get_option( 'c4p_log_type' ) );
 				}
 			}
 		}
