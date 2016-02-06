@@ -5,50 +5,61 @@
 
 /* Utils */
 .c4p-center {
-	text-align: center;
+    text-align: center;
 }
+
 .c4p-author-image {
-	height: 10em;
-	margin-top: 1em;
-	margin-left: 1em;
-	margin-right: 2em;
-	/*margin: 2em 1.5em;*/
+    height: 10em;
+    margin-top: 1em;
+    margin-left: 1em;
+    margin-right: 2em;
+    /*margin: 2em 1.5em;*/
 }
+
 .c4p-full-card {
     max-width: none;
 }
+
 .c4p-left {
     float: left;
 }
+
 .c4p-right {
     float: right;
 }
+
 .c4p-clearfix:after {
     content: "";
     display: table;
     clear: both;
 }
+
 /* Notices */
 
 .updated, .error {
     margin: 15px 0 20px !important;
 }
+
 .c4p-update-nag {
     padding: 0px 15px;
     width: 96%;
     margin: 15px 15px 0 2px;
 }
+
 /* Stats Section */
 
 #c4p_stats_table th {
     font-weight: bold;
 }
+
 #c4p_stats_table th.no {
     width: 5% !important;
 }
+
 #c4p_stats_table th.ip {
     width: 10% !important;
 }
+
 /*#c4p_stats_table th.path {
 	width: 25% !important;
 }
@@ -66,4 +77,5 @@
     text-decoration: underline;
     font-weight: bold;
 }
+
 /* End Stats */

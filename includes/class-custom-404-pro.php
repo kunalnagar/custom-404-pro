@@ -35,7 +35,7 @@ class Custom_404_Pro {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Custom_404_Pro_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Custom_404_Pro_Loader $loader Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -44,7 +44,7 @@ class Custom_404_Pro {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_name;
 
@@ -53,7 +53,7 @@ class Custom_404_Pro {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $version    The current version of the plugin.
+	 * @var      string $version The current version of the plugin.
 	 */
 	protected $version;
 
@@ -69,7 +69,7 @@ class Custom_404_Pro {
 	public function __construct() {
 
 		$this->plugin_name = 'custom-404-pro';
-		$this->version = '1.0.0';
+		$this->version     = '1.0.0';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -183,10 +183,10 @@ class Custom_404_Pro {
 		$this->loader->add_filter( 'template_redirect', $plugin_admin, 'custom_404' );
 
 		// Filter Logs using Custom Fields (User Agents etc)
-		$this->loader->add_action('restrict_manage_posts', $plugin_admin, 'create_log_filters');
-		$this->loader->add_filter('pre_get_posts', $plugin_admin, 'get_filter_results');
+		$this->loader->add_action( 'restrict_manage_posts', $plugin_admin, 'create_log_filters' );
+		$this->loader->add_filter( 'pre_get_posts', $plugin_admin, 'get_filter_results' );
 
-		$this->loader->add_action('wp_ajax_c4p_clear_logs', $plugin_admin, 'c4p_clear_logs');
+		$this->loader->add_action( 'wp_ajax_c4p_clear_logs', $plugin_admin, 'c4p_clear_logs' );
 	}
 
 	/**
