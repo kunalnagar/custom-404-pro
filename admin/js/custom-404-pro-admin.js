@@ -90,27 +90,6 @@
             		}
             	});
             }, 2000);
-
-            // var interval = setInterval(function() {
-            // 	$that.parent().parent().find('.description').show();
-            // 	$that.parent().parent().find('.current-logs')
-            // }, 2000);
-            // $(this).html('Clearing logs...Please wait');
-            // $(this).attr('disabled', true);
-            // $.ajax({
-            //     url: ajaxurl,
-            //     type: 'POST',
-            //     data: {
-            //         action: 'c4p_clear_logs'
-            //     },
-            //     success: function (data) {
-            //         if (data == 'done') {
-            //             $that.html('Clear Logs');
-            //             $that.removeAttr('disabled');
-            //             alert('Logs deleted!');
-            //         }
-            //     }
-            // })
         });
     })
 })(jQuery);
