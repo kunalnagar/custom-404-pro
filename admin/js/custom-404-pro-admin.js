@@ -1,7 +1,7 @@
 (function ($) {
     'use strict';
     $(function () {
-        $('#c4p_logs_download_options').change(function () {
+    	$('#c4p_logs_download_options').change(function () {
             var val = $(this).val();
             if (val === '') {
                 $('#c4p_logs_download').attr('disabled', true);
@@ -42,25 +42,75 @@
             } else if (val === '') {
                 $('#c4p_page, #c4p_url').hide();
             }
-        })
+        });
+
+        function countLogs(cb) {
+        	var $that = $(this);
+            $that.parent().parent().find('.clear-logs-description').show();
+            $.ajax({
+            	url: ajaxurl,
+            	type: 'POST',
+            	data: {
+            		action: 'c4p_count_logs'
+            	},
+            	success: function(data) {
+            		console.log(data);
+            		$that.parent().parent().find('.current-logs').html('0');
+            		$that.parent().parent().find('.total-logs').html(data);
+            		cb(data);
+            	}
+            });
+        }
+        
+
+        /**
+         * Clear Logs
+         */
         $('#clear_logs').click(function () {
             var $that = $(this);
-            $(this).html('Clearing logs...Please wait');
-            $(this).attr('disabled', true);
-            $.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'c4p_clear_logs'
-                },
-                success: function (data) {
-                    if (data == 'done') {
-                        $that.html('Clear Logs');
-                        $that.removeAttr('disabled');
-                        alert('Logs deleted!');
-                    }
-                }
-            })
+            $that.parent().parent().find('.clear-logs-description').show();
+            var interval = setInterval(function() {
+            	countLogs(function(data) {
+            		if(data !== 0) {
+            			$that.parent().parent().find('.total-logs').html(data);
+            			$.ajax({
+			                url: ajaxurl,
+			                type: 'POST',
+			                data: {
+			                    action: 'c4p_clear_logs'
+			                },
+			                success: function (data) {
+			                }
+			            });
+            		} else {
+            			clearInterval(interval);
+            			$that.parent().parent().find('.total-logs').html('');
+            			$that.parent().parent().find('.clear-logs-description').hide();
+            			alert('Logs Cleared!');
+            		}
+            	});
+            }, 2000);
+
+            // var interval = setInterval(function() {
+            // 	$that.parent().parent().find('.description').show();
+            // 	$that.parent().parent().find('.current-logs')
+            // }, 2000);
+            // $(this).html('Clearing logs...Please wait');
+            // $(this).attr('disabled', true);
+            // $.ajax({
+            //     url: ajaxurl,
+            //     type: 'POST',
+            //     data: {
+            //         action: 'c4p_clear_logs'
+            //     },
+            //     success: function (data) {
+            //         if (data == 'done') {
+            //             $that.html('Clear Logs');
+            //             $that.removeAttr('disabled');
+            //             alert('Logs deleted!');
+            //         }
+            //     }
+            // })
         });
     })
 })(jQuery);

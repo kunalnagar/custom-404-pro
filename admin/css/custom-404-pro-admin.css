@@ -78,4 +78,8 @@
     font-weight: bold;
 }
 
+.clear-logs-description {
+	display: none;
+}
+
 /* End Stats */

@@ -21,9 +21,10 @@
 			<tr>
 				<th>Clear Logs</th>
 				<td>
-					<input type="button" name="clear_logs" id="clear_logs" class="button button-default"
-					       value="Clear Logs">
-
+					<input type="button" name="clear_logs" id="clear_logs" class="button button-default" value="Clear Logs">
+					<p class="clear-logs-description description">
+						Clearing Logs: <span class="total-logs"></span>
+					</p>
 				</td>
 			</tr>
 			<tr>
@@ -51,6 +52,8 @@
 						<option value="302" <?php echo get_option( 'c4p_log_type' ) == 302 ? 'selected' : '' ?>>302
 						</option>
 						<option value="301" <?php echo get_option( 'c4p_log_type' ) == 301 ? 'selected' : '' ?>>301
+						</option>
+						<option value="404" <?php echo get_option( 'c4p_log_type' ) == 404 ? 'selected' : '' ?>>404
 						</option>
 					</select>
 					<p class="description">

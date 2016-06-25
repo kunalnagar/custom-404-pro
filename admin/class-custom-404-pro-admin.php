@@ -84,6 +84,12 @@ class Custom_404_Pro_Admin {
 		) );
 	}
 
+	public function c4p_count_logs() {
+		$count = wp_count_posts('c4p_log');
+		wp_send_json($count->publish);
+		die();
+	}
+
 	public function c4p_clear_logs() {
 		$args = array(
 			'numberposts' => 500,

@@ -187,6 +187,7 @@ class Custom_404_Pro {
 		$this->loader->add_filter( 'pre_get_posts', $plugin_admin, 'get_filter_results' );
 
 		$this->loader->add_action( 'wp_ajax_c4p_clear_logs', $plugin_admin, 'c4p_clear_logs' );
+		$this->loader->add_action( 'wp_ajax_c4p_count_logs', $plugin_admin, 'c4p_count_logs' );
 	}
 
 	/**
