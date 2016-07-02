@@ -92,7 +92,7 @@ class Custom_404_Pro_Admin {
 
 	public function c4p_clear_logs() {
 		$args = array(
-			'numberposts' => 500,
+			'numberposts' => 100,
 			'post_type'   => 'c4p_log'
 		);
 		$logs = array( 'abc' );
