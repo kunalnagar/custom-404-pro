@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: kunalnagar
-Donate link: http://kunalnagar.in/donate/
+Donate link: https://www.paypal.me/kunalnagar/10
 Tags: wordpress, 404, 404 error page, 404 link, 404 page, broken link, custom 404, custom 404 error, custom 404 error page, custom 404 page, customize 404, customize 404 error page, customize 404 page, error, error page, missing, page, page not found, page not found error
 Requires at least: 3.0.1
-Tested up to: 4.5.3
-Stable tag: 2.0.1
+Tested up to: 4.6
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,9 @@ Allows users to replace the default 404 page with a custom page from the Pages s
 3. Global Settings
 
 == Changelog ==
+
+= 2.0.2 =
+* Fixed Donate Links
 
 = 2.0.1 =
 * Small bugfix while clearing logs

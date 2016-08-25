@@ -42,7 +42,7 @@ Please feel free to star on Github or [leave a rating](https://wordpress.org/plu
 
 ### Donate
 
-Like the plugin? Show your support by donating [here](http://kunalnagar.in/donate) (PayPal)
+Like the plugin? Show your support by donating [here](https://www.paypal.me/kunalnagar/10) (PayPal)
 
 ### Changelog
 
