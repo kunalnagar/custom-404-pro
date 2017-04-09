@@ -144,7 +144,7 @@ class Custom_404_Pro_Admin {
 
 	public function init_options() {
 		if ( get_option( 'c4p_logging_status' ) == '' || get_option( 'c4p_logging_status' ) == null ) {
-			update_option( 'c4p_logging_status', 'enabled' );
+			update_option( 'c4p_logging_status', 'disabled' );
 		}
 	}
 
