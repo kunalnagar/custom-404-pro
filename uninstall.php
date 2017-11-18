@@ -29,3 +29,27 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+$args = array (
+    'post_type' => 'c4p_log',
+    'nopaging' => true
+);
+
+$query = new WP_Query ($args);
+
+while ($query->have_posts ()) {
+    $query->the_post ();
+    $id = get_the_ID ();
+    wp_delete_post ($id, true);
+}
+
+wp_reset_postdata();
+
+delete_option('c4p_log_email');
+delete_option('c4p_log_type');
+delete_option('c4p_logging_status');
+delete_option('c4p_mode');
+delete_option('c4p_selected_page');
+delete_option('c4p_selected_url');
+
+unregister_post_type('c4p_log');

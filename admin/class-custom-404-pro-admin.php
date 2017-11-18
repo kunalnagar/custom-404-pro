@@ -59,7 +59,10 @@ class Custom_404_Pro_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/custom-404-pro-admin.css', array(), $this->version, 'all' );
+		$request = $_REQUEST['page'];
+		if($request === 'c4p-more-info' || $request === 'c4p-main') {
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/custom-404-pro-admin.css', array(), $this->version, 'all' );
+		}
 	}
 
 	/**
@@ -68,7 +71,10 @@ class Custom_404_Pro_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/custom-404-pro-admin.js', array( 'jquery' ), $this->version, false );
+		$request = $_REQUEST['page'];
+		if($request === 'c4p-more-info' || $request === 'c4p-main') {
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/custom-404-pro-admin.js', array( 'jquery' ), $this->version, false );
+		}
 	}
 
 	// Create Plugin Admin Menu
@@ -306,10 +312,21 @@ class Custom_404_Pro_Admin {
 	// Create the 404 Log Email to be sent
 	public function send_404_log_email( $log_meta ) {
 		$admin_email = get_option( 'admin_email' );
+		if(is_multisite()) {
+			global $blog_id;
+			$current_blog_details = get_blog_details( array( 'blog_id' => $blog_id ) );
+			$current_site_name = $current_blog_details->blogname;
+		} else {
+			$current_site_name = get_bloginfo('name');
+		}
 		$headers[]   = 'From: Site Admin <' . $admin_email . '>' . "\r\n";
 		$headers[]   = 'Content-Type: text/html; charset=UTF-8';
 		$message     = '<p>Here are the 404 Log Details:</p>';
 		$message .= '<table>';
+		$message .= '<tr>';
+		$message .= '<th>Site</th>';
+		$message .= '<td>' . $current_site_name . '</td>';
+		$message .= '</tr>';
 		$message .= '<tr>';
 		$message .= '<th>User IP</th>';
 		$message .= '<td>' . $log_meta['ip'] . '</td>';
