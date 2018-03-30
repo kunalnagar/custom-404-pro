@@ -3,8 +3,8 @@ Contributors: kunalnagar
 Donate link: https://www.paypal.me/kunalnagar/10
 Tags: wordpress, 404, 404 error page, 404 link, 404 page, broken link, custom 404, custom 404 error, custom 404 error page, custom 404 page, customize 404, customize 404 error page, customize 404 page, error, error page, missing, page, page not found, page not found error
 Requires at least: 3.0.1
-Tested up to: 4.9
-Stable tag: 2.1.0
+Tested up to: 4.9.4
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,6 +46,9 @@ Allows users to replace the default 404 page with a custom page from the Pages s
 3. Global Settings
 
 == Changelog ==
+
+= 2.1.1 =
+* Add Referer so users know where the 404 came from
 
 = 2.1.0 =
 * Cleanup on uninstall

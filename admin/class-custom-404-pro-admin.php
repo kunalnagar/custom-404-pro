@@ -178,6 +178,7 @@ class Custom_404_Pro_Admin {
 		$new_columns['cb']          = '<input type="checkbox" />';
 		$new_columns['ip']          = 'User IP';
 		$new_columns['404_path']    = '404 Path';
+		$new_columns['referer']  	= 'Referer';
 		$new_columns['user_agent']  = 'User Agent';
 		$new_columns['redirect_to'] = 'Redirect';
 		$new_columns['date']        = 'Date';
@@ -189,6 +190,7 @@ class Custom_404_Pro_Admin {
 	public function add_sorting_to_admin_table_columns( $sortable_columns ) {
 		$sortable_columns['ip']          = 'c4p_log_ip';
 		$sortable_columns['404_path']    = 'c4p_log_404_path';
+		$sortable_columns['referer']  	 = 'c4p_log_referer';
 		$sortable_columns['user_agent']  = 'c4p_log_user_agent';
 		$sortable_columns['redirect_to'] = 'c4p_log_redirect_to';
 
@@ -209,6 +211,11 @@ class Custom_404_Pro_Admin {
 				$path = get_post_meta( $id, 'c4p_log_404_path', true );
 				echo '<a href="' . $path . '" target="blank">' . $path . '</a>';;
 				break;
+
+			case 'referer':
+				$referer = get_post_meta( $id, 'c4p_log_referer', true );
+				echo '<a href="' . $referer . '" target="blank">' . $referer . '</a>';;
+				break;				
 
 			case 'user_agent':
 				$user_agent = get_post_meta( $id, 'c4p_log_user_agent', true );
@@ -336,6 +343,10 @@ class Custom_404_Pro_Admin {
 		$message .= '<td>' . $log_meta['404_path'] . '</td>';
 		$message .= '</tr>';
 		$message .= '<tr>';
+		$message .= '<th>Referer</th>';
+		$message .= '<td>' . $log_meta['referer'] . '</td>';
+		$message .= '</tr>';
+		$message .= '<tr>';
 		$message .= '<th>User Agent</th>';
 		$message .= '<td>' . $log_meta['user_agent'] . '</td>';
 		$message .= '</tr>';
@@ -392,10 +403,12 @@ class Custom_404_Pro_Admin {
 				if ( $is_email_send ) {
 					$log_meta_ip         = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_ip', true );
 					$log_meta_404_path   = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_404_path', true );
+					$log_meta_referer 	 = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_referer', true );
 					$log_meta_user_agent = get_post_meta( $c4p_log_data[0]->ID, 'c4p_log_user_agent', true );
 					$log_meta            = array(
 						'ip'         => $log_meta_ip,
 						'404_path'   => $log_meta_404_path,
+						'referer' 	 => $log_meta_referer,
 						'user_agent' => $log_meta_user_agent
 					);
 					$this->send_404_log_email( $log_meta );
@@ -437,6 +450,7 @@ class Custom_404_Pro_Admin {
 					$c4p_log_id   = wp_insert_post( $c4p_log_args );
 					update_post_meta( $c4p_log_id, 'c4p_log_ip', $ip );
 					update_post_meta( $c4p_log_id, 'c4p_log_404_path', $_SERVER['REQUEST_URI'] );
+					update_post_meta( $c4p_log_id, 'c4p_log_referer', $_SERVER['HTTP_REFERER'] );
 					update_post_meta( $c4p_log_id, 'c4p_log_user_agent', $_SERVER['HTTP_USER_AGENT'] );
 
 					$user_agent_meta = (array) $this->get_user_agent_from_api( $_SERVER['HTTP_USER_AGENT'] );
@@ -458,10 +472,12 @@ class Custom_404_Pro_Admin {
 					if ( $is_email_send ) {
 						$log_meta_ip         = get_post_meta( $c4p_log_id, 'c4p_log_ip', true );
 						$log_meta_404_path   = get_post_meta( $c4p_log_id, 'c4p_log_404_path', true );
+						$log_meta_referer    = get_post_meta( $c4p_log_id, 'c4p_log_referer', true );
 						$log_meta_user_agent = get_post_meta( $c4p_log_id, 'c4p_log_user_agent', true );
 						$log_meta            = array(
 							'ip'         => $log_meta_ip,
 							'404_path'   => $log_meta_404_path,
+							'referer' 	 => $log_meta_referer,
 							'user_agent' => $log_meta_user_agent
 						);
 						$this->send_404_log_email( $log_meta );
