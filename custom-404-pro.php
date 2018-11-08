@@ -4,58 +4,40 @@
 Plugin Name: Custom 404 Pro
 Plugin URI: https://wordpress.org/plugins/custom-404-pro/
 Description: Override the default 404 page with any page from the Admin Panel.
-Version: 2.1.3
+Version: 3.0.0
 Author: Kunal Nagar
 Author URI: http://kunalnagar.in
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
 	die;
 }
 
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-custom-404-pro-activator.php
- */
 function activate_custom_404_pro() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-custom-404-pro-activator.php';
-	Custom_404_Pro_Activator::activate();
+	require_once plugin_dir_path(__FILE__) . 'includes/ActivateClass.php';
+	ActivateClass::activate();
 }
 
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-custom-404-pro-deactivator.php
- */
 function deactivate_custom_404_pro() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-custom-404-pro-deactivator.php';
-	Custom_404_Pro_Deactivator::deactivate();
+	require_once plugin_dir_path(__FILE__) . 'includes/DeactivateClass.php';
+	DeactivateClass::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_custom_404_pro' );
-register_deactivation_hook( __FILE__, 'deactivate_custom_404_pro' );
+function uninstall_custom_404_pro() {
+	require_once plugin_dir_path(__FILE__) . 'includes/UninstallClass.php';
+	UninstallClass::uninstall();
+}
 
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require plugin_dir_path( __FILE__ ) . 'includes/class-custom-404-pro.php';
+register_activation_hook(__FILE__, 'activate_custom_404_pro');
+register_deactivation_hook(__FILE__, 'deactivate_custom_404_pro');
+register_uninstall_hook(__FILE__, 'uninstall_custom_404_pro');
 
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
- */
+require plugin_dir_path(__FILE__) . 'includes/PluginClass.php';
+
 function run_custom_404_pro() {
-
-	$plugin = new Custom_404_Pro();
-	$plugin->run();
+	new PluginClass();
 }
 
 run_custom_404_pro();

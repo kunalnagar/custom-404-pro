@@ -3,6 +3,11 @@
  * included in this file.
  */
 
+#c4p_page,
+#c4p_url {
+	display: none;
+}
+
 /* Utils */
 .c4p-center {
     text-align: center;
@@ -46,7 +51,7 @@
     margin: 15px 15px 0 2px;
 }
 
-/* Stats Section */
+ Stats Section 
 
 #c4p_stats_table th {
     font-weight: bold;

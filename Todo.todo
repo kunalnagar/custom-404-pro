@@ -1,0 +1,2 @@
+	☐	when activating plugin, add all plugin options in table and try to set defaults where necessary
+	☐	last left: trying to insert data in table if not present during activation
