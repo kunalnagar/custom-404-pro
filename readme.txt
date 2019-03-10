@@ -3,8 +3,8 @@ Contributors: kunalnagar
 Donate link: https://www.paypal.me/kunalnagar/10
 Tags: wordpress, 404, 404 error page, 404 link, 404 page, broken link, custom 404, custom 404 error, custom 404 error page, custom 404 page, customize 404, customize 404 error page, customize 404 page, error, error page, missing, page, page not found, page not found error
 Requires at least: 3.0.1
-Tested up to: 4.9.8
-Stable tag: 2.1.3
+Tested up to: 5.1
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,11 @@ Override the default 404 page with any page from the Admin Panel or a Custom URL
 
 == Description ==
 
-**IMPORTANT**: Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issues). I will not be using the WordPress.org support area.
+**UPDATE**: Version 3.0.0 of the plugin is completely written from the ground-up and has a completely new logging mechanism. If your old logs are important, please do not upgrade as of now. If you are facing performance/SEO issues and your old logs don't matter as much, you should be the first ones to upgrade.
 
 Allows users to replace the default 404 page with a custom page from the Pages section in the Admin Panel. Or you can specify a complete URL to redirect on 404.
+
+Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issues). I will not be using the WordPress.org support area.
 
 = Features =
 
@@ -22,10 +24,6 @@ Allows users to replace the default 404 page with a custom page from the Pages s
 * Record 404 Page Data
 * Custom Page Redirect
 * Custom URL Redirect
-* Record Visitor Keywords that led to 404
-* Custom Log Filters
-* Clean code
-* Awesome support
 
 = How does it work? =
 
@@ -46,6 +44,9 @@ Allows users to replace the default 404 page with a custom page from the Pages s
 3. Global Settings
 
 == Changelog ==
+
+= 3.0.0 =
+* Complete re-write from the ground-up with a new logging mechanism and better base for future development
 
 = 2.1.1 =
 * Add Referer so users know where the 404 came from
