@@ -6,15 +6,14 @@ $result = $wpdb->get_results($sql);
 // print_r($result);
 // echo "</pre>";
 $row_send_email = $result[3];
-$row_clear_logs = $result[4];
-$row_logging_enabled = $result[5];
-$row_redirect_error_code = $result[6];
+$row_logging_enabled = $result[4];
+$row_redirect_error_code = $result[5];
 ?>
 <div class="wrap">
 	<?php if($_GET["message"] === "updated"): ?>
 	<div class="updated">
 		<p>Saved!</p>
-	</div>	
+	</div>
 	<?php endif; ?>
 	<form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
 		<table class="form-table">
@@ -28,7 +27,7 @@ $row_redirect_error_code = $result[6];
 					</p>
 				</td>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<th>Clear Logs</th>
 				<td>
 					<input type="button" name="clear_logs" id="clear_logs" class="button button-default" value="Clear Logs">
@@ -41,7 +40,7 @@ $row_redirect_error_code = $result[6];
 						<b>Note:</b> This will clear ALL logs created by the plugin. It may take a while depending on the number of logs in the database.
 					</p>
 				</td>
-			</tr>
+			</tr> -->
 			<tr>
 				<th>Logging Status</th>
 				<td>
@@ -53,6 +52,9 @@ $row_redirect_error_code = $result[6];
 							Disabled
 						</option>
 					</select>
+					<p class="description">
+						If logging status is <b>Enabled</b>, the plugin will capture logs. If the logging status is <b>Disabled</b>, the plugin will stop capturing logs. Please note that your previous logs will <b>NOT</b> be deleted. You may do so from the <b>Logs</b> page.
+					</p>
 				</td>
 			</tr>
 			<tr>
@@ -69,7 +71,7 @@ $row_redirect_error_code = $result[6];
 						</option>
 					</select>
 					<p class="description">
-						When a 404 occurs, the redirect will be performed using this status code.
+						When a 404 occurs and a redirect mode has been set, it will be performed using this status code.
 					</p>
 				</td>
 			</tr>

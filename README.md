@@ -4,16 +4,14 @@
 
 Override the default 404 page with **any page** from the Admin Panel or a **Custom URL**.
 
+**UPDATE**: Version 3.0.0 of the plugin is completely written from the ground-up and has a completely new logging mechanism. If your old logs are important, please do not upgrade as of now. If you are facing performance/SEO issues and your old logs don't matter as much, you should be the first ones to upgrade.
+
 ### Features
 
 * Full 404 Page Control
 * Record 404 Page Data
 * Custom Page Redirect
 * Custom URL Redirect
-* Record Visitor Keywords that led to 404
-* Custom Log Filters
-* Clean code
-* Awesome support
 
 ### Installation
 
@@ -47,7 +45,3 @@ Like the plugin? Show your support by donating [here](https://www.paypal.me/kuna
 ### Changelog
 
 You can find the full changelog [here](https://wordpress.org/plugins/custom-404-pro/changelog/)
-
-### About Me
-
-My name is Kunal Nagar and I am a Freelance Web Developer from Jaipur, India. I build high quality websites using Core PHP, WordPress, Laravel etc. I also work on Hybrid Mobile Applications using Ionic. You can find out more about the services I provide on my [website](http://kunalnagar.in).

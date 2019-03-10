@@ -47,7 +47,7 @@ class LogsClass extends WP_List_Table {
     		$temp["created"] = $sql_data[$i]->created;
     		array_push($data, $temp);
     	}
-    	$per_page = 3;
+    	$per_page = 10;
     	$current_page = $this->get_pagenum();
     	$total_items = count($data);
     	$this->set_pagination_args(array(
@@ -112,9 +112,12 @@ class LogsClass extends WP_List_Table {
     }
 
     function column_ip($item) {
-        //Return the title contents
-        return sprintf('%1$s',
-            /*$1%s*/ $item['ip']
+        $actions = array(
+            'delete' => sprintf('<a href="?page=%s&action=%s&path=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
+        );
+        return sprintf('%1$s %2$s',
+            /*$1%s*/ $item['ip'],
+            /*$2%s*/ $this->row_actions($actions)
         );
     }
 

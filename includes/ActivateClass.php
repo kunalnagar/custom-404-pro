@@ -37,14 +37,12 @@ class ActivateClass {
 
 	function initialize_options() {
 		global $wpdb;
-		$charset_collate = $wpdb->get_charset_collate();
 		$table_options = $wpdb->prefix . "custom_404_pro_options";
 		$sql = "INSERT INTO " . $table_options . " (name, value) VALUES ";
 		$sql .= "('mode', NULL),";
 		$sql .= "('mode_page', NULL),";
 		$sql .= "('mode_url', NULL),";
 		$sql .= "('send_email', FALSE),";
-		$sql .= "('clear_logs', NULL),";
 		$sql .= "('logging_enabled', FALSE),";
 		$sql .= "('redirect_error_code', 302)";
 		$wpdb->query($sql);
