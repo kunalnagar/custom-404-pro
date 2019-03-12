@@ -215,20 +215,21 @@ class AdminClass {
 		wp_redirect(admin_url("admin.php?page=c4p-reset&message=updated"));
 	}
 
-    // public function custom_404_pro_upgrader($upgrader_object, $options) {
-    //     global $wpdb;
-    //     $table_options = $wpdb->prefix . "custom_404_pro_options";
-    //     $is_table_options_query = "SHOW TABLES LIKE '" . $table_options . "';";
-    //     $is_table_options = $wpdb->query($is_table_options_query);
-    //     if(empty($is_table_options)) {
-    //         if($options["action"] === "update" && $options["type"] === "plugin") {
-    //             $mode = get_option("c4p_mode");
-    //             $page = get_option("c4p_selected_page");
-    //             $url = get_option("c4p_selected_url");
-    //             self::update_mode($mode, $page, $url);
-    //         }
-    //     }
-    // }
+    public function custom_404_pro_upgrader($upgrader_object, $options) {
+        global $wpdb;
+        if($options["action"] === "update" && $options["type"] === "plugin") {
+            if(!empty(get_option('c4p_mode'))) {
+                $mode = get_option("c4p_mode");
+                $page = get_option("c4p_selected_page");
+                $url = get_option("c4p_selected_url");
+                self::update_mode($mode, $page, $url);
+                delete_option("c4p_mode");
+                delete_option("c4p_selected_page");
+                delete_option("c4p_selected_url");
+            }
+        }
+        // TODO Migrate old logs
+    }
 }
 
 
