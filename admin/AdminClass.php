@@ -49,29 +49,10 @@ class AdminClass {
 		global $wpdb;
 		// print_r($_POST);
 		// die();
-		$mode = "";
-		$mode_page = "";
-		$mode_url = "";
-		$table_options = $wpdb->prefix . "custom_404_pro_options";
-		if($_POST["mode"] === "page") {
-			$mode = "'page'";
-			$mode_page = $_POST["mode_page"];
-			$sql_mode_page = "UPDATE " . $table_options . " SET value = '" . $mode_page . "' WHERE name='mode_page'";
-			$sql_mode_url = "UPDATE " . $table_options . " SET value = 'NULL' WHERE name='mode_url'";
-		} else if($_POST["mode"] === "url") {
-			$mode = "'url'";
-			$mode_url = $_POST["mode_url"];
-			$sql_mode_url = "UPDATE " . $table_options . " SET value = '" . $mode_url . "' WHERE name='mode_url'";
-			$sql_mode_page = "UPDATE " . $table_options . " SET value = 'NULL' WHERE name='mode_page'";
-		} else {
-			$mode = "NULL";
-			$sql_mode_page = "UPDATE " . $table_options . " SET value='NULL' WHERE name='mode_page'";
-			$sql_mode_url = "UPDATE " . $table_options . " SET value='NULL' where name='mode_url'";
-		}
-		$sql_mode = "UPDATE " . $table_options . " SET value = " . $mode . " WHERE name='mode'";
-		$wpdb->query($sql_mode);
-		$wpdb->query($sql_mode_page);
-		$wpdb->query($sql_mode_url);
+		$mode = $_POST["mode"];
+		$page = $_POST["mode_page"];
+		$url = $_POST["mode_url"];
+        self::update_mode($mode, $page, $url);
 		wp_redirect(admin_url("admin.php?page=c4p-settings&tab=global-redirect&message=updated"));
 	}
 
@@ -190,14 +171,64 @@ class AdminClass {
 		);
 	}
 
+    private function update_mode($mode, $page, $url) {
+        global $wpdb;
+        $table_options = $wpdb->prefix . "custom_404_pro_options";
+        $sql_mode = "";
+        $sql_mode_page = "";
+        $sql_mode_url = "";
+        $mode_val = "";
+        switch($mode) {
+            case "page":
+                $mode_val = "page";
+                $sql_mode_page = "UPDATE " . $table_options . " SET value = '" . $page . "' WHERE name='mode_page'";
+                $sql_mode_url = "UPDATE " . $table_options . " SET value = 'NULL' WHERE name='mode_url'";
+                break;
+            case "url":
+                $mode_val = "url";
+                $sql_mode_url = "UPDATE " . $table_options . " SET value = '" . $url . "' WHERE name='mode_url'";
+                $sql_mode_page = "UPDATE " . $table_options . " SET value = 'NULL' WHERE name='mode_page'";
+                break;
+            case "":
+                $mode_val = "NULL";
+                $sql_mode_page = "UPDATE " . $table_options . " SET value='NULL' WHERE name='mode_page'";
+                $sql_mode_url = "UPDATE " . $table_options . " SET value='NULL' where name='mode_url'";
+                break;
+        }
+        $sql_mode = "UPDATE " . $table_options . " SET value = " . $mode_val . " WHERE name='mode'";
+        $wpdb->query($sql_mode);
+        $wpdb->query($sql_mode_page);
+        $wpdb->query($sql_mode_url);
+    }
+
 	public function form_reset() {
 		global $wpdb;
-		$sql1 = "DELETE FROM wp_posts WHERE post_type='c4p-log'";
-		$sql2 = "DELETE FROM wp_postmeta WHERE post_id NOT IN (SELECT id FROM wp_posts)";
-		$sql3 = "DELETE FROM wp_term_relationships WHERE object_id NOT IN (SELECT id FROM wp_posts)";
+        $table_wp_posts = $wpdb->prefix . "wp_posts";
+        $table_wp_postmeta = $wpdb->prefix . "wp_postmeta";
+        $table_wp_term_relationships = $wpdb->prefix . "wp_term_relationships";
+		$sql1 = "DELETE FROM " . $table_wp_posts . " WHERE post_type='c4p-log'";
+		$sql2 = "DELETE FROM " . $table_wp_postmeta . " WHERE post_id NOT IN (SELECT id FROM wp_posts)";
+		$sql3 = "DELETE FROM " . $table_wp_term_relationships . " WHERE object_id NOT IN (SELECT id FROM wp_posts)";
 		$wpdb->query($sql1);
 		$wpdb->query($sql2);
 		$wpdb->query($sql3);
 		wp_redirect(admin_url("admin.php?page=c4p-reset&message=updated"));
 	}
+
+    // public function custom_404_pro_upgrader($upgrader_object, $options) {
+    //     global $wpdb;
+    //     $table_options = $wpdb->prefix . "custom_404_pro_options";
+    //     $is_table_options_query = "SHOW TABLES LIKE '" . $table_options . "';";
+    //     $is_table_options = $wpdb->query($is_table_options_query);
+    //     if(empty($is_table_options)) {
+    //         if($options["action"] === "update" && $options["type"] === "plugin") {
+    //             $mode = get_option("c4p_mode");
+    //             $page = get_option("c4p_selected_page");
+    //             $url = get_option("c4p_selected_url");
+    //             self::update_mode($mode, $page, $url);
+    //         }
+    //     }
+    // }
 }
+
+

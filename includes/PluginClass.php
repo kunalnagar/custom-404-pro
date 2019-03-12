@@ -25,6 +25,7 @@ class PluginClass {
 		add_action('admin_post_form-settings-general', array($this->plugin_admin, 'form_settings_general'));
 		add_action('admin_post_form-reset', array($this->plugin_admin, 'form_reset'));
 		add_action('template_redirect', array($this->plugin_admin, 'custom_404_pro_redirect'));
+        // add_action('upgrader_process_complete', array($this->plugin_admin, 'custom_404_pro_upgrader'));
 	}
 
 	private function define_public_hooks() {

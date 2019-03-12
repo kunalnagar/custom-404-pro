@@ -3,8 +3,17 @@
 class ActivateClass {
 
 	public function activate() {
-		self::create_tables();
-		self::initialize_options();
+        global $wpdb;
+        $table_options = $wpdb->prefix . "custom_404_pro_options";
+        $table_logs = $wpdb->prefix . "custom_404_pro_logs";
+        $is_table_options_query = "SHOW TABLES LIKE '" . $table_options . "';";
+        $is_table_logs_query = "SHOW TABLES LIKE '" . $table_options . "';";
+        $is_table_options = $wpdb->query($is_table_options_query);
+        $is_table_logs = $wpdb->query($is_table_logs_query);
+        if(empty($is_table_options) && empty($is_table_logs)) {
+            self::create_tables();
+            self::initialize_options();
+        }
 	}
 
 	function create_tables() {
