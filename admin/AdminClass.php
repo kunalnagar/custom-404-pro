@@ -195,7 +195,7 @@ class AdminClass {
                 $sql_mode_url = "UPDATE " . $table_options . " SET value='NULL' where name='mode_url'";
                 break;
         }
-        $sql_mode = "UPDATE " . $table_options . " SET value = " . $mode_val . " WHERE name='mode'";
+        $sql_mode = "UPDATE " . $table_options . " SET value = '" . $mode_val . "' WHERE name='mode'";
         $wpdb->query($sql_mode);
         $wpdb->query($sql_mode_page);
         $wpdb->query($sql_mode_url);
