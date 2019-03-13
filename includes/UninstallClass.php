@@ -1,6 +1,6 @@
 <?php
 
-class DeactivateClass {
+class UninstallClass {
 
 	public static function uninstall() {
 		global $wpdb;
