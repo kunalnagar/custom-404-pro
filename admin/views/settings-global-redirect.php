@@ -18,11 +18,13 @@ if($mode === "page") {
 }
 ?>
 <div class="wrap">
-	<?php if($_GET["message"] === "updated"): ?>
-	<div class="updated">
-		<p>Saved!</p>
-	</div>	
-	<?php endif; ?>
+    <?php if(array_key_exists("message", $_GET)): ?>
+    	<?php if($_GET["message"] === "updated"): ?>
+    	<div class="updated">
+    		<p>Saved!</p>
+    	</div>
+    	<?php endif; ?>
+    <?php endif; ?>
 	<form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
 		<table class="form-table">
 			<tbody>

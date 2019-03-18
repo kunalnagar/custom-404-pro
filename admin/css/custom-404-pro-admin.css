@@ -51,40 +51,11 @@
     margin: 15px 15px 0 2px;
 }
 
- Stats Section 
-
-#c4p_stats_table th {
-    font-weight: bold;
-}
-
-#c4p_stats_table th.no {
-    width: 5% !important;
-}
-
-#c4p_stats_table th.ip {
-    width: 10% !important;
-}
-
-/*#c4p_stats_table th.path {
-	width: 25% !important;
-}
-#c4p_stats_table th.referer {
-	width: 20% !important;
-}
-#c4p_stats_table th.time {
-	width: 15% !important;
-}
-#c4p_stats_table th.user-agent {
-	width: 10% !important;
-}*/
-
-#c4p_stats_table td span.user-agent {
-    text-decoration: underline;
-    font-weight: bold;
-}
-
 .clear-logs-description {
 	display: none;
 }
 
-/* End Stats */
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}

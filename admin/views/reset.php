@@ -1,10 +1,12 @@
 <div class="wrap">
 	<h2>Reset (Important, read carefully)</h2>
-	<?php if($_GET["message"] === "updated"): ?>
-	<div class="updated">
-		<p>Old logs (prior to version 3.0.0) deleted successfully!</p>
-	</div>
-	<?php endif; ?>
+	<?php if(array_key_exists("message", $_GET)): ?>
+        <?php if($_GET["message"] === "updated"): ?>
+    	<div class="updated">
+    		<p>Old logs (prior to version 3.0.0) deleted successfully!</p>
+    	</div>
+    	<?php endif; ?>
+    <?php endif; ?>
 	<br /><form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
 		<p class="description">
 			Version 3.0.0 of the plugin has been re-written from the ground up and fixes a ton of bugs that users have been facing. These include performance and SEO issues related to the logs being created. We have also moved to a new logging model. <br /><br />

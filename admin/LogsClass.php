@@ -21,19 +21,23 @@ class LogsClass extends WP_List_Table {
     	$hidden = array();
     	$sortable = self::get_sortable_columns();
     	$this->_column_headers = array($columns, $hidden, $sortable);
-    	$table_logs = $wpdb->prefix . "custom_404_pro_logs";
-    	$sql = "SELECT * FROM " . $table_logs;
+        $helpers = Helpers::singleton();
+    	$sql = "SELECT * FROM " . $helpers->table_logs;
 
-    	$order_by = $_GET["orderby"];
-    	$order = strtoupper($_GET["order"]);
-    	if(!empty($order_by) && !empty($order)) {
-    		$sql = self::manage_sorting($order_by, $order, $sql);
-    	}
+        if(array_key_exists("orderby", $_GET)) {
+            $order_by = $_GET["orderby"];
+            $order = strtoupper($_GET["order"]);
+            if(!empty($order_by) && !empty($order)) {
+                $sql = self::manage_sorting($order_by, $order, $sql);
+            }
+        }
 
-    	$search = $_GET["s"];
-    	if(!empty($search)) {
-    		$sql = self::manage_search($search, $sql);
-    	}
+        if(array_key_exists("s", $_GET)) {
+        	$search = $_GET["s"];
+        	if(!empty($search)) {
+        		$sql = self::manage_search($search, $sql);
+        	}
+        }
 
     	$sql_data = $wpdb->get_results($sql);
     	$data = array();

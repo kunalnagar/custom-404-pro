@@ -1,20 +1,26 @@
 <?php
 global $wpdb;
-$sql = "SELECT * FROM " . $wpdb->prefix . "custom_404_pro_options";
+$helpers = Helpers::singleton();
+$sql = "SELECT * FROM " . $helpers->table_options;
 $result = $wpdb->get_results($sql);
-// echo "<pre>";
-// print_r($result);
-// echo "</pre>";
 $row_send_email = $result[3];
 $row_logging_enabled = $result[4];
 $row_redirect_error_code = $result[5];
+if(array_key_exists(6, $result)) {
+    $row_log_ip = $result[6];
+} else {
+    $row_log_ip = new stdClass();
+    $row_log_ip->value = true;
+}
 ?>
 <div class="wrap">
-	<?php if($_GET["message"] === "updated"): ?>
-	<div class="updated">
-		<p>Saved!</p>
-	</div>
-	<?php endif; ?>
+    <?php if(array_key_exists("message", $_GET)): ?>
+    	<?php if($_GET["message"] === "updated"): ?>
+    	<div class="updated">
+    		<p>Saved!</p>
+    	</div>
+    	<?php endif; ?>
+    <?php endif; ?>
 	<form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
 		<table class="form-table">
 			<tbody>
@@ -23,24 +29,10 @@ $row_redirect_error_code = $result[5];
 				<td>
 					<input type="checkbox" id="c4p_log_email" name="send_email" <?php echo $row_send_email->value == true ? "checked" : "" ?> />
 					<p class="description">
-						If you check this, an email will be sent on every error log on the admin's email account. If you're just starting out, it is recommended you uncheck this. Enable it based on your error volume to avoid flooding of your email inbox.
+						If you check this, <b>and logging is enabled</b>, an email will be sent on every error log on the admin's email account. If you're just starting out, it is recommended you uncheck this. Enable it based on your error volume to avoid flooding of your email inbox.
 					</p>
 				</td>
 			</tr>
-			<!-- <tr>
-				<th>Clear Logs</th>
-				<td>
-					<input type="button" name="clear_logs" id="clear_logs" class="button button-default" value="Clear Logs">
-					<?php if($row_clear_logs->created !== $row_clear_logs->updated): ?>
-					<p class="description description--last-cleared">
-						Last cleared: <?php echo $row_clear_logs->updated; ?>
-					</p>
-					<?php endif; ?>
-					<p class="description">
-						<b>Note:</b> This will clear ALL logs created by the plugin. It may take a while depending on the number of logs in the database.
-					</p>
-				</td>
-			</tr> -->
 			<tr>
 				<th>Logging Status</th>
 				<td>
@@ -57,6 +49,15 @@ $row_redirect_error_code = $result[5];
 					</p>
 				</td>
 			</tr>
+            <tr>
+                <th>Log IP</th>
+                <td>
+                    <input type="checkbox" id="c4p_log_ip" name="log_ip" <?php echo $row_log_ip->value == true ? "checked" : "" ?> />
+                    <p class="description">
+                        By default, the IP address of the 404 user agent is captured. If you would like to disable this for privacy reasons, please uncheck this box. When no IP is recorded, it will appear as <b>N/A</b> in the Logs Table as well as the email.
+                    </p>
+                </td>
+            </tr>
 			<tr>
 				<th>Redirect Code</th>
 				<td>

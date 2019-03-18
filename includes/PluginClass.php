@@ -3,18 +3,14 @@
 class PluginClass {
 
 	public function __construct() {
-		$this->plugin_admin;
-		$this->plugin_public;
+		$this->plugin_admin = "";
 		$this->load_dependencies();
 		$this->define_admin_hooks();
-		$this->define_public_hooks();
 	}
 
 	private function load_dependencies() {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/AdminClass.php';
 		$this->plugin_admin = new AdminClass();
-		// require_once plugin_dir_path(dirname(__FILE__)) . 'public/PublicClass.php';
-		// $this->plugin_public = new PublicClass();
 	}
 
 	private function define_admin_hooks() {
@@ -26,9 +22,5 @@ class PluginClass {
 		add_action('admin_post_form-reset', array($this->plugin_admin, 'form_reset'));
 		add_action('template_redirect', array($this->plugin_admin, 'custom_404_pro_redirect'));
         add_action('upgrader_process_complete', array($this->plugin_admin, 'custom_404_pro_upgrader'), 10, 2);
-	}
-
-	private function define_public_hooks() {
-		// TODO
 	}
 }
