@@ -109,6 +109,9 @@ class AdminClass {
 
     private function custom_404_pro_log($is_email) {
         global $wpdb;
+        if(!$this->helpers->is_option("log_ip")) {
+            $this->helpers->insert_option("log_ip", true);
+        }
         if(empty($this->helpers->get_option("log_ip"))) {
             $ip = "N/A";
         } else {
