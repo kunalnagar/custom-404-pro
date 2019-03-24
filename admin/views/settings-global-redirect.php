@@ -18,14 +18,7 @@ if($mode === "page") {
 }
 ?>
 <div class="wrap">
-    <?php if(array_key_exists("message", $_GET)): ?>
-    	<?php if($_GET["message"] === "updated"): ?>
-    	<div class="updated">
-    		<p>Saved!</p>
-    	</div>
-    	<?php endif; ?>
-    <?php endif; ?>
-	<form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
+    <form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
 		<table class="form-table">
 			<tbody>
 			<tr>
@@ -67,7 +60,7 @@ if($mode === "page") {
 			<tr id="c4p_url" class="select-url">
 				<th>Enter a URL</th>
 				<td>
-					<input name="mode_url" type="url" class="regular-text" value="<?php echo $mode_url; ?>" autocomplete="off">
+					<input id="mode_url" name="mode_url" type="url" class="regular-text" value="<?php echo $mode_url; ?>" autocomplete="off" <?php echo (!empty($mode_url)) ? "required = \"required\"" : "" ?>>
 					<p class="description">
 						Enter a valid URL, for e.g. https://google.com
 					</p>

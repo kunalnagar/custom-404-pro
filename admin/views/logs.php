@@ -1,23 +1,6 @@
 <?php
 
-global $wpdb;
-
-$helpers = Helpers::singleton();
-$table_logs = $helpers->table_logs;
-
-if(array_key_exists("action", $_REQUEST)) {
-    $action = $_REQUEST["action"];
-    if($action === "delete") {
-        if(is_array($_REQUEST["path"])) {
-            $sql_delete = "DELETE FROM " . $table_logs . " WHERE id in (" . implode(",", $_REQUEST["path"]) . ")";
-        } else {
-            $sql_delete = "DELETE FROM " . $table_logs . " WHERE id=" . $_REQUEST["path"] . "";
-        }
-        $wpdb->query($sql_delete);
-    }
-}
-
-require_once(__DIR__ . '../../LogsClass.php');
+require_once(__DIR__ . "../../LogsClass.php");
 
 $logs_table = new LogsClass();
 $logs_table->prepare_items();
@@ -26,15 +9,15 @@ $logs_table->prepare_items();
 
 <div class="wrap">
 	<h2>Logs</h2>
-	<form id="form_logs" method="get">
+	<form id="form_logs" method="GET">
         <!-- For plugins, we also need to ensure that the form posts back to our current page -->
-        <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+        <input type="hidden" name="page" value="<?php echo $_REQUEST["page"] ?>" />
         <!-- Now we can render the completed list table -->
         <p class="search-box">
 			<label class="screen-reader-text" for="search_id-search-input">Search</label>
-			<input id="search_id-search-input" type="text" name="s" value="<?php if(array_key_exists('s', $_GET)) { echo $_GET["s"]; } ?>" autocomplete="off" />
+			<input id="search_id-search-input" type="text" name="s" value="<?php if(array_key_exists("s", $_GET)) { echo $_GET["s"]; } ?>" autocomplete="off" />
 			<input id="search-submit" class="button" type="submit" name="" value="Search" />
-		</p><br /><br />
+		</p>
         <?php $logs_table->display(); ?>
     </form>
 </div>

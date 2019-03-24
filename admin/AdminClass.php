@@ -34,7 +34,7 @@ class AdminClass {
         if(array_key_exists("page", $_REQUEST)) {
             $request = $_REQUEST["page"];
             if($request === "c4p-settings" || $request === "c4p-main" || $request === "c4p-about") {
-                wp_enqueue_style("custom-404-pro-admin-css", plugin_dir_url(__FILE__) . "css/custom-404-pro-admin.css", array(), "3.1.0");
+                wp_enqueue_style("custom-404-pro-admin-css", plugin_dir_url(__FILE__) . "css/custom-404-pro-admin.css", array(), "3.2.0");
             }
         }
 
@@ -44,8 +44,24 @@ class AdminClass {
         if(array_key_exists("page", $_REQUEST)) {
             $request = $_REQUEST["page"];
             if($request === "c4p-settings" || $request === "c4p-main") {
-                wp_enqueue_script("custom-404-pro-admin-js", plugin_dir_url(__FILE__) . "js/custom-404-pro-admin.js", array("jquery"), "3.1.0", false);
+                wp_enqueue_script("custom-404-pro-admin-js", plugin_dir_url(__FILE__) . "js/custom-404-pro-admin.js", array("jquery"), "3.2.0", false);
             }
+        }
+    }
+
+    public function custom_404_pro_notices() {
+        $message = "";
+        $messageType = "success";
+        $html = "";
+        if(array_key_exists("c4pmessage", $_REQUEST)) {
+            $message = urldecode($_REQUEST["c4pmessage"]);
+            if(array_key_exists("c4pmessageType", $_REQUEST)) {
+                $messageType = $_REQUEST["c4pmessageType"];
+            }
+            $html   .=  "<div class=\"notice notice-" . $messageType . " is-dismissible\">";
+            $html   .=  "<p>" . $message . "</p>";
+            $html   .=  "</div>";
+            echo $html;
         }
     }
 
@@ -55,7 +71,8 @@ class AdminClass {
         $page = $_POST["mode_page"];
         $url = $_POST["mode_url"];
         self::update_mode($mode, $page, $url);
-        wp_redirect(admin_url("admin.php?page=c4p-settings&tab=global-redirect&message=updated"));
+        $message = urlencode("Saved!");
+        wp_redirect(admin_url("admin.php?page=c4p-settings&tab=global-redirect&c4pmessage=" . $message . "&c4pmessageType=success"));
     }
 
     public function form_settings_general() {
@@ -81,7 +98,27 @@ class AdminClass {
         $this->helpers->update_option("redirect_error_code", $field_redirect_error_code);
         // New options
         $this->helpers->upsert_option("log_ip", $field_log_ip);
-        wp_redirect(admin_url("admin.php?page=c4p-settings&tab=general&message=updated"));
+        $message = urlencode("Saved!");
+        wp_redirect(admin_url("admin.php?page=c4p-settings&tab=general&c4pmessage=" . $message . "&c4pmessageType=success"));
+    }
+
+    public function custom_404_pro_admin_init() {
+        global $wpdb;
+        if(array_key_exists("action", $_REQUEST)) {
+            $action = $_REQUEST["action"];
+            if($action === "c4p-logs--delete") {
+                if(array_key_exists("path", $_REQUEST)) {
+                    $this->helpers->delete_logs($_REQUEST["path"]);
+                    $message = urlencode("Log(s) successfully deleted!");
+                    wp_redirect(admin_url("admin.php?page=c4p-main&c4pmessage=" . $message . "&c4pmessageType=success"));
+                } else {
+                    $message = urlencode("Please select a few logs to delete and try again.");
+                    wp_redirect(admin_url("admin.php?page=c4p-main&c4pmessage=" . $message . "&c4pmessageType=warning"));
+                }
+            } else if($action === "c4p-logs--export-csv") {
+                $this->helpers->export_logs_csv();
+            }
+        }
     }
 
     public function custom_404_pro_redirect() {
@@ -216,7 +253,8 @@ class AdminClass {
         $wpdb->query($sql1);
         $wpdb->query($sql2);
         $wpdb->query($sql3);
-        wp_redirect(admin_url("admin.php?page=c4p-reset&message=updated"));
+        $message = urlencode("Older logs before 3.0.0 have been deleted successfully!");
+        wp_redirect(admin_url("admin.php?page=c4p-reset&c4pmessage=" . $message . "&c4pmessageType=success"));
     }
 
     public function custom_404_pro_upgrader($upgrader_object, $options) {

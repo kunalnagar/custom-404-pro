@@ -15,6 +15,21 @@ class LogsClass extends WP_List_Table {
         ));
     }
 
+    /**
+     * Add stuff on top or bottom of the Logs Table
+     *
+     * @param  [String] $which top/bottom
+     * @return null
+     */
+    function extra_tablenav($which) {
+        $top = "";
+        if($which === "top") {
+
+        } else if($which === "bottom") {
+
+        }
+    }
+
     function prepare_items() {
     	global $wpdb;
     	$columns = self::get_columns();
@@ -117,7 +132,7 @@ class LogsClass extends WP_List_Table {
 
     function column_ip($item) {
         $actions = array(
-            'delete' => sprintf('<a href="?page=%s&action=%s&path=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
+            'c4p-logs--delete' => sprintf('<a href="?page=%s&action=%s&path=%s">Delete</a>', $_REQUEST['page'], 'c4p-logs--delete', $item['id'])
         );
         return sprintf('%1$s %2$s',
             /*$1%s*/ $item['ip'],
@@ -131,7 +146,8 @@ class LogsClass extends WP_List_Table {
 
     function get_bulk_actions() {
     	$actions = array(
-			"delete" => "Delete"
+			"c4p-logs--delete" => "Delete",
+            "c4p-logs--export-csv" => "Export All (.csv)"
 		);
 		return $actions;
     }

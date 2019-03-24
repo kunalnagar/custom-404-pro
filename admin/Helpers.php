@@ -46,6 +46,14 @@ class Helpers {
         echo "</pre>";
     }
 
+    public function admin_notice($type, $message) {
+        $html   =   "";
+        $html   .=  "<div class=\"notice notice-" . $type . "\">";
+        $html   .=  "   <p>" . $message . "</p>";
+        $html   .=  "</div>";
+        return $html;
+    }
+
     public function initialize_table_options() {
         global $wpdb;
         $count = count($this->options_defaults);
@@ -108,6 +116,56 @@ class Helpers {
             $result = self::insert_option($option_name, $option_value);
         }
         return $result;
+    }
+
+    public function get_logs_columns() {
+        global $wpdb;
+        $query = "SHOW COLUMNS FROM " . $this->table_logs;
+        $result = $wpdb->get_results($query);
+        return $result;
+    }
+
+    public function get_logs() {
+        global $wpdb;
+        $query = "SELECT * from " . $this->table_logs;
+        $result = $wpdb->get_results($query, ARRAY_A);
+        return $result;
+    }
+
+    public function delete_logs($path) {
+        global $wpdb;
+        if(is_array($path)) {
+            $query = "DELETE FROM " . $this->table_logs . " WHERE id in (" . implode(",", $path) . ")";
+        } else {
+            $query = "DELETE FROM " . $this->table_logs . " WHERE id=" . $path . "";
+        }
+        $result = $wpdb->query($query);
+        return $result;
+    }
+
+    public function export_logs_csv() {
+        $filename = "logs_" . time() . ".csv";
+        $csv_output = "";
+        $columns = self::get_logs_columns();
+        if(count($columns) > 0) {
+            foreach($columns as $column){
+                $csv_output .= $column->Field . ", ";
+            }
+        }
+        $csv_output .= "\n";
+        $results = self::get_logs();
+        if(count($results) > 0) {
+            foreach($results as $result){
+                foreach($result as $q) {
+                    $csv_output .= "\"$q\"" . ", ";
+                }
+                $csv_output .= "\n";
+            }
+        }
+        header("Content-Type: application/csv");
+        header("Content-Disposition: attachment; filename=" . $filename);
+        header("Pragma: no-cache");
+        print $csv_output; exit;
     }
 
 }
