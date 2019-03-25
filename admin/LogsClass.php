@@ -147,6 +147,7 @@ class LogsClass extends WP_List_Table {
     function get_bulk_actions() {
     	$actions = array(
 			"c4p-logs--delete" => "Delete",
+            "c4p-logs--delete-all" => "Delete All",
             "c4p-logs--export-csv" => "Export All (.csv)"
 		);
 		return $actions;

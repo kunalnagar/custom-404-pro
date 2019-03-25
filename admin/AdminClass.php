@@ -115,6 +115,10 @@ class AdminClass {
                     $message = urlencode("Please select a few logs to delete and try again.");
                     wp_redirect(admin_url("admin.php?page=c4p-main&c4pmessage=" . $message . "&c4pmessageType=warning"));
                 }
+            } else if($action === "c4p-logs--delete-all") {
+                $this->helpers->delete_logs("all");
+                $message = urlencode("All Logs successfully deleted!");
+                wp_redirect(admin_url("admin.php?page=c4p-main&c4pmessage=" . $message . "&c4pmessageType=success"));
             } else if($action === "c4p-logs--export-csv") {
                 $this->helpers->export_logs_csv();
             }

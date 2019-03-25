@@ -134,7 +134,9 @@ class Helpers {
 
     public function delete_logs($path) {
         global $wpdb;
-        if(is_array($path)) {
+        if($path === "all") {
+            $query = "TRUNCATE TABLE " . $this->table_logs;
+        } else if(is_array($path)) {
             $query = "DELETE FROM " . $this->table_logs . " WHERE id in (" . implode(",", $path) . ")";
         } else {
             $query = "DELETE FROM " . $this->table_logs . " WHERE id=" . $path . "";
