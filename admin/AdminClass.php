@@ -255,6 +255,7 @@ class AdminClass {
         global $wpdb;
         $logsData = [];
         $old_logs = get_posts([
+            "numberposts" => 500,
             "post_status" => "publish",
             "post_type" => "c4p_log"
         ]);
