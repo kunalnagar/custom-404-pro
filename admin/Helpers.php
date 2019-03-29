@@ -125,6 +125,43 @@ class Helpers {
         return $result;
     }
 
+    public function get_old_logs_count() {
+        global $wpdb;
+        $query = "SELECT COUNT(*) FROM " . $wpdb->prefix . "posts WHERE post_type='c4p_log'";
+        $result = $wpdb->get_var($query);
+        return (int)$result;
+    }
+
+    public function delete_old_logs($logIDs) {
+        global $wpdb;
+        foreach($logIDs as $id) {
+            wp_delete_post($id, true);
+        }
+    }
+
+    public function create_logs($logsData, $isDeletingOld) {
+        global $wpdb;
+        $count = count($logsData);
+        $logIDs = [];
+        $query = "INSERT INTO " . $this->table_logs . " (ip, path, referer, user_agent) VALUES";
+        foreach($logsData as $key => $log) {
+            if(!empty($log->id)) {
+                array_push($logIDs, $log->id);
+            }
+            $query .= " ('$log->ip', '$log->path', '$log->referer', '$log->user_agent')";
+            if($key < $count - 1) {
+                $query .= ",";
+            }
+        }
+        $result = $wpdb->query($query);
+        if(!is_wp_error($result)) {
+            if(!empty($isDeletingOld) && $isDeletingOld) {
+                self::delete_old_logs($logIDs);
+            }
+        }
+        return $result;
+    }
+
     public function get_logs() {
         global $wpdb;
         $query = "SELECT * from " . $this->table_logs;

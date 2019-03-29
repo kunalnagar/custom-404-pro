@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar/10
 Tags: wordpress, 404, 404 error page, 404 link, 404 page, broken link, custom 404, custom 404 error, custom 404 error page, custom 404 page, customize 404, customize 404 error page, customize 404 page, error, error page, missing, page, page not found, page not found error
 Requires at least: 3.0.1
 Tested up to: 5.1.1
-Stable tag: 3.2.1
+Stable tag: 3.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,8 +45,12 @@ Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issu
 
 == Changelog ==
 
+= 3.2.2 =
+* [NEW] Migrate Tab: Migrate Logs from Plugin version < 3.0.0 to the new logging system
+* [BUGFIX] Typo in Reset Tab when deleting old logs
+
 = 3.2.1 =
-* Delete All Logs now available as a Bulk Action
+* [NEW] Bulk Action: Delete All Logs now available
 
 = 3.2.0 =
 * Exports Logs as CSV

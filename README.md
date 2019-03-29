@@ -4,14 +4,16 @@
 
 Override the default 404 page with **any page** from the Admin Panel or a **Custom URL**.
 
-**UPDATE**: Version 3.0.0 of the plugin is completely written from the ground-up and has a completely new logging mechanism. If your old logs are important, please do not upgrade as of now. If you are facing performance/SEO issues and your old logs don't matter as much, you should be the first ones to upgrade.
+**UPDATE**: In version 3.2.2 of the plugin, we've added the ability to migrate your old logs to the new logging system. It's highly recommended as you'll get immense performance benefits in the WP Dashboard. Once you've migrated your logs to the new system, you should use the Reset tab and make sure that they're completely gone from your WP Install.
+
+As always, if you do like the plugin, please take a minute and give it a rating. Thanks!
 
 ### Features
 
-* Full 404 Page Control
-* Record 404 Page Data
-* Custom Page Redirect
-* Custom URL Redirect
+* Log a 404 error
+* Redirect 404 errors using popular redirect codes (301, 302 etc)
+* Export Logs (.csv)
+* Email the WordPress Admin when a 404 occurs
 
 ### Installation
 
