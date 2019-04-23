@@ -7,11 +7,12 @@ class AdminClass {
     }
 
     public function create_menu() {
-        add_menu_page("Custom 404 Pro", "Custom 404 Pro", "manage_options", "c4p-main", array($this, 'page_logs'), 'dashicons-chart-bar');
-        add_submenu_page("c4p-main", "Logs", "Logs", "manage_options", "c4p-main", array($this, 'page_logs'));
-        add_submenu_page("c4p-main", "Settings", "Settings", "manage_options", "c4p-settings", array($this, 'page_settings'));
-        add_submenu_page("c4p-main", "About", "About", "manage_options", "c4p-about", array($this, 'page_about'));
-        add_submenu_page("c4p-main", "Reset", "Reset", "manage_options", "c4p-reset", array($this, 'page_reset'));
+        add_menu_page("Custom 404 Pro", "Custom 404 Pro", "manage_options", "c4p-main", array($this, "page_logs"), "dashicons-chart-bar");
+        add_submenu_page("c4p-main", "Logs", "Logs", "manage_options", "c4p-main", array($this, "page_logs"));
+        add_submenu_page("c4p-main", "Settings", "Settings", "manage_options", "c4p-settings", array($this, "page_settings"));
+        add_submenu_page("c4p-main", "Migrate", "Migrate", "manage_options", "c4p-migrate", array($this, "page_migrate"));
+        add_submenu_page("c4p-main", "Reset", "Reset", "manage_options", "c4p-reset", array($this, "page_reset"));
+        add_submenu_page("c4p-main", "About", "About", "manage_options", "c4p-about", array($this, "page_about"));
     }
 
     public function page_logs() {
@@ -22,12 +23,16 @@ class AdminClass {
         include "views/settings.php";
     }
 
-    public function page_about() {
-        include "views/about.php";
+    public function page_migrate() {
+        include "views/migrate.php";
     }
 
     public function page_reset() {
         include "views/reset.php";
+    }
+
+    public function page_about() {
+        include "views/about.php";
     }
 
     public function enqueue_styles() {
@@ -246,12 +251,34 @@ class AdminClass {
         $this->helpers->update_option("mode_url", $mode_url_val);
     }
 
+    public function form_migrate() {
+        global $wpdb;
+        $logsData = [];
+        $old_logs = get_posts([
+            "numberposts" => 500,
+            "post_status" => "publish",
+            "post_type" => "c4p_log"
+        ]);
+        foreach($old_logs as $log) {
+            $temp = new stdClass();
+            $temp->id = $log->ID;
+            $temp->ip = get_post_meta($log->ID, "c4p_log_ip", true);
+            $temp->path = get_post_meta($log->ID, "c4p_log_404_path", true);
+            $temp->referer = get_post_meta($log->ID, "c4p_log_referer", true);
+            $temp->user_agent = get_post_meta($log->ID, "c4p_log_user_agent", true);
+            array_push($logsData, $temp);
+        }
+        $this->helpers->create_logs($logsData, true);
+        $message = urlencode("Older log(s) before 3.0.0 have been migrated successfully. You might need to repeat this process if there are some left.");
+        wp_redirect(admin_url("admin.php?page=c4p-migrate&c4pmessage=" . $message . "&c4pmessageType=success"));
+    }
+
     public function form_reset() {
         global $wpdb;
         $table_wp_posts = $wpdb->prefix . "wp_posts";
         $table_wp_postmeta = $wpdb->prefix . "wp_postmeta";
         $table_wp_term_relationships = $wpdb->prefix . "wp_term_relationships";
-        $sql1 = "DELETE FROM " . $table_wp_posts . " WHERE post_type='c4p-log'";
+        $sql1 = "DELETE FROM " . $table_wp_posts . " WHERE post_type='c4p_log'";
         $sql2 = "DELETE FROM " . $table_wp_postmeta . " WHERE post_id NOT IN (SELECT id FROM wp_posts)";
         $sql3 = "DELETE FROM " . $table_wp_term_relationships . " WHERE object_id NOT IN (SELECT id FROM wp_posts)";
         $wpdb->query($sql1);

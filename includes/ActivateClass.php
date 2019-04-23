@@ -39,7 +39,9 @@ class ActivateClass {
 		) $charset_collate;";
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		dbDelta($sql_logs);
+		echo $wpdb->last_error;
 		dbDelta($sql_options);
+		echo $wpdb->last_error;
 	}
 
 	static function initialize_options() {
