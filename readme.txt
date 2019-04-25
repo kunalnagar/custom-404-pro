@@ -12,8 +12,6 @@ Override the default 404 page with any page from the Admin Panel or a Custom URL
 
 == Description ==
 
-**UPDATE**: Version 3.0.0 of the plugin is completely written from the ground-up and has a completely new logging mechanism. If your old logs are important, please do not upgrade as of now. If you are facing performance/SEO issues and your old logs don't matter as much, you should be the first ones to upgrade.
-
 Allows users to replace the default 404 page with a custom page from the Pages section in the Admin Panel. Or you can specify a complete URL to redirect on 404.
 
 Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issues). I will not be using the WordPress.org support area.
@@ -45,8 +43,11 @@ Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issu
 
 == Changelog ==
 
-= 3.2.5 =
+= 3.2.6 =
 * Follow WordPress Coding Standards
+
+= 3.2.5 =
+* Update from v2 to v3 for all users
 
 = 3.2.4 =
 * Error Logging
