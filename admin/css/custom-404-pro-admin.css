@@ -10,45 +10,45 @@
 
 /* Utils */
 .c4p-center {
-    text-align: center;
+	text-align: center;
 }
 
 .c4p-author-image {
-    height: 10em;
-    margin-top: 1em;
-    margin-left: 1em;
-    margin-right: 2em;
-    /*margin: 2em 1.5em;*/
+	height: 10em;
+	margin-top: 1em;
+	margin-left: 1em;
+	margin-right: 2em;
+	/*margin: 2em 1.5em;*/
 }
 
 .c4p-full-card {
-    max-width: none;
+	max-width: none;
 }
 
 .c4p-left {
-    float: left;
+	float: left;
 }
 
 .c4p-right {
-    float: right;
+	float: right;
 }
 
 .c4p-clearfix:after {
-    content: "";
-    display: table;
-    clear: both;
+	content: "";
+	display: table;
+	clear: both;
 }
 
 /* Notices */
 
 .updated, .error {
-    margin: 15px 0 20px !important;
+	margin: 15px 0 20px !important;
 }
 
 .c4p-update-nag {
-    padding: 0px 15px;
-    width: 96%;
-    margin: 15px 15px 0 2px;
+	padding: 0px 15px;
+	width: 96%;
+	margin: 15px 15px 0 2px;
 }
 
 .clear-logs-description {
@@ -56,10 +56,10 @@
 }
 
 .disabled {
-    opacity: 0.5;
-    pointer-events: none;
+	opacity: 0.5;
+	pointer-events: none;
 }
 
 #c4p_export_logs {
-    margin-top: 3px;
+	margin-top: 3px;
 }

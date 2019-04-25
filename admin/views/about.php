@@ -1,6 +1,6 @@
 <?php
-	$plugin_main_file = dirname(dirname(dirname(dirname(__FILE__)))) . '/custom-404-pro/custom-404-pro.php';
-	$plugin_data = get_plugin_data($plugin_main_file);
+	$plugin_main_file = dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/custom-404-pro/custom-404-pro.php';
+	$plugin_data      = get_plugin_data( $plugin_main_file );
 ?>
 
 <div class="wrap">
@@ -39,8 +39,8 @@
 								<input type="hidden" name="last_name" value="Nagar">
 								<input type="hidden" name="email" value="knlnagar@gmail.com">
 								<input type="image" name="submit" border="0"
-								       src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
-								       alt="PayPal - The safer, easier way to pay online">
+									   src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
+									   alt="PayPal - The safer, easier way to pay online">
 							</form>
 						</div>
 					</div>

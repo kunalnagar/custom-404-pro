@@ -1,24 +1,24 @@
 <?php
 global $wpdb;
-$args  = array(
+$args      = array(
 	'post_type'   => 'page',
-	'post_status' => 'publish'
+	'post_status' => 'publish',
 );
-$pages = get_pages($args);
-$sql_mode = "SELECT value FROM " . $wpdb->prefix . "custom_404_pro_options" . " WHERE name=\"mode\"";
-$mode = $wpdb->get_var($sql_mode);
-$mode_page = "";
-$mode_url = "";
-if($mode === "page") {
-	$sql_mode_page = "SELECT value FROM " . $wpdb->prefix . "custom_404_pro_options" . " WHERE name=\"mode_page\"";
-	$mode_page = $wpdb->get_var($sql_mode_page);
-} else if($mode === "url") {
-	$sql_mode_url = "SELECT value FROM " . $wpdb->prefix . "custom_404_pro_options" . " WHERE name=\"mode_url\"";
-	$mode_url = $wpdb->get_var($sql_mode_url);
+$pages     = get_pages( $args );
+$sql_mode  = 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options' . ' WHERE name="mode"';
+$mode      = $wpdb->get_var( $sql_mode );
+$mode_page = '';
+$mode_url  = '';
+if ( $mode === 'page' ) {
+	$sql_mode_page = 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options' . ' WHERE name="mode_page"';
+	$mode_page     = $wpdb->get_var( $sql_mode_page );
+} elseif ( $mode === 'url' ) {
+	$sql_mode_url = 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options' . ' WHERE name="mode_url"';
+	$mode_url     = $wpdb->get_var( $sql_mode_url );
 }
 ?>
 <div class="wrap">
-    <form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
+	<form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
 		<table class="form-table">
 			<tbody>
 			<tr>
@@ -26,10 +26,10 @@ if($mode === "page") {
 				<td>
 					<select id="c4p_mode" name="mode">
 						<option value="">None</option>
-						<option value="page" <?php echo ( $mode == 'page' ) ? "selected" : "" ?>>
+						<option value="page" <?php echo ( $mode == 'page' ) ? 'selected' : ''; ?>>
 							WordPress Page
 						</option>
-						<option value="url" <?php echo ( $mode == 'url' ) ? "selected" : "" ?>>
+						<option value="url" <?php echo ( $mode == 'url' ) ? 'selected' : ''; ?>>
 							URL
 						</option>
 					</select>
@@ -46,11 +46,11 @@ if($mode === "page") {
 				<td>
 					<select name="mode_page">
 						<option value="">None (Default Error Page)</option>
-						<?php foreach ( $pages as $page ): ?>
-							<option value="<?php echo $page->ID; ?>" <?php echo ( $page->ID == $mode_page ) ? "selected" : "" ?>>
-								<?php echo $page->post_title; ?>
+		<?php foreach ( $pages as $page ) : ?>
+							<option value="<?php echo $page->ID; ?>" <?php echo ( $page->ID == $mode_page ) ? 'selected' : ''; ?>>
+			<?php echo $page->post_title; ?>
 							</option>
-						<?php endforeach; ?>
+		<?php endforeach; ?>
 					</select>
 					<p class="description">
 						The Default error page will be replaced by the page you choose in this list.
@@ -60,7 +60,7 @@ if($mode === "page") {
 			<tr id="c4p_url" class="select-url">
 				<th>Enter a URL</th>
 				<td>
-					<input id="mode_url" name="mode_url" type="url" class="regular-text" value="<?php echo $mode_url; ?>" autocomplete="off" <?php echo (!empty($mode_url)) ? "required = \"required\"" : "" ?>>
+					<input id="mode_url" name="mode_url" type="url" class="regular-text" value="<?php echo $mode_url; ?>" autocomplete="off" <?php echo ( ! empty( $mode_url ) ) ? 'required = "required"' : ''; ?>>
 					<p class="description">
 						Enter a valid URL, for e.g. https://google.com
 					</p>
