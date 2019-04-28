@@ -1,45 +1,39 @@
 <?php
 
-/*
-Plugin Name: Custom 404 Pro
-Plugin URI: https://wordpress.org/plugins/custom-404-pro/
-Description: Override the default 404 page with any page or a custom URL from the Admin Panel.
-Version: 3.2.6
-Author: Kunal Nagar
-Author URI: https://kunalnagar.in
-License: GPL-2.0+
-License URI: http://www.gnu.org/licenses/gpl-2.0.txt
-*/
+/**
+ * Plugin Name: Custom 404 Pro
+ * Plugin URI: https://wordpress.org/plugins/custom-404-pro/
+ * Description: Override the default 404 page with any page or a custom URL from the Admin Panel.
+ * Version: 3.2.7
+ * Author: Kunal Nagar
+ * Author URI: https://kunalnagar.in
+ * License: GPL-2.0+
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+ *
+ * @package  Custom404Pro
+ */
 
-if ( ! defined( 'WPINC' ) ) {
-	die;
+defined( 'ABSPATH' ) || exit;
+
+// Define C4P_PLUGIN_FILE.
+if ( ! defined( 'C4P_PLUGIN_FILE' ) ) {
+	define( 'C4P_PLUGIN_FILE', __FILE__ );
 }
 
-function activate_custom_404_pro() {
-	include_once plugin_dir_path( __FILE__ ) . 'includes/ActivateClass.php';
-	ActivateClass::activate();
+// Include the main Custom404Pro class.
+if ( ! class_exists( 'Custom404Pro' ) ) {
+	include_once dirname( __FILE__ ) . '/includes/class-custom404pro.php';
 }
 
-function deactivate_custom_404_pro() {
-	include_once plugin_dir_path( __FILE__ ) . 'includes/DeactivateClass.php';
-	DeactivateClass::deactivate();
+/**
+ * Returns the main instance of Custom404Pro.
+ *
+ * @since  3.2.7
+ * @return Custom404Pro
+ */
+function C4P() {
+	return Custom404Pro::instance();
 }
 
-function uninstall_custom_404_pro() {
-	include_once plugin_dir_path( __FILE__ ) . 'includes/UninstallClass.php';
-	UninstallClass::uninstall();
-}
-
-register_activation_hook( __FILE__, 'activate_custom_404_pro' );
-register_deactivation_hook( __FILE__, 'deactivate_custom_404_pro' );
-register_uninstall_hook( __FILE__, 'uninstall_custom_404_pro' );
-
-require plugin_dir_path( __FILE__ ) . 'includes/PluginClass.php';
-require plugin_dir_path( __FILE__ ) . 'admin/Helpers.php';
-
-function run_custom_404_pro() {
-	 Helpers::singleton();
-	new PluginClass();
-}
-
-run_custom_404_pro();
+// Global for backwards compatibility.
+$GLOBALS['c4p'] = C4P();
