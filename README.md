@@ -4,7 +4,7 @@
 
 Override the default 404 page with **any page** from the Admin Panel or a **Custom URL**.
 
-**UPDATE**: In version 3.2.2 of the plugin, we've added the ability to migrate your old logs to the new logging system. It's highly recommended as you'll get immense performance benefits in the WP Dashboard. Once you've migrated your logs to the new system, you should use the Reset tab and make sure that they're completely gone from your WP Install.
+**UPDATE**: In version 3.2.2 and above, we've added the ability to migrate your old logs to the new logging system. It's highly recommended as you'll get immense performance benefits in the WP Dashboard. Once you've migrated your logs to the new system, you should use the Reset tab and make sure that they're completely gone from your WP Install.
 
 As always, if you do like the plugin, please take a minute and give it a rating. Thanks!
 
