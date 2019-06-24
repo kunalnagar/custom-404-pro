@@ -18,7 +18,7 @@ $logs_table->prepare_items();
 			<input id="search_id-search-input" type="text" name="s" value="
 			<?php
 			if ( array_key_exists( 's', $_GET ) ) {
-				echo $_GET['s'];
+				echo esc_html($_GET['s']);
 			}
 			?>
 			" autocomplete="off" />
