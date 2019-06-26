@@ -40,15 +40,15 @@ class LogsClass extends WP_List_Table {
 		$sql                   = 'SELECT * FROM ' . $helpers->table_logs;
 
 		if ( array_key_exists( 'orderby', $_GET ) ) {
-			$order_by = $_GET['orderby'];
-			$order    = strtoupper( $_GET['order'] );
+			$order_by = esc_html($_GET['orderby']);
+			$order    = strtoupper( esc_html($_GET['order']) );
 			if ( ! empty( $order_by ) && ! empty( $order ) ) {
 				$sql = self::manage_sorting( $order_by, $order, $sql );
 			}
 		}
 
 		if ( array_key_exists( 's', $_GET ) ) {
-			$search = $_GET['s'];
+			$search = esc_html($_GET['s']);
 			if ( ! empty( $search ) ) {
 				$sql = self::manage_search( $search, $sql );
 			}
@@ -140,7 +140,7 @@ class LogsClass extends WP_List_Table {
 
 	public function column_ip( $item ) {
 		$actions = array(
-			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s">Delete</a>', $_REQUEST['page'], 'c4p-logs--delete', $item['id'] ),
+			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s">Delete</a>', esc_html($_REQUEST['page']), 'c4p-logs--delete', $item['id'] ),
 		);
 		return sprintf(
 			'%1$s %2$s',

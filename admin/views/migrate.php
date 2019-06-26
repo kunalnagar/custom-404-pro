@@ -7,7 +7,7 @@ $old_logs_count = Helpers::get_old_logs_count();
 <div class="wrap">
 	<h2>Migrate (Important, read carefully)</h2>
 	<?php if ( array_key_exists( 'message', $_GET ) ) : ?>
-		<?php if ( $_GET['message'] === 'updated' ) : ?>
+		<?php if ( esc_html($_GET['message']) === 'updated' ) : ?>
 		<div class="updated">
 			<p>Old logs (prior to version 3.0.0) deleted successfully!</p>
 		</div>
