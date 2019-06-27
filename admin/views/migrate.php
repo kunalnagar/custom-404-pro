@@ -7,7 +7,7 @@ $old_logs_count = Helpers::get_old_logs_count();
 <div class="wrap">
 	<h2>Migrate (Important, read carefully)</h2>
 	<?php if ( array_key_exists( 'message', $_GET ) ) : ?>
-		<?php if ( esc_html($_GET['message']) === 'updated' ) : ?>
+		<?php if ( sanitize_text_field($_GET['message']) === 'updated' ) : ?>
 		<div class="updated">
 			<p>Old logs (prior to version 3.0.0) deleted successfully!</p>
 		</div>
@@ -29,6 +29,7 @@ $old_logs_count = Helpers::get_old_logs_count();
 		<p class="submit">
 			<input type="hidden" name="action" value="form-migrate"/>
 			<input type="submit" name="submit" id="submit" class="button button-primary" value="Migrate">
+            <?php wp_nonce_field("form-migrate", "form-migrate"); ?>
 		</p>
 	</form>
 </div>

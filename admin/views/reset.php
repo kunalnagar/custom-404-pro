@@ -1,7 +1,7 @@
 <div class="wrap">
 	<h2>Reset (Important, read carefully)</h2>
 	<?php if ( array_key_exists( 'message', $_GET ) ) : ?>
-		<?php if ( esc_html($_GET['message']) === 'updated' ) : ?>
+		<?php if ( sanitize_text_field($_GET['message']) === 'updated' ) : ?>
 		<div class="updated">
 			<p>Old logs (prior to version 3.0.0) deleted successfully!</p>
 		</div>
@@ -20,6 +20,7 @@
 		<p class="submit">
 			<input type="hidden" name="action" value="form-reset"/>
 			<input type="submit" name="submit" id="submit" class="button button-primary" value="Reset">
+            <?php wp_nonce_field("form-reset", "form-reset"); ?>
 		</p>
 	</form>
 </div>

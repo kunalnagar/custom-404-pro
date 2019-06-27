@@ -15,7 +15,7 @@ class PluginClass {
 
 	private function define_admin_hooks() {
 		// Core action hooks
-		add_action( 'admin_menu', array( $this->plugin_admin, 'create_menu' ) );
+        add_action( 'admin_menu', array( $this->plugin_admin, 'create_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_styles' ) );
 		add_action( 'admin_init', array( $this->plugin_admin, 'custom_404_pro_admin_init' ) );
