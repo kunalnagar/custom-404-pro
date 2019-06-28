@@ -4,8 +4,6 @@
 
 Override the default 404 page with **any page** from the Admin Panel or a **Custom URL**.
 
-**UPDATE [June 26, 2019]**: This plugin is currently taken off the [WordPress plugin repository](https://wordpress.org/plugins/custom-404-pro/) due to a few security loopholes. I am currently working on the highest priority to fix them and work with the WordPress Plugin team to get it back up. I apologize for any inconvenience caused to all of you and I appreciate your understanding in this matter. Thanks!
-
 As always, if you do like the plugin, please take a minute and give it a rating. Thanks!
 
 ### Features
