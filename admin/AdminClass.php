@@ -148,102 +148,96 @@ class AdminClass {
 
     public function custom_404_pro_redirect() {
         global $wpdb;
-        if(current_user_can('administrator')) {
-            if ( is_404() ) {
-                $sql                     = 'SELECT * FROM ' . $this->helpers->table_options;
-                $sql_result              = $wpdb->get_results( $sql );
-                $row_mode                = $sql_result[0];
-                $row_mode_page           = $sql_result[1];
-                $row_mode_url            = $sql_result[2];
-                $row_send_email          = $sql_result[3];
-                $row_logging_enabled     = $sql_result[4];
-                $row_redirect_error_code = $sql_result[5];
-                if ( $row_logging_enabled->value ) {
-                    self::custom_404_pro_log( $row_send_email->value );
-                }
-                if ( $row_mode->value === 'page' ) {
-                    $page = get_post( $row_mode_page->value );
-                    wp_redirect( $page->guid, $row_redirect_error_code->value );
-                } elseif ( $row_mode->value === 'url' ) {
-                    wp_redirect( $row_mode_url->value, $row_redirect_error_code->value );
-                }
+        if ( is_404() ) {
+            $sql                     = 'SELECT * FROM ' . $this->helpers->table_options;
+            $sql_result              = $wpdb->get_results( $sql );
+            $row_mode                = $sql_result[0];
+            $row_mode_page           = $sql_result[1];
+            $row_mode_url            = $sql_result[2];
+            $row_send_email          = $sql_result[3];
+            $row_logging_enabled     = $sql_result[4];
+            $row_redirect_error_code = $sql_result[5];
+            if ( $row_logging_enabled->value ) {
+                self::custom_404_pro_log( $row_send_email->value );
+            }
+            if ( $row_mode->value === 'page' ) {
+                $page = get_post( $row_mode_page->value );
+                wp_redirect( $page->guid, $row_redirect_error_code->value );
+            } elseif ( $row_mode->value === 'url' ) {
+                wp_redirect( $row_mode_url->value, $row_redirect_error_code->value );
             }
         }
     }
 
     private function custom_404_pro_log( $is_email ) {
         global $wpdb;
-        if(current_user_can('administrator')) {
-            if ( ! $this->helpers->is_option( 'log_ip' ) ) {
-                $this->helpers->insert_option( 'log_ip', true );
-            }
-            if ( empty( $this->helpers->get_option( 'log_ip' ) ) ) {
-                $ip = 'N/A';
+        if ( ! $this->helpers->is_option( 'log_ip' ) ) {
+            $this->helpers->insert_option( 'log_ip', true );
+        }
+        if ( empty( $this->helpers->get_option( 'log_ip' ) ) ) {
+            $ip = 'N/A';
+        } else {
+            if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
             } else {
-                if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-                    $ip = $_SERVER['HTTP_CLIENT_IP'];
-                } elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-                    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $ip = $_SERVER['REMOTE_ADDR'];
-                }
+                $ip = $_SERVER['REMOTE_ADDR'];
             }
-            $path    = $_SERVER['REQUEST_URI'];
-            $referer = '';
-            if ( array_key_exists( 'HTTP_REFERER', $_SERVER ) ) {
-                $referer = $_SERVER['HTTP_REFERER'];
-            }
-            $user_agent = $_SERVER['HTTP_USER_AGENT'];
-            $sql_save   = 'INSERT INTO ' . $this->helpers->table_logs . " (ip, path, referer, user_agent) VALUES ('$ip', '$path', '$referer', '$user_agent')";
-            $wpdb->query( $sql_save );
-            if ( ! empty( $is_email ) ) {
-                self::custom_404_pro_send_mail( $ip, $path, $referer, $user_agent );
-            }
+        }
+        $path    = $_SERVER['REQUEST_URI'];
+        $referer = '';
+        if ( array_key_exists( 'HTTP_REFERER', $_SERVER ) ) {
+            $referer = $_SERVER['HTTP_REFERER'];
+        }
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $sql_save   = 'INSERT INTO ' . $this->helpers->table_logs . " (ip, path, referer, user_agent) VALUES ('$ip', '$path', '$referer', '$user_agent')";
+        $wpdb->query( $sql_save );
+        if ( ! empty( $is_email ) ) {
+            self::custom_404_pro_send_mail( $ip, $path, $referer, $user_agent );
         }
     }
 
     private function custom_404_pro_send_mail( $ip, $path, $referer, $user_agent ) {
-        if(current_user_can('administrator')) {
-            $admin_email = get_option( 'admin_email' );
-            if ( is_multisite() ) {
-                global $blog_id;
-                $current_blog_details = get_blog_details( array( 'blog_id' => $blog_id ) );
-                $current_site_name    = $current_blog_details->blogname;
-            } else {
-                $current_site_name = get_bloginfo( 'name' );
-            }
-            $headers[] = 'From: Site Admin <' . $admin_email . '>' . "\r\n";
-            $headers[] = 'Content-Type: text/html; charset=UTF-8';
-            $message   = '<p>Here are the 404 Log Details:</p>';
-            $message  .= '<table>';
-            $message  .= '<tr>';
-            $message  .= '<th>Site</th>';
-            $message  .= '<td>' . $current_site_name . '</td>';
-            $message  .= '</tr>';
-            $message  .= '<tr>';
-            $message  .= '<th>User IP</th>';
-            $message  .= '<td>' . $ip . '</td>';
-            $message  .= '</tr>';
-            $message  .= '<tr>';
-            $message  .= '<th>404 Path</th>';
-            $message  .= '<td>' . $path . '</td>';
-            $message  .= '</tr>';
-            $message  .= '<tr>';
-            $message  .= '<th>Referer</th>';
-            $message  .= '<td>' . $referer . '</td>';
-            $message  .= '</tr>';
-            $message  .= '<tr>';
-            $message  .= '<th>User Agent</th>';
-            $message  .= '<td>' . $user_agent . '</td>';
-            $message  .= '</tr>';
-            $message  .= '</table>';
-            $is_sent   = wp_mail(
-                $admin_email,
-                '404 Error on Site',
-                $message,
-                $headers
-            );
+        $admin_email = get_option( 'admin_email' );
+        if ( is_multisite() ) {
+            global $blog_id;
+            $current_blog_details = get_blog_details( array( 'blog_id' => $blog_id ) );
+            $current_site_name    = $current_blog_details->blogname;
+        } else {
+            $current_site_name = get_bloginfo( 'name' );
         }
+        $headers[] = 'From: Site Admin <' . $admin_email . '>' . "\r\n";
+        $headers[] = 'Content-Type: text/html; charset=UTF-8';
+        $message   = '<p>Here are the 404 Log Details:</p>';
+        $message  .= '<table>';
+        $message  .= '<tr>';
+        $message  .= '<th>Site</th>';
+        $message  .= '<td>' . $current_site_name . '</td>';
+        $message  .= '</tr>';
+        $message  .= '<tr>';
+        $message  .= '<th>User IP</th>';
+        $message  .= '<td>' . $ip . '</td>';
+        $message  .= '</tr>';
+        $message  .= '<tr>';
+        $message  .= '<th>404 Path</th>';
+        $message  .= '<td>' . $path . '</td>';
+        $message  .= '</tr>';
+        $message  .= '<tr>';
+        $message  .= '<th>Referer</th>';
+        $message  .= '<td>' . $referer . '</td>';
+        $message  .= '</tr>';
+        $message  .= '<tr>';
+        $message  .= '<th>User Agent</th>';
+        $message  .= '<td>' . $user_agent . '</td>';
+        $message  .= '</tr>';
+        $message  .= '</table>';
+        $is_sent   = wp_mail(
+            $admin_email,
+            '404 Error on Site',
+            $message,
+            $headers
+        );
     }
 
     private function update_mode( $mode, $page, $url ) {
