@@ -26,7 +26,5 @@ class PluginClass {
 		// Custom hooks
 		add_action( 'admin_post_form-settings-global-redirect', array( $this->plugin_admin, 'form_settings_global_redirect' ) );
 		add_action( 'admin_post_form-settings-general', array( $this->plugin_admin, 'form_settings_general' ) );
-		add_action( 'admin_post_form-reset', array( $this->plugin_admin, 'form_reset' ) );
-		add_action( 'admin_post_form-migrate', array( $this->plugin_admin, 'form_migrate' ) );
 	}
 }

@@ -11,8 +11,6 @@ class AdminClass {
             add_menu_page( 'Custom 404 Pro', 'Custom 404 Pro', 'manage_options', 'c4p-main', array( $this, 'page_logs' ), 'dashicons-chart-bar' );
             add_submenu_page( 'c4p-main', 'Logs', 'Logs', 'manage_options', 'c4p-main', array( $this, 'page_logs' ) );
             add_submenu_page( 'c4p-main', 'Settings', 'Settings', 'manage_options', 'c4p-settings', array( $this, 'page_settings' ) );
-            add_submenu_page( 'c4p-main', 'Migrate', 'Migrate', 'manage_options', 'c4p-migrate', array( $this, 'page_migrate' ) );
-            add_submenu_page( 'c4p-main', 'Reset', 'Reset', 'manage_options', 'c4p-reset', array( $this, 'page_reset' ) );
             add_submenu_page( 'c4p-main', 'About', 'About', 'manage_options', 'c4p-about', array( $this, 'page_about' ) );
         }
     }
@@ -23,14 +21,6 @@ class AdminClass {
 
     public function page_settings() {
         include 'views/settings.php';
-    }
-
-    public function page_migrate() {
-        include 'views/migrate.php';
-    }
-
-    public function page_reset() {
-        include 'views/reset.php';
     }
 
     public function page_about() {
@@ -269,67 +259,25 @@ class AdminClass {
         }
     }
 
-    public function form_migrate() {
-        global $wpdb;
-        $logsData = [];
-        if(wp_verify_nonce($_POST['form-migrate'], 'form-migrate') && check_admin_referer("form-migrate", "form-migrate") && current_user_can('administrator')) {
-            $old_logs = get_posts(
-                [
-                    'numberposts' => 500,
-                    'post_status' => 'publish',
-                    'post_type'   => 'c4p_log',
-                ]
-            );
-            foreach ( $old_logs as $log ) {
-                $temp             = new stdClass();
-                $temp->id         = $log->ID;
-                $temp->ip         = get_post_meta( $log->ID, 'c4p_log_ip', true );
-                $temp->path       = get_post_meta( $log->ID, 'c4p_log_404_path', true );
-                $temp->referer    = get_post_meta( $log->ID, 'c4p_log_referer', true );
-                $temp->user_agent = get_post_meta( $log->ID, 'c4p_log_user_agent', true );
-                array_push( $logsData, $temp );
-            }
-            $this->helpers->create_logs( $logsData, true );
-            $message = urlencode( 'Older log(s) before 3.0.0 have been migrated successfully. You might need to repeat this process if there are some left.' );
-            wp_redirect( admin_url( 'admin.php?page=c4p-migrate&c4pmessage=' . $message . '&c4pmessageType=success' ) );
-        }
-    }
-
-    public function form_reset() {
-        global $wpdb;
-        if(wp_verify_nonce($_POST['form-reset'], 'form-reset') && check_admin_referer("form-reset", "form-reset") && current_user_can('administrator')) {
-            $table_wp_posts              = $wpdb->prefix . 'wp_posts';
-            $table_wp_postmeta           = $wpdb->prefix . 'wp_postmeta';
-            $table_wp_term_relationships = $wpdb->prefix . 'wp_term_relationships';
-            $sql1                        = 'DELETE FROM ' . $table_wp_posts . " WHERE post_type='c4p_log'";
-            $sql2                        = 'DELETE FROM ' . $table_wp_postmeta . ' WHERE post_id NOT IN (SELECT id FROM wp_posts)';
-            $sql3                        = 'DELETE FROM ' . $table_wp_term_relationships . ' WHERE object_id NOT IN (SELECT id FROM wp_posts)';
-            $wpdb->query( $sql1 );
-            $wpdb->query( $sql2 );
-            $wpdb->query( $sql3 );
-            $message = urlencode( 'Older logs before 3.0.0 have been deleted successfully!' );
-            wp_redirect( admin_url( 'admin.php?page=c4p-reset&c4pmessage=' . $message . '&c4pmessageType=success' ) );
-        }
-    }
-
-    public function custom_404_pro_upgrader( $upgrader_object, $options ) {
-        global $wpdb;
-        if(current_user_can('administrator')) {
-            if ( $options['action'] === 'update' && $options['type'] === 'plugin' ) {
-                if ( ! empty( get_option( 'c4p_mode' ) ) ) {
-                    $mode = get_option( 'c4p_mode' );
-                    $page = get_option( 'c4p_selected_page' );
-                    $url  = get_option( 'c4p_selected_url' );
-                    self::update_mode( $mode, $page, $url );
-                    delete_option( 'c4p_mode' );
-                    delete_option( 'c4p_selected_page' );
-                    delete_option( 'c4p_selected_url' );
-                }
-                // When new features are requested by customers, they usually get a new option.
-                // This is where we add new option keys when customers upgrade the plugin.
-                $this->helpers->upsert_option( 'log_ip', true );
-            }
-        }
-        // TODO: Migrate old logs
-    }
+    // Not needed for now, commenting
+    // public function custom_404_pro_upgrader( $upgrader_object, $options ) {
+    //     global $wpdb;
+    //     if(current_user_can('administrator')) {
+    //         if ( $options['action'] === 'update' && $options['type'] === 'plugin' ) {
+    //             if ( ! empty( get_option( 'c4p_mode' ) ) ) {
+    //                 $mode = get_option( 'c4p_mode' );
+    //                 $page = get_option( 'c4p_selected_page' );
+    //                 $url  = get_option( 'c4p_selected_url' );
+    //                 self::update_mode( $mode, $page, $url );
+    //                 delete_option( 'c4p_mode' );
+    //                 delete_option( 'c4p_selected_page' );
+    //                 delete_option( 'c4p_selected_url' );
+    //             }
+    //             // When new features are requested by customers, they usually get a new option.
+    //             // This is where we add new option keys when customers upgrade the plugin.
+    //             $this->helpers->upsert_option( 'log_ip', true );
+    //         }
+    //     }
+    //     // TODO: Migrate old logs
+    // }
 }
