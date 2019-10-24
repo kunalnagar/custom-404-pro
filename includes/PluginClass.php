@@ -20,7 +20,7 @@ class PluginClass {
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_styles' ) );
 		add_action( 'admin_init', array( $this->plugin_admin, 'custom_404_pro_admin_init' ) );
 		add_action( 'template_redirect', array( $this->plugin_admin, 'custom_404_pro_redirect' ) );
-		add_action( 'upgrader_process_complete', array( $this->plugin_admin, 'custom_404_pro_upgrader' ), 10, 2 );
+		// add_action( 'upgrader_process_complete', array( $this->plugin_admin, 'custom_404_pro_upgrader' ), 10, 2 );
 		add_action( 'admin_notices', array( $this->plugin_admin, 'custom_404_pro_notices' ) );
 
 		// Custom hooks
