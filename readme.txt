@@ -1,10 +1,10 @@
-=== Plugin Name ===
+=== Custom 404 Pro ===
 Contributors: kunalnagar
 Donate link: https://www.paypal.me/kunalnagar/10
 Tags: wordpress, 404, 404 error page, 404 link, 404 page, broken link, custom 404, custom 404 error, custom 404 error page, custom 404 page, customize 404, customize 404 error page, customize 404 page, error, error page, missing, page, page not found, page not found error
 Requires at least: 3.0.1
 Tested up to: 5.2
-Stable tag: 3.2.13
+Stable tag: 3.2.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,8 @@ Override the default 404 page with any page from the Admin Panel or a Custom URL
 == Description ==
 
 Allows users to replace the default 404 page with a custom page from the Pages section in the Admin Panel. Or you can specify a complete URL to redirect on 404.
+
+= Important Note =
 
 Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issues). I will not be using the WordPress.org support area.
 
@@ -35,6 +37,16 @@ Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issu
 * Copy the custom-404-pro folder to the wp-content/plugins directory.
 * Activate from the Plugins Section.
 
+== Frequently Asked Questions ==
+
+= Why is the 404 custom redirect not working? =
+
+Some users have reported an issue with the Divi theme where the 404 redirect does not work. In such cases, please disable the Divi theme and try again. It's usually a good practice to start disabling themes/plugins one by one and work your way backward to see what might be causing the issue.
+
+= Why are my plugin preferences not being saved? =
+
+Uninstall the plugin from the Plugins page (important!) and reinstall it. Never remove plugin folders directly from your WordPress installation as this DOES NOT cleanup plugin database tables.
+
 == Screenshots ==
 
 1. Activate the plugin from the WordPress Admin Panel
@@ -42,6 +54,9 @@ Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issu
 3. Global Settings
 
 == Changelog ==
+
+= 3.2.14 =
+* Update Readme to include FAQ
 
 = 3.2.13 =
 * Remove upgrader script
