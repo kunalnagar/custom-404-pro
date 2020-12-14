@@ -18,8 +18,7 @@
 							<div class="c4p-left" style="width: 70%">
 								<p>Hi.</p>
 								<p>My name is <b>Kunal Nagar</b> and I'm a Front-End Web Developer.</p>
-								<p><b><u>I am currently looking for opportunities in the Vancouver and Toronto area.</u></b></p>
-								<p>For more info and résumé, you can visit my <a href="https://kunalnagar.in" target="_blank">website</a>.</p>
+								<p>For more info and résumé, you can visit my <a href="https://www.kunalnagar.in" target="_blank" rel="noopener noreferrer">website</a>.</p>
 							</div>
 						</div>
 					</div>
