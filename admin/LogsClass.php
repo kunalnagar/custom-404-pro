@@ -37,7 +37,7 @@ class LogsClass extends WP_List_Table {
 		$sortable              = self::get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$helpers               = Helpers::singleton();
-		$sql                   = 'SELECT * FROM ' . $helpers->table_logs;
+		$sql                   = 'SELECT * FROM ' . $wpdb->prefix . $helpers->table_logs;
 
 		if ( array_key_exists( 'orderby', $_GET ) ) {
 			$order_by = esc_html($_GET['orderby']);

@@ -2,27 +2,39 @@
 
 class ActivateClass {
 
-	public static function activate() {
+    static function _activate() {
+        global $wpdb;
+        $helpers                = Helpers::singleton();
+        $is_table_options_query = "SHOW TABLES LIKE '" . $wpdb->prefix . $helpers->table_options . "';";
+        $is_table_logs_query    = "SHOW TABLES LIKE '" . $wpdb->prefix . $helpers->table_logs . "';";
+        $is_table_options       = $wpdb->query( $is_table_options_query );
+        $is_table_logs          = $wpdb->query( $is_table_logs_query );
+        if ( empty( $is_table_options ) && empty( $is_table_logs ) ) {
+            self::create_tables();
+            self::initialize_options();
+        }
+    }
+
+	public static function activate($network_wide) {
 		global $wpdb;
         if(current_user_can('administrator')) {
-    		$helpers                = Helpers::singleton();
-    		$is_table_options_query = "SHOW TABLES LIKE '" . $helpers->table_options . "';";
-    		$is_table_logs_query    = "SHOW TABLES LIKE '" . $helpers->table_logs . "';";
-    		$is_table_options       = $wpdb->query( $is_table_options_query );
-    		$is_table_logs          = $wpdb->query( $is_table_logs_query );
-    		if ( empty( $is_table_options ) && empty( $is_table_logs ) ) {
-    			self::create_tables();
-    			self::initialize_options();
-    		}
+            $sites = get_sites(['fields'=>'ids']);
+            foreach ($sites as $blog_id) {
+                switch_to_blog($blog_id);
+                self::_activate();
+                restore_current_blog();
+            }
         }
 	}
 
 	public static function create_tables() {
 		global $wpdb;
+        $helpers                = Helpers::singleton();
+        $table_options = $wpdb->prefix . $helpers->table_options;
+        $table_logs = $wpdb->prefix . $helpers->table_logs;
         if(current_user_can('administrator')) {
     		$charset_collate = $wpdb->get_charset_collate();
-    		$helpers         = Helpers::singleton();
-    		$sql_logs        = "CREATE TABLE $helpers->table_logs (
+    		$sql_logs        = "CREATE TABLE $table_logs (
     			id mediumint(9) NOT NULL AUTO_INCREMENT,
     			ip text,
     			path text,
@@ -32,7 +44,7 @@ class ActivateClass {
     			updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     		  	PRIMARY KEY (id)
     		) $charset_collate;";
-    		$sql_options     = "CREATE TABLE $helpers->table_options (
+    		$sql_options     = "CREATE TABLE $table_options (
     			id mediumint(9) NOT NULL AUTO_INCREMENT,
     			name text,
     			value text,
