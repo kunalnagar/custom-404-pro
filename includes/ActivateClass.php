@@ -15,14 +15,18 @@ class ActivateClass {
         }
     }
 
-	public static function activate($network_wide) {
+	public static function activate() {
 		global $wpdb;
         if(current_user_can('administrator')) {
-            $sites = get_sites(['fields'=>'ids']);
-            foreach ($sites as $blog_id) {
-                switch_to_blog($blog_id);
+            if(is_multisite()) {
+                $sites = get_sites(['fields'=>'ids']);
+                foreach ($sites as $blog_id) {
+                    switch_to_blog($blog_id);
+                    self::_activate();
+                    restore_current_blog();
+                }
+            } else {
                 self::_activate();
-                restore_current_blog();
             }
         }
 	}
