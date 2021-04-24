@@ -14,8 +14,8 @@ class Helpers {
 
 	public function __construct() {
 		global $wpdb;
-		$this->table_options    = $wpdb->prefix . 'custom_404_pro_options';
-		$this->table_logs       = $wpdb->prefix . 'custom_404_pro_logs';
+		$this->table_options    = 'custom_404_pro_options';
+		$this->table_logs       = 'custom_404_pro_logs';
 		$this->options_defaults = array();
 		$options_defaults_temp  = array(
 			'mode'                => '',
@@ -33,12 +33,6 @@ class Helpers {
 			array_push( $this->options_defaults, $obj );
 		}
 	}
-
-	// public function plugin_data() {
-	// $plugin_main_file = dirname(__FILE__) . '/custom-404-pro/custom-404-pro.php';
-	// $plugin_data = get_plugin_data($plugin_main_file);
-	// return $plugin_data;
-	// }
 
 	public function print_pretty( $result ) {
 		echo '<pre>';
@@ -58,7 +52,7 @@ class Helpers {
 		global $wpdb;
         if(current_user_can('administrator')) {
             $count = count( $this->options_defaults );
-            $sql   = 'INSERT INTO ' . $this->table_options . ' (name, value) VALUES ';
+            $sql   = 'INSERT INTO ' . $wpdb->prefix . $this->table_options . ' (name, value) VALUES ';
             foreach ( $this->options_defaults as $key => $option ) {
                 if ( $key !== ( $count - 1 ) ) {
                     $sql .= "('" . $option->name . "', '" . $option->value . "'),";
@@ -73,7 +67,7 @@ class Helpers {
 	public function is_option( $option_name ) {
 		global $wpdb;
         if(current_user_can('administrator')) {
-    		$query  = 'SELECT * FROM ' . $this->table_options . " WHERE name='" . $option_name . "'";
+    		$query  = 'SELECT * FROM ' . $wpdb->prefix . $this->table_options . " WHERE name='" . $option_name . "'";
     		$result = $wpdb->get_results( $query );
     		if ( empty( $result ) ) {
     			return false;
@@ -86,7 +80,7 @@ class Helpers {
 	public function get_option( $option_name ) {
 		global $wpdb;
         if(current_user_can('administrator')) {
-    		$query  = 'SELECT value FROM ' . $this->table_options . " WHERE name='" . $option_name . "'";
+    		$query  = 'SELECT value FROM ' . $wpdb->prefix . $this->table_options . " WHERE name='" . $option_name . "'";
     		$result = $wpdb->get_var( $query );
     		return $result;
         }
@@ -96,7 +90,7 @@ class Helpers {
 		global $wpdb;
         if(current_user_can('administrator')) {
     		$result = $wpdb->insert(
-    			$this->table_options,
+    			$wpdb->prefix . $this->table_options,
     			array(
     				'name'  => $option_name,
     				'value' => $option_value,
@@ -110,7 +104,7 @@ class Helpers {
 		global $wpdb;
         if(current_user_can('administrator')) {
     		$result = $wpdb->update(
-    			$this->table_options,
+    			$wpdb->prefix . $this->table_options,
     			array( 'value' => $option_value ),
     			array( 'name' => $option_name )
     		);
@@ -133,7 +127,7 @@ class Helpers {
 	public function get_logs_columns() {
 		global $wpdb;
         if(current_user_can('administrator')) {
-    		$query  = 'SHOW COLUMNS FROM ' . $this->table_logs;
+    		$query  = 'SHOW COLUMNS FROM ' . $wpdb->prefix . $this->table_logs;
     		$result = $wpdb->get_results( $query );
     		return $result;
         }
@@ -162,7 +156,7 @@ class Helpers {
         if(current_user_can('administrator')) {
     		$count  = count( $logsData );
     		$logIDs = [];
-    		$query  = 'INSERT INTO ' . $this->table_logs . ' (ip, path, referer, user_agent) VALUES';
+    		$query  = 'INSERT INTO ' . $wpdb->prefix . $this->table_logs . ' (ip, path, referer, user_agent) VALUES';
     		foreach ( $logsData as $key => $log ) {
     			if ( ! empty( $log->id ) ) {
     				array_push( $logIDs, $log->id );
@@ -185,7 +179,7 @@ class Helpers {
 	public function get_logs() {
 		global $wpdb;
         if(current_user_can('administrator')) {
-    		$query  = 'SELECT * from ' . $this->table_logs;
+    		$query  = 'SELECT * from ' . $wpdb->prefix . $this->table_logs;
     		$result = $wpdb->get_results( $query, ARRAY_A );
     		return $result;
         }
@@ -195,11 +189,11 @@ class Helpers {
 		global $wpdb;
         if(current_user_can('administrator')) {
     		if ( $path === 'all' ) {
-    			$query = 'TRUNCATE TABLE ' . $this->table_logs;
+    			$query = 'TRUNCATE TABLE ' . $wpdb->prefix . $this->table_logs;
     		} elseif ( is_array( $path ) ) {
-    			$query = 'DELETE FROM ' . $this->table_logs . ' WHERE id in (' . implode( ',', $path ) . ')';
+    			$query = 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id in (' . implode( ',', $path ) . ')';
     		} else {
-    			$query = 'DELETE FROM ' . $this->table_logs . ' WHERE id=' . $path . '';
+    			$query = 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id=' . $path . '';
     		}
     		$result = $wpdb->query( $query );
     		return $result;

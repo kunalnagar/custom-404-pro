@@ -139,7 +139,7 @@ class AdminClass {
     public function custom_404_pro_redirect() {
         global $wpdb;
         if ( is_404() ) {
-            $sql                     = 'SELECT * FROM ' . $this->helpers->table_options;
+            $sql                     = 'SELECT * FROM ' . $wpdb->prefix . $this->helpers->table_options;
             $sql_result              = $wpdb->get_results( $sql );
             $row_mode                = $sql_result[0];
             $row_mode_page           = $sql_result[1];
@@ -181,7 +181,7 @@ class AdminClass {
             $referer = $_SERVER['HTTP_REFERER'];
         }
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $sql_save   = 'INSERT INTO ' . $this->helpers->table_logs . " (ip, path, referer, user_agent) VALUES ('$ip', '$path', '$referer', '$user_agent')";
+        $sql_save   = 'INSERT INTO ' . $wpdb->prefix . $this->helpers->table_logs . " (ip, path, referer, user_agent) VALUES ('$ip', '$path', '$referer', '$user_agent')";
         $wpdb->query( $sql_save );
         if ( ! empty( $is_email ) ) {
             self::custom_404_pro_send_mail( $ip, $path, $referer, $user_agent );
