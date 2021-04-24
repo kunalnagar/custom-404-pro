@@ -34,12 +34,6 @@ class Helpers {
 		}
 	}
 
-	// public function plugin_data() {
-	// $plugin_main_file = dirname(__FILE__) . '/custom-404-pro/custom-404-pro.php';
-	// $plugin_data = get_plugin_data($plugin_main_file);
-	// return $plugin_data;
-	// }
-
 	public function print_pretty( $result ) {
 		echo '<pre>';
 		var_dump( $result );
