@@ -118,7 +118,7 @@ class AdminClass {
                 $action = sanitize_text_field($_REQUEST['action']);
                 if ( $action === 'c4p-logs--delete' ) {
                     if ( array_key_exists( 'path', $_REQUEST ) ) {
-                        $this->helpers->delete_logs( sanitize_text_field($_REQUEST['path']) );
+                        $this->helpers->delete_logs( sanitize_url($_REQUEST['path']) );
                         $message = urlencode( 'Log(s) successfully deleted!' );
                         wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
                     } else {

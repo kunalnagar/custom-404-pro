@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: wordpress, 404, 404 error page, 404 link, 404 page, broken link, custom 404, custom 404 error, custom 404 error page, custom 404 page, customize 404, customize 404 error page, customize 404 page, error, error page, missing, page, page not found, page not found error
 Requires at least: 3.0.1
 Tested up to: 6.1
-Stable tag: 3.7.0
+Stable tag: 3.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,7 +55,10 @@ Uninstall the plugin from the Plugins page (important!) and reinstall it. Never 
 
 == Changelog ==
 
-= 3.6.1 =
+= 3.7.1 =
+* Fix path vulnerability
+
+= 3.7.0 =
 * Support WordPress 6.1
 
 = 3.6.0 =
