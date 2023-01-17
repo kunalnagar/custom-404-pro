@@ -113,12 +113,12 @@ class AdminClass {
 
     public function custom_404_pro_admin_init() {
         global $wpdb;
-        if(current_user_can('administrator')) {
+        if( current_user_can( 'administrator' ) && wp_verify_nonce( $_REQUEST['form-logs-options'], 'form-logs-options' ) ) {
             if ( array_key_exists( 'action', $_REQUEST ) ) {
                 $action = sanitize_text_field($_REQUEST['action']);
                 if ( $action === 'c4p-logs--delete' ) {
                     if ( array_key_exists( 'path', $_REQUEST ) ) {
-                        $this->helpers->delete_logs( sanitize_url($_REQUEST['path']) );
+                        $this->helpers->delete_logs( $_REQUEST['path'] );
                         $message = urlencode( 'Log(s) successfully deleted!' );
                         wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
                     } else {
