@@ -91,12 +91,12 @@ class LogsClass extends WP_List_Table {
 		} elseif ( $order_by === 'r' ) {
 			$sql .= ' ORDER BY referer';
 		}
-		$sql .= ' ' . $order;
+		$sql .= ' ' . sanitize_sql_orderby( $order );
 		return $sql;
 	}
 
 	public function manage_search( $search, $sql ) {
-		$sql .= " WHERE (ip LIKE '%" . $search . "%' OR path LIKE '%" . $search . "%' OR referer LIKE '%" . $search . "%' OR user_agent LIKE '%" . $search . "%' OR created LIKE '%" . $search . "%')";
+		$sql .= " WHERE (ip LIKE '%" . sanitize_text_field( $search ) . "%' OR path LIKE '%" . $search . "%' OR referer LIKE '%" . $search . "%' OR user_agent LIKE '%" . $search . "%' OR created LIKE '%" . $search . "%')";
 		return $sql;
 	}
 

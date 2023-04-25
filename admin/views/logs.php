@@ -16,7 +16,7 @@ $logs_table->prepare_items();
 		<!-- Now we can render the completed list table -->
 		<p class="search-box">
 			<label class="screen-reader-text" for="search_id-search-input">Search</label>
-			<input id="search_id-search-input" type="text" name="s" value="<?php if ( array_key_exists( 's', $_GET ) ) { echo sanitize_text_field($_GET['s']); } ?>" autocomplete="off" />
+			<input id="search_id-search-input" type="text" name="s" value="<?php if ( array_key_exists( 's', $_GET ) ) { echo esc_attr($_GET['s']); } ?>" autocomplete="off" />
 			<input id="search-submit" class="button" type="submit" name="" value="Search" />
 		</p>
 		<?php $logs_table->display(); ?>

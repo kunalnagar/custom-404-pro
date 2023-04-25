@@ -1,7 +1,7 @@
 <?php
 global $wpdb;
 $helpers                 = Helpers::singleton();
-$sql                     = 'SELECT * FROM ' . $helpers->table_options;
+$sql                     = 'SELECT * FROM ' . $wpdb->prefix . $helpers->table_options;
 $result                  = $wpdb->get_results( $sql );
 $row_send_email          = $result[3];
 $row_logging_enabled     = $result[4];

@@ -181,7 +181,7 @@ class AdminClass {
             $referer = $_SERVER['HTTP_REFERER'];
         }
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $sql_save   = 'INSERT INTO ' . $wpdb->prefix . $this->helpers->table_logs . " (ip, path, referer, user_agent) VALUES ('$ip', '$path', '$referer', '$user_agent')";
+        $sql_save   = $wpdb->prepare("INSERT INTO `$wpdb->prefix . $this->helpers->table_logs` ('ip', 'path', 'referer', 'user_agent') VALUES (%s, %s, %s, %s)", $ip, $path, $referer, $user_agent);
         $wpdb->query( $sql_save );
         if ( ! empty( $is_email ) ) {
             self::custom_404_pro_send_mail( $ip, $path, $referer, $user_agent );
