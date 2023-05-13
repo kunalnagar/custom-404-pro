@@ -96,7 +96,8 @@ class LogsClass extends WP_List_Table {
 	}
 
 	public function manage_search( $search, $sql ) {
-		$sql .= " WHERE (ip LIKE '%" . esc_sql( $search ) . "%' OR path LIKE '%" . $search . "%' OR referer LIKE '%" . $search . "%' OR user_agent LIKE '%" . $search . "%' OR created LIKE '%" . $search . "%')";
+		$escaped_search = esc_sql( $search );
+        $sql .= " WHERE (ip LIKE '%" . esc_sql( $escaped_search ) . "%' OR path LIKE '%" . $escaped_search . "%' OR referer LIKE '%" . $escaped_search . "%' OR user_agent LIKE '%" . $escaped_search . "%' OR created LIKE '%" . $escaped_search . "%')";
 		return $sql;
 	}
 
