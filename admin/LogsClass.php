@@ -59,11 +59,11 @@ class LogsClass extends WP_List_Table {
 		for ( $i = 0; $i < count( $sql_data ); $i++ ) {
 			$temp               = array();
 			$temp['id']         = $sql_data[ $i ]->id;
-			$temp['ip']         = $sql_data[ $i ]->ip;
-			$temp['path']       = $sql_data[ $i ]->path;
-			$temp['referer']    = $sql_data[ $i ]->referer;
-			$temp['user_agent'] = $sql_data[ $i ]->user_agent;
-			$temp['created']    = $sql_data[ $i ]->created;
+			$temp['ip']         = sanitize_text_field($sql_data[ $i ]->ip);
+			$temp['path']       = sanitize_text_field($sql_data[ $i ]->path);
+			$temp['referer']    = sanitize_text_field($sql_data[ $i ]->referer);
+			$temp['user_agent'] = sanitize_text_field($sql_data[ $i ]->user_agent);
+			$temp['created']    = sanitize_text_field($sql_data[ $i ]->created);
 			array_push( $data, $temp );
 		}
 		$per_page     = 50;
