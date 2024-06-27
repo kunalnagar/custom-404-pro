@@ -22,30 +22,30 @@ if ( $mode === 'page' ) {
 		<table class="form-table">
 			<tbody>
 			<tr>
-				<th>Mode</th>
+				<th><?php esc_html_e( 'Mode', 'custom-404-pro' ); ?></th>
 				<td>
 					<select id="c4p_mode" name="mode">
-						<option value="">None</option>
+						<option value=""><?php esc_html_e( 'None', 'custom-404-pro' ); ?></option>
 						<option value="page" <?php echo ( $mode == 'page' ) ? 'selected' : ''; ?>>
-							WordPress Page
+							<?php esc_html_e( 'WordPress Page', 'custom-404-pro' ); ?>
 						</option>
 						<option value="url" <?php echo ( $mode == 'url' ) ? 'selected' : ''; ?>>
-							URL
+							<?php esc_html_e( 'URL', 'custom-404-pro' ); ?>
 						</option>
 					</select>
 					<p class="description">
-						<b>WordPress Page:</b> Select any WordPress page as a redirect page.
+						<?php printf(esc_html__( '%1$sWordPress Page:%2$s Select any WordPress page as a redirect page.', 'custom-404-pro' ),'<b>','</b>'); ?>
 					</p>
 					<p class="description">
-						<b>URL:</b> Redirect chosen error requests to a specific URL
+						<?php printf(esc_html__( '%1$sURL:%2$s Redirect chosen error requests to a specific URL.', 'custom-404-pro' ),'<b>','</b>'); ?>
 					</p>
 				</td>
 			</tr>
 			<tr id="c4p_page" class="select-page">
-				<th>Select a Page</th>
+				<th><?php esc_html_e( 'Select a Page', 'custom-404-pro' ); ?></th>
 				<td>
 					<select name="mode_page">
-						<option value="">None (Default Error Page)</option>
+						<option value=""><?php esc_html_e( 'None (Default Error Page)', 'custom-404-pro' ); ?></option>
 		<?php foreach ( $pages as $page ) : ?>
 							<option value="<?php echo $page->ID; ?>" <?php echo ( $page->ID == $mode_page ) ? 'selected' : ''; ?>>
 			<?php echo $page->post_title; ?>
@@ -53,16 +53,16 @@ if ( $mode === 'page' ) {
 		<?php endforeach; ?>
 					</select>
 					<p class="description">
-						The Default error page will be replaced by the page you choose in this list.
+						<?php esc_html_e( 'The Default error page will be replaced by the page you choose in this list.', 'custom-404-pro' ); ?>
 					</p>
 				</td>
 			</tr>
 			<tr id="c4p_url" class="select-url">
-				<th>Enter a URL</th>
+				<th><?php esc_html_e( 'Enter a URL', 'custom-404-pro' ); ?></th>
 				<td>
 					<input id="mode_url" name="mode_url" type="url" class="regular-text" value="<?php echo $mode_url; ?>" autocomplete="off" <?php echo ( ! empty( $mode_url ) ) ? 'required = "required"' : ''; ?>>
 					<p class="description">
-						Enter a valid URL, for e.g. https://google.com
+						<?php esc_html_e( 'Enter a valid URL, for e.g. https://google.com', 'custom-404-pro' ); ?>
 					</p>
 				</td>
 			</tr>
@@ -70,12 +70,11 @@ if ( $mode === 'page' ) {
 		</table>
 		<p class="submit">
 			<input type="hidden" name="action" value="form-settings-global-redirect"/>
-			<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'custom-404-pro' ); ?>">
             <?php wp_nonce_field("form-settings-global-redirect", "form-settings-global-redirect"); ?>
 		</p>
 	</form>
 	<p class="description">
-		<b>Note: </b>To revert back to the default setting, please choose <b>None</b> from the list and <b>Save
-			Changes</b>.
+		<?php printf(esc_html__( '%1$sNote:%2$s To revert back to the default setting, please choose %1$sNone%2$s from the list and %1$sSave Changes%2$s.', 'custom-404-pro' ),'<b>','</b>'); ?>
 	</p>
 </div>

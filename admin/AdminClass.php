@@ -9,9 +9,9 @@ class AdminClass {
     public function create_menu() {
         if(current_user_can('administrator')) {
             add_menu_page( 'Custom 404 Pro', 'Custom 404 Pro', 'manage_options', 'c4p-main', array( $this, 'page_logs' ), 'dashicons-chart-bar' );
-            add_submenu_page( 'c4p-main', 'Logs', 'Logs', 'manage_options', 'c4p-main', array( $this, 'page_logs' ) );
-            add_submenu_page( 'c4p-main', 'Settings', 'Settings', 'manage_options', 'c4p-settings', array( $this, 'page_settings' ) );
-            add_submenu_page( 'c4p-main', 'About', 'About', 'manage_options', 'c4p-about', array( $this, 'page_about' ) );
+            add_submenu_page( 'c4p-main', __( 'Logs', 'custom-404-pro' ), __( 'Logs', 'custom-404-pro' ), 'manage_options', 'c4p-main', array( $this, 'page_logs' ) );
+            add_submenu_page( 'c4p-main', __( 'Settings', 'custom-404-pro' ), __( 'Settings', 'custom-404-pro' ), 'manage_options', 'c4p-settings', array( $this, 'page_settings' ) );
+            add_submenu_page( 'c4p-main', __( 'About', 'custom-404-pro' ), __( 'About', 'custom-404-pro' ), 'manage_options', 'c4p-about', array( $this, 'page_about' ) );
         }
     }
 
@@ -74,7 +74,7 @@ class AdminClass {
             $page = sanitize_text_field($_POST['mode_page']);
             $url  = sanitize_text_field($_POST['mode_url']);
             self::update_mode( $mode, $page, $url );
-            $message = urlencode( 'Saved!' );
+            $message = urlencode( __( 'Saved!', 'custom-404-pro') );
             wp_redirect( admin_url( 'admin.php?page=c4p-settings&tab=global-redirect&c4pmessage=' . $message . '&c4pmessageType=success' ) );
         }
     }
@@ -106,7 +106,7 @@ class AdminClass {
             $this->helpers->update_option( 'redirect_error_code', $field_redirect_error_code );
             // New options
             $this->helpers->upsert_option( 'log_ip', $field_log_ip );
-            $message = urlencode( 'Saved!' );
+            $message = urlencode( __( 'Saved!', 'custom-404-pro') );
             wp_redirect( admin_url( 'admin.php?page=c4p-settings&tab=general&c4pmessage=' . $message . '&c4pmessageType=success' ) );
         }
     }
@@ -119,15 +119,15 @@ class AdminClass {
                 if ( $action === 'c4p-logs--delete' ) {
                     if ( array_key_exists( 'path', $_REQUEST ) ) {
                         $this->helpers->delete_logs( $_REQUEST['path'] );
-                        $message = urlencode( 'Log(s) successfully deleted!' );
+                        $message = urlencode( __( 'Log(s) successfully deleted!', 'custom-404-pro' ) );
                         wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
                     } else {
-                        $message = urlencode( 'Please select a few logs to delete and try again.' );
+                        $message = urlencode( __( 'Please select a few logs to delete and try again.', 'custom-404-pro' ) );
                         wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=warning' ) );
                     }
                 } elseif ( $action === 'c4p-logs--delete-all' ) {
                     $this->helpers->delete_logs( 'all' );
-                    $message = urlencode( 'All Logs successfully deleted!' );
+                    $message = urlencode( __( 'All Logs successfully deleted!', 'custom-404-pro' ) );
                     wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
                 } elseif ( $action === 'c4p-logs--export-csv' ) {
                     $this->helpers->export_logs_csv();
@@ -165,7 +165,7 @@ class AdminClass {
             $this->helpers->insert_option( 'log_ip', true );
         }
         if ( empty( $this->helpers->get_option( 'log_ip' ) ) ) {
-            $ip = 'N/A';
+            $ip = __( 'N/A', 'custom-404-pro' );
         } else {
             if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
                 $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -199,32 +199,32 @@ class AdminClass {
         }
         $headers[] = 'From: Site Admin <' . $admin_email . '>' . "\r\n";
         $headers[] = 'Content-Type: text/html; charset=UTF-8';
-        $message   = '<p>Here are the 404 Log Details:</p>';
+        $message   = '<p>' . esc_html__( 'Here are the 404 Log Details:', 'custom-404-pro' ) . '</p>';
         $message  .= '<table>';
         $message  .= '<tr>';
-        $message  .= '<th>Site</th>';
+        $message  .= '<th>' . esc_html__( 'Site', 'custom-404-pro' ) . '</th>';
         $message  .= '<td>' . $current_site_name . '</td>';
         $message  .= '</tr>';
         $message  .= '<tr>';
-        $message  .= '<th>User IP</th>';
+        $message  .= '<th>' . esc_html__( 'User IP', 'custom-404-pro' ) . '</th>';
         $message  .= '<td>' . $ip . '</td>';
         $message  .= '</tr>';
         $message  .= '<tr>';
-        $message  .= '<th>404 Path</th>';
+        $message  .= '<th>' . esc_html__( '404 Path', 'custom-404-pro' ) . '</th>';
         $message  .= '<td>' . $path . '</td>';
         $message  .= '</tr>';
         $message  .= '<tr>';
-        $message  .= '<th>Referer</th>';
+        $message  .= '<th>' . esc_html__( 'Referer', 'custom-404-pro' ) . '</th>';
         $message  .= '<td>' . $referer . '</td>';
         $message  .= '</tr>';
         $message  .= '<tr>';
-        $message  .= '<th>User Agent</th>';
+        $message  .= '<th>' . esc_html__( 'User Agent', 'custom-404-pro' ) . '</th>';
         $message  .= '<td>' . $user_agent . '</td>';
         $message  .= '</tr>';
         $message  .= '</table>';
         $is_sent   = wp_mail(
             $admin_email,
-            '404 Error on Site',
+            __( '404 Error on Site', 'custom-404-pro' ),
             $message,
             $headers
         );

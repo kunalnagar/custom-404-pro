@@ -7,6 +7,7 @@ Description: Override the default 404 page with any page or a custom URL from th
 Version: 3.11.0
 Author: Kunal Nagar
 Author URI: https://www.kunalnagar.in
+Text Domain: custom-404-pro
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 */
