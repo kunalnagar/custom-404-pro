@@ -14,7 +14,7 @@ if ( array_key_exists( 6, $result ) ) {
 }
 ?>
 <div class="wrap">
-    <form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
+	<form method="post" action="<?php echo get_admin_url() . 'admin-post.php'; ?>">
 		<table class="form-table">
 			<tbody>
 			<tr>
@@ -74,7 +74,7 @@ if ( array_key_exists( 6, $result ) ) {
 		<p class="submit">
 			<input type="hidden" name="action" value="form-settings-general"/>
 			<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
-            <?php wp_nonce_field("form-settings-general", "form-settings-general"); ?>
+			<?php wp_nonce_field( 'form-settings-general', 'form-settings-general' ); ?>
 		</p>
 	</form>
 </div>

@@ -38,7 +38,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/PluginClass.php';
 require plugin_dir_path( __FILE__ ) . 'admin/Helpers.php';
 
 function run_custom_404_pro() {
-	 Helpers::singleton();
+	Helpers::singleton();
 	new PluginClass();
 }
 

@@ -50,181 +50,181 @@ class Helpers {
 
 	public function initialize_table_options() {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-            $count = count( $this->options_defaults );
-            $sql   = 'INSERT INTO ' . $wpdb->prefix . $this->table_options . ' (name, value) VALUES ';
-            foreach ( $this->options_defaults as $key => $option ) {
-                if ( $key !== ( $count - 1 ) ) {
-                    $sql .= "('" . $option->name . "', '" . $option->value . "'),";
-                } else {
-                    $sql .= "('" . $option->name . "', '" . $option->value . "')";
-                }
-            }
-            $wpdb->query( $sql );
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$count = count( $this->options_defaults );
+			$sql   = 'INSERT INTO ' . $wpdb->prefix . $this->table_options . ' (name, value) VALUES ';
+			foreach ( $this->options_defaults as $key => $option ) {
+				if ( $key !== ( $count - 1 ) ) {
+					$sql .= "('" . $option->name . "', '" . $option->value . "'),";
+				} else {
+					$sql .= "('" . $option->name . "', '" . $option->value . "')";
+				}
+			}
+			$wpdb->query( $sql );
+		}
 	}
 
 	public function is_option( $option_name ) {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		$query  = 'SELECT * FROM ' . $wpdb->prefix . $this->table_options . " WHERE name='" . $option_name . "'";
-    		$result = $wpdb->get_results( $query );
-    		if ( empty( $result ) ) {
-    			return false;
-    		} else {
-    			return $result[0];
-    		}
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$query  = 'SELECT * FROM ' . $wpdb->prefix . $this->table_options . " WHERE name='" . $option_name . "'";
+			$result = $wpdb->get_results( $query );
+			if ( empty( $result ) ) {
+				return false;
+			} else {
+				return $result[0];
+			}
+		}
 	}
 
 	public function get_option( $option_name ) {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		$query  = 'SELECT value FROM ' . $wpdb->prefix . $this->table_options . " WHERE name='" . $option_name . "'";
-    		$result = $wpdb->get_var( $query );
-    		return $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$query  = 'SELECT value FROM ' . $wpdb->prefix . $this->table_options . " WHERE name='" . $option_name . "'";
+			$result = $wpdb->get_var( $query );
+			return $result;
+		}
 	}
 
 	public function insert_option( $option_name, $option_value ) {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		$result = $wpdb->insert(
-    			$wpdb->prefix . $this->table_options,
-    			array(
-    				'name'  => $option_name,
-    				'value' => $option_value,
-    			)
-    		);
-    		return $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$result = $wpdb->insert(
+				$wpdb->prefix . $this->table_options,
+				array(
+					'name'  => $option_name,
+					'value' => $option_value,
+				)
+			);
+			return $result;
+		}
 	}
 
 	public function update_option( $option_name, $option_value ) {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		$result = $wpdb->update(
-    			$wpdb->prefix . $this->table_options,
-    			array( 'value' => $option_value ),
-    			array( 'name' => $option_name )
-    		);
-    		return $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$result = $wpdb->update(
+				$wpdb->prefix . $this->table_options,
+				array( 'value' => $option_value ),
+				array( 'name' => $option_name )
+			);
+			return $result;
+		}
 	}
 
 	public function upsert_option( $option_name, $option_value ) {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		if ( self::is_option( $option_name ) ) {
-    			$result = self::update_option( $option_name, $option_value );
-    		} else {
-    			$result = self::insert_option( $option_name, $option_value );
-    		}
-    		return $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			if ( self::is_option( $option_name ) ) {
+				$result = self::update_option( $option_name, $option_value );
+			} else {
+				$result = self::insert_option( $option_name, $option_value );
+			}
+			return $result;
+		}
 	}
 
 	public function get_logs_columns() {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		$query  = 'SHOW COLUMNS FROM ' . $wpdb->prefix . $this->table_logs;
-    		$result = $wpdb->get_results( $query );
-    		return $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$query  = 'SHOW COLUMNS FROM ' . $wpdb->prefix . $this->table_logs;
+			$result = $wpdb->get_results( $query );
+			return $result;
+		}
 	}
 
 	public function get_old_logs_count() {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		$query  = 'SELECT COUNT(*) FROM ' . $wpdb->prefix . "posts WHERE post_type='c4p_log'";
-    		$result = $wpdb->get_var( $query );
-    		return (int) $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$query  = 'SELECT COUNT(*) FROM ' . $wpdb->prefix . "posts WHERE post_type='c4p_log'";
+			$result = $wpdb->get_var( $query );
+			return (int) $result;
+		}
 	}
 
 	public function delete_old_logs( $logIDs ) {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		foreach ( $logIDs as $id ) {
-    			wp_delete_post( $id, true );
-    		}
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			foreach ( $logIDs as $id ) {
+				wp_delete_post( $id, true );
+			}
+		}
 	}
 
 	public function create_logs( $logsData, $isDeletingOld ) {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		$count  = count( $logsData );
-    		$logIDs = [];
-    		$query  = 'INSERT INTO ' . $wpdb->prefix . $this->table_logs . ' (ip, path, referer, user_agent) VALUES';
-    		foreach ( $logsData as $key => $log ) {
-    			if ( ! empty( $log->id ) ) {
-    				array_push( $logIDs, $log->id );
-    			}
-    			$query .= " ('$log->ip', '$log->path', '$log->referer', '$log->user_agent')";
-    			if ( $key < $count - 1 ) {
-    				$query .= ',';
-    			}
-    		}
-    		$result = $wpdb->query( $query );
-    		if ( ! is_wp_error( $result ) ) {
-    			if ( ! empty( $isDeletingOld ) && $isDeletingOld ) {
-    				self::delete_old_logs( $logIDs );
-    			}
-    		}
-    		return $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$count  = count( $logsData );
+			$logIDs = array();
+			$query  = 'INSERT INTO ' . $wpdb->prefix . $this->table_logs . ' (ip, path, referer, user_agent) VALUES';
+			foreach ( $logsData as $key => $log ) {
+				if ( ! empty( $log->id ) ) {
+					array_push( $logIDs, $log->id );
+				}
+				$query .= " ('$log->ip', '$log->path', '$log->referer', '$log->user_agent')";
+				if ( $key < $count - 1 ) {
+					$query .= ',';
+				}
+			}
+			$result = $wpdb->query( $query );
+			if ( ! is_wp_error( $result ) ) {
+				if ( ! empty( $isDeletingOld ) && $isDeletingOld ) {
+					self::delete_old_logs( $logIDs );
+				}
+			}
+			return $result;
+		}
 	}
 
 	public function get_logs() {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		$query  = 'SELECT * from ' . $wpdb->prefix . $this->table_logs;
-    		$result = $wpdb->get_results( $query, ARRAY_A );
-    		return $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$query  = 'SELECT * from ' . $wpdb->prefix . $this->table_logs;
+			$result = $wpdb->get_results( $query, ARRAY_A );
+			return $result;
+		}
 	}
 
 	public function delete_logs( $path ) {
 		global $wpdb;
-        if(current_user_can('administrator')) {
-    		if ( $path === 'all' ) {
-    			$query = 'TRUNCATE TABLE ' . $wpdb->prefix . $this->table_logs;
-    		} elseif ( is_array( $path ) ) {
-    			$query = 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id in (' . implode( ',', $path ) . ')';
-    		} else {
-    			$query = 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id=' . $path . '';
-    		}
-    		$result = $wpdb->query( $query );
-    		return $result;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			if ( $path === 'all' ) {
+				$query = 'TRUNCATE TABLE ' . $wpdb->prefix . $this->table_logs;
+			} elseif ( is_array( $path ) ) {
+				$query = 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id in (' . implode( ',', $path ) . ')';
+			} else {
+				$query = 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id=' . $path . '';
+			}
+			$result = $wpdb->query( $query );
+			return $result;
+		}
 	}
 
 	public function export_logs_csv() {
-        if(current_user_can('administrator')) {
-    		$filename   = 'logs_' . time() . '.csv';
-    		$csv_output = '';
-    		$columns    = self::get_logs_columns();
-    		if ( count( $columns ) > 0 ) {
-    			foreach ( $columns as $column ) {
-    				$csv_output .= $column->Field . ', ';
-    			}
-    		}
-    		$csv_output .= "\n";
-    		$results     = self::get_logs();
-    		if ( count( $results ) > 0 ) {
-    			foreach ( $results as $result ) {
-    				foreach ( $result as $q ) {
-    					$csv_output .= "\"$q\"" . ', ';
-    				}
-    				$csv_output .= "\n";
-    			}
-    		}
-    		header( 'Content-Type: application/csv' );
-    		header( 'Content-Disposition: attachment; filename=' . $filename );
-    		header( 'Pragma: no-cache' );
-    		print $csv_output;
-    		exit;
-        }
+		if ( current_user_can( 'administrator' ) ) {
+			$filename   = 'logs_' . time() . '.csv';
+			$csv_output = '';
+			$columns    = self::get_logs_columns();
+			if ( count( $columns ) > 0 ) {
+				foreach ( $columns as $column ) {
+					$csv_output .= $column->Field . ', ';
+				}
+			}
+			$csv_output .= "\n";
+			$results     = self::get_logs();
+			if ( count( $results ) > 0 ) {
+				foreach ( $results as $result ) {
+					foreach ( $result as $q ) {
+						$csv_output .= "\"$q\"" . ', ';
+					}
+					$csv_output .= "\n";
+				}
+			}
+			header( 'Content-Type: application/csv' );
+			header( 'Content-Disposition: attachment; filename=' . $filename );
+			header( 'Pragma: no-cache' );
+			print $csv_output;
+			exit;
+		}
 	}
 }

@@ -71,7 +71,7 @@ if ( $mode === 'page' ) {
 		<p class="submit">
 			<input type="hidden" name="action" value="form-settings-global-redirect"/>
 			<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
-            <?php wp_nonce_field("form-settings-global-redirect", "form-settings-global-redirect"); ?>
+			<?php wp_nonce_field( 'form-settings-global-redirect', 'form-settings-global-redirect' ); ?>
 		</p>
 	</form>
 	<p class="description">
