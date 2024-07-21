@@ -40,15 +40,15 @@ class LogsClass extends WP_List_Table {
 		$sql                   = 'SELECT * FROM ' . $wpdb->prefix . $helpers->table_logs;
 
 		if ( array_key_exists( 'orderby', $_GET ) ) {
-			$order_by = esc_html($_GET['orderby']);
-			$order    = strtoupper( esc_html($_GET['order']) );
+			$order_by = esc_html( $_GET['orderby'] );
+			$order    = strtoupper( esc_html( $_GET['order'] ) );
 			if ( ! empty( $order_by ) && ! empty( $order ) ) {
 				$sql = self::manage_sorting( $order_by, $order, $sql );
 			}
 		}
 
 		if ( array_key_exists( 's', $_GET ) ) {
-			$search = esc_html($_GET['s']);
+			$search = esc_html( $_GET['s'] );
 			if ( ! empty( $search ) ) {
 				$sql = self::manage_search( $search, $sql );
 			}
@@ -59,11 +59,11 @@ class LogsClass extends WP_List_Table {
 		for ( $i = 0; $i < count( $sql_data ); $i++ ) {
 			$temp               = array();
 			$temp['id']         = $sql_data[ $i ]->id;
-			$temp['ip']         = sanitize_text_field($sql_data[ $i ]->ip);
-			$temp['path']       = sanitize_text_field($sql_data[ $i ]->path);
-			$temp['referer']    = sanitize_text_field($sql_data[ $i ]->referer);
-			$temp['user_agent'] = sanitize_text_field($sql_data[ $i ]->user_agent);
-			$temp['created']    = sanitize_text_field($sql_data[ $i ]->created);
+			$temp['ip']         = sanitize_text_field( $sql_data[ $i ]->ip );
+			$temp['path']       = sanitize_text_field( $sql_data[ $i ]->path );
+			$temp['referer']    = sanitize_text_field( $sql_data[ $i ]->referer );
+			$temp['user_agent'] = sanitize_text_field( $sql_data[ $i ]->user_agent );
+			$temp['created']    = sanitize_text_field( $sql_data[ $i ]->created );
 			array_push( $data, $temp );
 		}
 		$per_page     = 50;
@@ -97,7 +97,7 @@ class LogsClass extends WP_List_Table {
 
 	public function manage_search( $search, $sql ) {
 		$escaped_search = esc_sql( $search );
-        $sql .= " WHERE (ip LIKE '%" . esc_sql( $escaped_search ) . "%' OR path LIKE '%" . $escaped_search . "%' OR referer LIKE '%" . $escaped_search . "%' OR user_agent LIKE '%" . $escaped_search . "%' OR created LIKE '%" . $escaped_search . "%')";
+		$sql           .= " WHERE (ip LIKE '%" . esc_sql( $escaped_search ) . "%' OR path LIKE '%" . $escaped_search . "%' OR referer LIKE '%" . $escaped_search . "%' OR user_agent LIKE '%" . $escaped_search . "%' OR created LIKE '%" . $escaped_search . "%')";
 		return $sql;
 	}
 
@@ -141,7 +141,7 @@ class LogsClass extends WP_List_Table {
 
 	public function column_ip( $item ) {
 		$actions = array(
-			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s">Delete</a>', esc_html($_REQUEST['page']), 'c4p-logs--delete', $item['id'] ),
+			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s">Delete</a>', esc_html( $_REQUEST['page'] ), 'c4p-logs--delete', $item['id'] ),
 		);
 		return sprintf(
 			'%1$s %2$s',
