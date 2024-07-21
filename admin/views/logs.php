@@ -12,7 +12,6 @@ $logs_table->prepare_items();
 	<form id="form_logs" method="GET">
 		<!-- For plugins, we also need to ensure that the form posts back to our current page -->
 		<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
-		<?php wp_nonce_field( 'form-logs-options', 'form-logs-options' ); ?>
 		<!-- Now we can render the completed list table -->
 		<p class="search-box">
 			<label class="screen-reader-text" for="search_id-search-input">Search</label>

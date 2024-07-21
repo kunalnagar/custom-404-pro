@@ -113,7 +113,9 @@ class AdminClass {
 
 	public function custom_404_pro_admin_init() {
 		global $wpdb;
-		if ( current_user_can( 'administrator' ) && wp_verify_nonce( $_REQUEST['form-logs-options'], 'form-logs-options' ) ) {
+		var_dump( $_REQUEST );
+		if ( current_user_can( 'administrator' ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'c4p-logs--delete' ) ) {
+			echo 'Hello!';
 			if ( array_key_exists( 'action', $_REQUEST ) ) {
 				$action = sanitize_text_field( $_REQUEST['action'] );
 				if ( $action === 'c4p-logs--delete' ) {
