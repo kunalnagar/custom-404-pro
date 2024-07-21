@@ -55,9 +55,9 @@ class AdminClass {
 		$html        = '';
 		if ( current_user_can( 'administrator' ) ) {
 			if ( array_key_exists( 'c4pmessage', $_REQUEST ) ) {
-				$message = urldecode( sanitize_text_field( $_REQUEST['c4pmessage'] ) );
+				$message = esc_html( urldecode( sanitize_text_field( $_REQUEST['c4pmessage'] ) ) );
 				if ( array_key_exists( 'c4pmessageType', $_REQUEST ) ) {
-					$messageType = sanitize_text_field( $_REQUEST['c4pmessageType'] );
+					$messageType = esc_html( sanitize_text_field( $_REQUEST['c4pmessageType'] ) );
 				}
 				$html .= '<div class="notice notice-' . $messageType . ' is-dismissible">';
 				$html .= '<p>' . $message . '</p>';
