@@ -140,8 +140,9 @@ class LogsClass extends WP_List_Table {
 	}
 
 	public function column_ip( $item ) {
+		$nonce   = wp_create_nonce( 'c4p-logs--delete' );
 		$actions = array(
-			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s">Delete</a>', esc_html( $_REQUEST['page'] ), 'c4p-logs--delete', $item['id'] ),
+			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s&_wpnonce=%s">Delete</a>', esc_html( $_REQUEST['page'] ), 'c4p-logs--delete', $item['id'], $nonce ),
 		);
 		return sprintf(
 			'%1$s %2$s',
