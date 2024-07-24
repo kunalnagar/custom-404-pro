@@ -13,7 +13,7 @@
 					<div class="inside">
 						<div class="c4p-clearfix">
 							<div class="c4p-left">
-								<img src="<?php echo plugin_dir_url( __FILE__ ) . 'me.png'; ?>" class="c4p-author-image"/>
+								<img src="<?php echo plugin_dir_url( __FILE__ ) . 'me.jpg'; ?>" class="c4p-author-image"/>
 							</div>
 							<div class="c4p-left" style="width: 70%">
 								<p>Hi.</p>
@@ -29,17 +29,12 @@
 					<h3 class="hndle ui-sortable-handle">Like the plugin?</h3>
 					<div class="inside">
 						<div class="misc-pub-section">
-							<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-								<input type="hidden" name="cmd" value="_donations"/>
-								<input type="hidden" name="business" value="knlnagar@gmail.com">
-								<input type="hidden" name="item_name" value="Custom 404 Pro is awesome!">
-								<input type="hidden" name="currency_code" value="USD"/>
-								<input type="hidden" name="first_name" value="Kunal">
-								<input type="hidden" name="last_name" value="Nagar">
-								<input type="hidden" name="email" value="knlnagar@gmail.com">
-								<input type="image" name="submit" border="0"
-										src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
-										alt="PayPal - The safer, easier way to pay online">
+							<form action="https://www.paypal.com/donate" method="post" target="_top">
+								<input type="hidden" name="business" value="YEKFFE2HSGHTJ" />
+								<input type="hidden" name="no_recurring" value="0" />
+								<input type="hidden" name="currency_code" value="CAD" />
+								<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+								<img alt="" border="0" src="https://www.paypal.com/en_CA/i/scr/pixel.gif" width="1" height="1" />
 							</form>
 						</div>
 					</div>
@@ -68,7 +63,7 @@
 						<div class="misc-pub-section">
 							<label>Email:</label>
 							<span>
-							<b><a href="mailto:knlnagar@gmail.com">knlnagar@gmail.com</a></b>
+							<b><a href="mailto:hireme@kunalnagar.in">hireme@kunalnagar.in</a></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
