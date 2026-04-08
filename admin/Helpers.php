@@ -4,6 +4,10 @@ class Helpers {
 
 	private static $instance;
 
+	public $table_options;
+	public $table_logs;
+	public $options_defaults;
+
 	public static function singleton() {
 		static $inst = null;
 		if ( $inst === null ) {
