@@ -3,8 +3,8 @@ Contributors: kunalnagar
 Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, 404 error page, custom 404 page, broken link
 Requires at least: 3.0.1
-Tested up to: 6.6
-Stable tag: 3.12.0
+Tested up to: 6.9.4
+Stable tag: 3.12.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,10 @@ Uninstall the plugin from the Plugins page (important!) and reinstall it. Never 
 3. Global Settings
 
 == Changelog ==
+
+= 3.12.1 =
+* Security: Remediate SQL injection and CSRF vulnerabilities (CVE-2025-9947)
+* Update tested up to WordPress 6.9.4
 
 = 3.12.0 =
 * Support WordPress 6.6
