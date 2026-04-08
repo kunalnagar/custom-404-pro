@@ -52,7 +52,7 @@ class Helpers {
 			$count = count( $this->options_defaults );
 			$sql   = 'INSERT INTO ' . $wpdb->prefix . $this->table_options . ' (name, value) VALUES '; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			foreach ( $this->options_defaults as $key => $option ) {
-				if ( $key !== ( $count - 1 ) ) {
+				if ( ( $count - 1 ) !== $key ) {
 					$sql .= "('" . $option->name . "', '" . $option->value . "'),";
 				} else {
 					$sql .= "('" . $option->name . "', '" . $option->value . "')";

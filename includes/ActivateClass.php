@@ -5,8 +5,8 @@ class ActivateClass {
 	private static function run_activation() {
 		global $wpdb;
 		$helpers                = Helpers::singleton();
-		$is_table_options_query = $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . $helpers->table_options ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$is_table_logs_query    = $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . $helpers->table_logs ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$is_table_options_query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->prefix . $helpers->table_options ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$is_table_logs_query    = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->prefix . $helpers->table_logs ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$is_table_options       = $wpdb->query( $is_table_options_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$is_table_logs          = $wpdb->query( $is_table_logs_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( empty( $is_table_options ) && empty( $is_table_logs ) ) {

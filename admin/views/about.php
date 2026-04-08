@@ -57,7 +57,15 @@
 						<div class="misc-pub-section">
 							<label>Author:</label>
 							<span>
-							<b><?php echo wp_kses( $plugin_data['Author'], array( 'a' => array( 'href' => array(), 'rel' => array() ) ) ); ?></b>
+							<b><?php echo wp_kses(
+								$plugin_data['Author'],
+								array(
+									'a' => array(
+										'href' => array(),
+										'rel'  => array(),
+									),
+								)
+							); ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">

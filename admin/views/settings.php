@@ -1,7 +1,7 @@
 <?php
 
-$tab        = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
-$active_tab = empty( $tab ) ? 'global-redirect' : $tab;
+$c4p_tab    = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+$active_tab = empty( $c4p_tab ) ? 'global-redirect' : $c4p_tab;
 
 ?>
 

@@ -6,15 +6,15 @@ $args     = array(
 );
 $wp_pages  = get_pages( $args );
 $sql_mode  = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options WHERE name = %s', 'mode' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-$mode      = $wpdb->get_var( $sql_mode ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-$mode_page = '';
-$mode_url  = '';
-if ( 'page' === $mode ) {
+$redirect_mode      = $wpdb->get_var( $sql_mode ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+$redirect_mode_page = '';
+$redirect_mode_url  = '';
+if ( 'page' === $redirect_mode ) {
 	$sql_mode_page = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options WHERE name = %s', 'mode_page' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-	$mode_page     = $wpdb->get_var( $sql_mode_page ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-} elseif ( 'url' === $mode ) {
+	$redirect_mode_page     = $wpdb->get_var( $sql_mode_page ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+} elseif ( 'url' === $redirect_mode ) {
 	$sql_mode_url = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options WHERE name = %s', 'mode_url' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-	$mode_url     = $wpdb->get_var( $sql_mode_url ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$redirect_mode_url     = $wpdb->get_var( $sql_mode_url ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 }
 ?>
 <div class="wrap">
@@ -26,10 +26,10 @@ if ( 'page' === $mode ) {
 				<td>
 					<select id="c4p_mode" name="mode">
 						<option value="">None</option>
-						<option value="page" <?php echo ( 'page' === $mode ) ? 'selected' : ''; ?>>
+						<option value="page" <?php echo ( 'page' === $redirect_mode ) ? 'selected' : ''; ?>>
 							WordPress Page
 						</option>
-						<option value="url" <?php echo ( 'url' === $mode ) ? 'selected' : ''; ?>>
+						<option value="url" <?php echo ( 'url' === $redirect_mode ) ? 'selected' : ''; ?>>
 							URL
 						</option>
 					</select>
@@ -47,7 +47,7 @@ if ( 'page' === $mode ) {
 					<select name="mode_page">
 						<option value="">None (Default Error Page)</option>
 		<?php foreach ( $wp_pages as $wp_page ) : ?>
-							<option value="<?php echo esc_attr( $wp_page->ID ); ?>" <?php echo ( $wp_page->ID === (int) $mode_page ) ? 'selected' : ''; ?>>
+							<option value="<?php echo esc_attr( $wp_page->ID ); ?>" <?php echo ( $wp_page->ID === (int) $redirect_mode_page ) ? 'selected' : ''; ?>>
 			<?php echo esc_html( $wp_page->post_title ); ?>
 							</option>
 		<?php endforeach; ?>
@@ -60,7 +60,7 @@ if ( 'page' === $mode ) {
 			<tr id="c4p_url" class="select-url">
 				<th>Enter a URL</th>
 				<td>
-					<input id="mode_url" name="mode_url" type="url" class="regular-text" value="<?php echo esc_url( $mode_url ); ?>" autocomplete="off" <?php echo ( ! empty( $mode_url ) ) ? 'required = "required"' : ''; ?>>
+					<input id="mode_url" name="mode_url" type="url" class="regular-text" value="<?php echo esc_url( $redirect_mode_url ); ?>" autocomplete="off" <?php echo ( ! empty( $redirect_mode_url ) ) ? 'required = "required"' : ''; ?>>
 					<p class="description">
 						Enter a valid URL, for e.g. https://google.com
 					</p>
