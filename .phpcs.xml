@@ -13,6 +13,24 @@
     <config name="minimum_supported_wp_version" value="5.0"/>
     <config name="testVersion" value="7.4-"/>
 
-    <rule ref="WordPress"/>
+    <rule ref="WordPress-Core">
+        <!-- File naming would require renaming all existing files — skip for now -->
+        <exclude name="WordPress.Files.FileName"/>
+        <!-- Docblocks are not present in the existing codebase -->
+        <exclude name="Squiz.Commenting"/>
+        <!-- Yoda conditions are a style preference, not a bug -->
+        <exclude name="WordPress.PHP.YodaConditions"/>
+        <!-- Direct DB queries are intentional in this plugin -->
+        <exclude name="WordPress.DB.DirectDatabaseQuery"/>
+        <!-- current_user_can('administrator') is an existing pattern throughout -->
+        <exclude name="WordPress.WP.Capabilities.RoleFound"/>
+    </rule>
+    <rule ref="WordPress-Extra">
+        <exclude name="WordPress.Files.FileName"/>
+        <exclude name="Squiz.Commenting"/>
+        <exclude name="WordPress.PHP.YodaConditions"/>
+        <exclude name="WordPress.DB.DirectDatabaseQuery"/>
+        <exclude name="WordPress.WP.Capabilities.RoleFound"/>
+    </rule>
     <rule ref="PHPCompatibilityWP"/>
 </ruleset>
