@@ -57,6 +57,8 @@
         <!-- Pre-existing: unnecessary string concatenation in views -->
         <exclude name="Squiz.Strings.ConcatenationSpacing"/>
         <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
+        <!-- Pre-existing: unnecessary string concatenation in view templates -->
+        <exclude name="Generic.Strings.UnnecessaryStringConcat"/>
     </rule>
     <rule ref="WordPress-Extra">
         <exclude name="WordPress.Files.FileName"/>
@@ -79,6 +81,7 @@
         <exclude name="WordPress.WP.GlobalVariablesOverride"/>
         <exclude name="Squiz.Strings.ConcatenationSpacing"/>
         <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
+        <exclude name="Generic.Strings.UnnecessaryStringConcat"/>
     </rule>
     <rule ref="PHPCompatibilityWP"/>
 </ruleset>
