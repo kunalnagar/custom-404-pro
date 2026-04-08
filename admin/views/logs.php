@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '../../LogsClass.php';
+require_once __DIR__ . '/../LogsClass.php';
 
 $logs_table = new LogsClass();
 $logs_table->prepare_items();

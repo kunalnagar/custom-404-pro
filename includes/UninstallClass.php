@@ -4,13 +4,13 @@ class UninstallClass {
 
 	public static function uninstall() {
 		global $wpdb;
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			$table_logs    = $wpdb->prefix . 'custom_404_pro_logs';
-			$sql_logs      = "DROP TABLE IF EXISTS $table_logs";
+			$sql_logs      = "DROP TABLE IF EXISTS $table_logs"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$table_options = $wpdb->prefix . 'custom_404_pro_options';
-			$sql_options   = "DROP TABLE IF EXISTS $table_options";
-			$wpdb->query( $sql_logs );
-			$wpdb->query( $sql_options );
+			$sql_options   = "DROP TABLE IF EXISTS $table_options"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( $sql_logs ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->query( $sql_options ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		}
 	}
 }

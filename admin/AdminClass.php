@@ -9,7 +9,7 @@ class AdminClass {
 	}
 
 	public function create_menu() {
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			add_menu_page( 'Custom 404 Pro', 'Custom 404 Pro', 'manage_options', 'c4p-main', array( $this, 'page_logs' ), 'dashicons-chart-bar' );
 			add_submenu_page( 'c4p-main', 'Logs', 'Logs', 'manage_options', 'c4p-main', array( $this, 'page_logs' ) );
 			add_submenu_page( 'c4p-main', 'Settings', 'Settings', 'manage_options', 'c4p-settings', array( $this, 'page_settings' ) );
@@ -30,10 +30,10 @@ class AdminClass {
 	}
 
 	public function enqueue_styles() {
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			if ( array_key_exists( 'page', $_REQUEST ) ) {
 				$request = sanitize_text_field( $_REQUEST['page'] );
-				if ( $request === 'c4p-settings' || $request === 'c4p-main' || $request === 'c4p-about' ) {
+				if ( 'c4p-settings' === $request || 'c4p-main' === $request || 'c4p-about' === $request ) {
 					wp_enqueue_style( 'custom-404-pro-admin-css', plugin_dir_url( __FILE__ ) . 'css/custom-404-pro-admin.css', array(), '3.2.0' );
 				}
 			}
@@ -41,10 +41,10 @@ class AdminClass {
 	}
 
 	public function enqueue_scripts() {
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			if ( array_key_exists( 'page', $_REQUEST ) ) {
 				$request = sanitize_text_field( $_REQUEST['page'] );
-				if ( $request === 'c4p-settings' || $request === 'c4p-main' ) {
+				if ( 'c4p-settings' === $request || 'c4p-main' === $request ) {
 					wp_enqueue_script( 'custom-404-pro-admin-js', plugin_dir_url( __FILE__ ) . 'js/custom-404-pro-admin.js', array( 'jquery' ), '3.2.0', false );
 				}
 			}
@@ -52,55 +52,55 @@ class AdminClass {
 	}
 
 	public function custom_404_pro_notices() {
-		$message     = '';
-		$messageType = 'success';
-		$html        = '';
-		if ( current_user_can( 'administrator' ) ) {
+		$message      = '';
+		$message_type = 'success';
+		$html         = '';
+		if ( current_user_can( 'manage_options' ) ) {
 			if ( array_key_exists( 'c4pmessage', $_REQUEST ) ) {
 				$message = esc_html( urldecode( sanitize_text_field( $_REQUEST['c4pmessage'] ) ) );
 				if ( array_key_exists( 'c4pmessageType', $_REQUEST ) ) {
-					$allowed_types = array( 'success', 'error', 'warning', 'info' );
+					$allowed_types  = array( 'success', 'error', 'warning', 'info' );
 					$requested_type = sanitize_text_field( $_REQUEST['c4pmessageType'] );
-					$messageType    = in_array( $requested_type, $allowed_types, true ) ? $requested_type : 'info';
+					$message_type   = in_array( $requested_type, $allowed_types, true ) ? $requested_type : 'info';
 				}
-				$html .= '<div class="notice notice-' . $messageType . ' is-dismissible">';
+				$html .= '<div class="notice notice-' . $message_type . ' is-dismissible">';
 				$html .= '<p>' . $message . '</p>';
 				$html .= '</div>';
-				echo $html;
+				echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is already escaped above
 			}
 		}
 	}
 
 	public function form_settings_global_redirect() {
 		global $wpdb;
-		if ( wp_verify_nonce( $_POST['form-settings-global-redirect'], 'form-settings-global-redirect' ) && check_admin_referer( 'form-settings-global-redirect', 'form-settings-global-redirect' ) && current_user_can( 'administrator' ) ) {
+		if ( wp_verify_nonce( $_POST['form-settings-global-redirect'], 'form-settings-global-redirect' ) && check_admin_referer( 'form-settings-global-redirect', 'form-settings-global-redirect' ) && current_user_can( 'manage_options' ) ) {
 			$mode = sanitize_text_field( $_POST['mode'] );
 			$page = sanitize_text_field( $_POST['mode_page'] );
 			$url  = sanitize_text_field( $_POST['mode_url'] );
 			self::update_mode( $mode, $page, $url );
-			$message = urlencode( 'Saved!' );
-			wp_redirect( admin_url( 'admin.php?page=c4p-settings&tab=global-redirect&c4pmessage=' . $message . '&c4pmessageType=success' ) );
+			$message = rawurlencode( 'Saved!' );
+			wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=global-redirect&c4pmessage=' . $message . '&c4pmessageType=success' ) );
 		}
 	}
 
 	public function form_settings_general() {
 		global $wpdb;
-		if ( wp_verify_nonce( $_POST['form-settings-general'], 'form-settings-general' ) && check_admin_referer( 'form-settings-general', 'form-settings-general' ) && current_user_can( 'administrator' ) ) {
+		if ( wp_verify_nonce( $_POST['form-settings-general'], 'form-settings-general' ) && check_admin_referer( 'form-settings-general', 'form-settings-general' ) && current_user_can( 'manage_options' ) ) {
 			$send_email                = sanitize_text_field( $_POST['send_email'] );
 			$logging_enabled           = sanitize_text_field( $_POST['logging_enabled'] );
 			$log_ip                    = sanitize_text_field( $_POST['log_ip'] );
 			$field_redirect_error_code = sanitize_text_field( $_POST['redirect_error_code'] );
-			if ( isset( $send_email ) && $send_email === 'on' ) {
+			if ( isset( $send_email ) && 'on' === $send_email ) {
 				$field_send_email = true;
 			} else {
 				$field_send_email = false;
 			}
-			if ( isset( $logging_enabled ) && $logging_enabled === 'enabled' ) {
+			if ( isset( $logging_enabled ) && 'enabled' === $logging_enabled ) {
 				$field_logging_enabled = true;
 			} else {
 				$field_logging_enabled = false;
 			}
-			if ( isset( $log_ip ) && $log_ip === 'on' ) {
+			if ( isset( $log_ip ) && 'on' === $log_ip ) {
 				$field_log_ip = true;
 			} else {
 				$field_log_ip = false;
@@ -108,33 +108,32 @@ class AdminClass {
 			$this->helpers->update_option( 'send_email', $field_send_email );
 			$this->helpers->update_option( 'logging_enabled', $field_logging_enabled );
 			$this->helpers->update_option( 'redirect_error_code', $field_redirect_error_code );
-			// New options
 			$this->helpers->upsert_option( 'log_ip', $field_log_ip );
-			$message = urlencode( 'Saved!' );
-			wp_redirect( admin_url( 'admin.php?page=c4p-settings&tab=general&c4pmessage=' . $message . '&c4pmessageType=success' ) );
+			$message = rawurlencode( 'Saved!' );
+			wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=general&c4pmessage=' . $message . '&c4pmessageType=success' ) );
 		}
 	}
 
 	public function custom_404_pro_admin_init() {
 		global $wpdb;
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			if ( array_key_exists( 'action', $_REQUEST ) ) {
 				$action = sanitize_text_field( $_REQUEST['action'] );
-				if ( $action === 'c4p-logs--delete' && wp_verify_nonce( $_REQUEST['_wpnonce'], 'c4p-logs--delete' ) ) {
+				if ( 'c4p-logs--delete' === $action && wp_verify_nonce( $_REQUEST['_wpnonce'], 'c4p-logs--delete' ) ) {
 					if ( array_key_exists( 'path', $_REQUEST ) ) {
 						$path = is_array( $_REQUEST['path'] ) ? array_map( 'absint', $_REQUEST['path'] ) : absint( $_REQUEST['path'] );
 						$this->helpers->delete_logs( $path );
-						$message = urlencode( 'Log(s) successfully deleted!' );
-						wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
+						$message = rawurlencode( 'Log(s) successfully deleted!' );
+						wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
 					} else {
-						$message = urlencode( 'Please select a few logs to delete and try again.' );
-						wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=warning' ) );
+						$message = rawurlencode( 'Please select a few logs to delete and try again.' );
+						wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=warning' ) );
 					}
-				} elseif ( $action === 'c4p-logs--delete-all' && wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-logs' ) ) {
+				} elseif ( 'c4p-logs--delete-all' === $action && wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-logs' ) ) {
 					$this->helpers->delete_logs( 'all' );
-					$message = urlencode( 'All Logs successfully deleted!' );
-					wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
-				} elseif ( $action === 'c4p-logs--export-csv' && wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-logs' ) ) {
+					$message = rawurlencode( 'All Logs successfully deleted!' );
+					wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
+				} elseif ( 'c4p-logs--export-csv' === $action && wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-logs' ) ) {
 					$this->helpers->export_logs_csv();
 				}
 			}
@@ -144,8 +143,8 @@ class AdminClass {
 	public function custom_404_pro_redirect() {
 		global $wpdb;
 		if ( is_404() ) {
-			$sql                     = 'SELECT * FROM ' . $wpdb->prefix . $this->helpers->table_options;
-			$sql_result              = $wpdb->get_results( $sql );
+			$sql                     = 'SELECT * FROM ' . $wpdb->prefix . $this->helpers->table_options; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$sql_result              = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$row_mode                = $sql_result[0];
 			$row_mode_page           = $sql_result[1];
 			$row_mode_url            = $sql_result[2];
@@ -155,11 +154,11 @@ class AdminClass {
 			if ( $row_logging_enabled->value ) {
 				self::custom_404_pro_log( $row_send_email->value );
 			}
-			if ( $row_mode->value === 'page' ) {
+			if ( 'page' === $row_mode->value ) {
 				$page = get_post( $row_mode_page->value );
-				wp_redirect( $page->guid, $row_redirect_error_code->value );
-			} elseif ( $row_mode->value === 'url' ) {
-				wp_redirect( $row_mode_url->value, $row_redirect_error_code->value );
+				wp_safe_redirect( $page->guid, $row_redirect_error_code->value );
+			} elseif ( 'url' === $row_mode->value ) {
+				wp_safe_redirect( $row_mode_url->value, $row_redirect_error_code->value );
 			}
 		}
 	}
@@ -184,8 +183,8 @@ class AdminClass {
 			$referer = esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
 		}
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-		$sql_save   = $wpdb->prepare( 'INSERT INTO ' . $wpdb->prefix . $this->helpers->table_logs . ' (ip, path, referer, user_agent) VALUES (%s, %s, %s, %s)', $ip, $path, $referer, $user_agent );
-		$wpdb->query( $sql_save );
+		$sql_save   = $wpdb->prepare( 'INSERT INTO ' . $wpdb->prefix . $this->helpers->table_logs . ' (ip, path, referer, user_agent) VALUES (%s, %s, %s, %s)', $ip, $path, $referer, $user_agent ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $sql_save ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		if ( ! empty( $is_email ) ) {
 			self::custom_404_pro_send_mail( $ip, $path, $referer, $user_agent );
 		}
@@ -225,7 +224,7 @@ class AdminClass {
 		$message  .= '<td>' . $user_agent . '</td>';
 		$message  .= '</tr>';
 		$message  .= '</table>';
-		$is_sent   = wp_mail(
+		wp_mail(
 			$admin_email,
 			'404 Error on Site',
 			$message,
@@ -235,7 +234,7 @@ class AdminClass {
 
 	private function update_mode( $mode, $page, $url ) {
 		global $wpdb;
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			$mode_val      = '';
 			$mode_page_val = '';
 			$mode_url_val  = '';
@@ -261,26 +260,4 @@ class AdminClass {
 			$this->helpers->update_option( 'mode_url', $mode_url_val );
 		}
 	}
-
-	// Not needed for now, commenting
-	// public function custom_404_pro_upgrader( $upgrader_object, $options ) {
-	// global $wpdb;
-	// if(current_user_can('administrator')) {
-	// if ( $options['action'] === 'update' && $options['type'] === 'plugin' ) {
-	// if ( ! empty( get_option( 'c4p_mode' ) ) ) {
-	// $mode = get_option( 'c4p_mode' );
-	// $page = get_option( 'c4p_selected_page' );
-	// $url  = get_option( 'c4p_selected_url' );
-	// self::update_mode( $mode, $page, $url );
-	// delete_option( 'c4p_mode' );
-	// delete_option( 'c4p_selected_page' );
-	// delete_option( 'c4p_selected_url' );
-	// }
-	// When new features are requested by customers, they usually get a new option.
-	// This is where we add new option keys when customers upgrade the plugin.
-	// $this->helpers->upsert_option( 'log_ip', true );
-	// }
-	// }
-	// TODO: Migrate old logs
-	// }
 }

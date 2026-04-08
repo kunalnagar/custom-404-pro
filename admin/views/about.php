@@ -13,7 +13,7 @@
 					<div class="inside">
 						<div class="c4p-clearfix">
 							<div class="c4p-left">
-								<img src="<?php echo plugin_dir_url( __FILE__ ) . 'me.jpg'; ?>" class="c4p-author-image"/>
+								<img src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'me.jpg' ); ?>" class="c4p-author-image"/>
 							</div>
 							<div class="c4p-left" style="width: 70%">
 								<p>Hi.</p>
@@ -45,19 +45,19 @@
 						<div class="misc-pub-section">
 							<label>Name:</label>
 							<span>
-							<b><?php echo $plugin_data['Title']; ?></b>
+							<b><?php echo esc_html( $plugin_data['Title'] ); ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
 							<label>Version:</label>
 							<span>
-							<b><?php echo $plugin_data['Version']; ?></b>
+							<b><?php echo esc_html( $plugin_data['Version'] ); ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
 							<label>Author:</label>
 							<span>
-							<b><?php echo $plugin_data['Author']; ?></b>
+							<b><?php echo wp_kses( $plugin_data['Author'], array( 'a' => array( 'href' => array(), 'rel' => array() ) ) ); ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
