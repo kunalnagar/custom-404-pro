@@ -10,7 +10,8 @@
 			),
 		)
 	);
-?>
+	?>
+
 
 <div class="wrap">
 	<h2>Custom 404 Pro Info</h2><br>
@@ -66,7 +67,7 @@
 						<div class="misc-pub-section">
 							<label>Author:</label>
 							<span>
-							<b><?php echo $c4p_author_output; ?></b>
+							<b><?php echo $c4p_author_output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already passed through wp_kses() above ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
