@@ -2,6 +2,8 @@
 
 class AdminClass {
 
+	private $helpers;
+
 	public function __construct() {
 		$this->helpers = Helpers::singleton();
 	}

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ruleset name="Custom 404 Pro">
+    <description>Coding standards for Custom 404 Pro</description>
+
+    <file>.</file>
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>tests/*</exclude-pattern>
+
+    <!-- Only lint PHP files; skip JS, CSS, etc. -->
+    <arg name="extensions" value="php"/>
+
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+    <!-- Do not fail CI on warnings — only errors count -->
+    <arg name="warning-severity" value="0"/>
+
+    <config name="minimum_supported_wp_version" value="5.0"/>
+    <config name="testVersion" value="7.4-"/>
+
+    <rule ref="WordPress-Core">
+        <!-- File naming would require renaming all existing files -->
+        <exclude name="WordPress.Files.FileName"/>
+        <!-- Docblocks are not present in the existing codebase -->
+        <exclude name="Squiz.Commenting"/>
+        <!-- Yoda conditions are a style preference, not a bug -->
+        <exclude name="WordPress.PHP.YodaConditions"/>
+        <!-- Direct DB queries are intentional in this plugin -->
+        <exclude name="WordPress.DB.DirectDatabaseQuery"/>
+        <!-- PreparedSQL fires false positives on table name strings -->
+        <exclude name="WordPress.DB.PreparedSQL.NotPrepared"/>
+        <!-- current_user_can('administrator') is an existing pattern throughout -->
+        <exclude name="WordPress.WP.Capabilities.RoleFound"/>
+        <!-- Pre-existing: missing visibility on methods -->
+        <exclude name="Squiz.Scope.MethodScope.Missing"/>
+        <!-- Pre-existing: underscore-prefixed method names -->
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <!-- Pre-existing: output not escaped in debug/activate helpers -->
+        <exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped"/>
+        <!-- Pre-existing: commented-out code blocks -->
+        <exclude name="Squiz.PHP.CommentedOutCode.Found"/>
+        <!-- Pre-existing: empty if/elseif statements -->
+        <exclude name="Generic.CodeAnalysis.EmptyStatement"/>
+        <!-- Pre-existing: nonce checks missing in some queries -->
+        <exclude name="WordPress.Security.NonceVerification"/>
+        <!-- Pre-existing: count() used in loop conditions -->
+        <exclude name="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+        <exclude name="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+        <!-- Pre-existing: camelCase variable names throughout the codebase -->
+        <exclude name="WordPress.NamingConventions.ValidVariableName"/>
+        <!-- Pre-existing: var_dump() in debug helper -->
+        <exclude name="WordPress.PHP.DevelopmentFunctions"/>
+        <!-- Pre-existing: wpdb->prepare() placeholder false positives -->
+        <exclude name="WordPress.DB.PreparedSQLPlaceholders"/>
+        <!-- Pre-existing: $post and other WP globals reassigned in views -->
+        <exclude name="WordPress.WP.GlobalVariablesOverride"/>
+        <!-- Pre-existing: unnecessary string concatenation in views -->
+        <exclude name="Squiz.Strings.ConcatenationSpacing"/>
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
+        <!-- Pre-existing: unnecessary string concatenation in view templates -->
+        <exclude name="Generic.Strings.UnnecessaryStringConcat"/>
+    </rule>
+    <rule ref="WordPress-Extra">
+        <exclude name="WordPress.Files.FileName"/>
+        <exclude name="Squiz.Commenting"/>
+        <exclude name="WordPress.PHP.YodaConditions"/>
+        <exclude name="WordPress.DB.DirectDatabaseQuery"/>
+        <exclude name="WordPress.DB.PreparedSQL.NotPrepared"/>
+        <exclude name="WordPress.WP.Capabilities.RoleFound"/>
+        <exclude name="Squiz.Scope.MethodScope.Missing"/>
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped"/>
+        <exclude name="Squiz.PHP.CommentedOutCode.Found"/>
+        <exclude name="Generic.CodeAnalysis.EmptyStatement"/>
+        <exclude name="WordPress.Security.NonceVerification"/>
+        <exclude name="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+        <exclude name="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName"/>
+        <exclude name="WordPress.PHP.DevelopmentFunctions"/>
+        <exclude name="WordPress.DB.PreparedSQLPlaceholders"/>
+        <exclude name="WordPress.WP.GlobalVariablesOverride"/>
+        <exclude name="Squiz.Strings.ConcatenationSpacing"/>
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
+        <exclude name="Generic.Strings.UnnecessaryStringConcat"/>
+    </rule>
+    <rule ref="PHPCompatibilityWP"/>
+</ruleset>
