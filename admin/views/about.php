@@ -1,6 +1,15 @@
 <?php
-	$plugin_main_file = dirname( dirname( dirname( __DIR__ ) ) ) . '/custom-404-pro/custom-404-pro.php';
-	$plugin_data      = get_plugin_data( $plugin_main_file );
+	$plugin_main_file  = dirname( dirname( dirname( __DIR__ ) ) ) . '/custom-404-pro/custom-404-pro.php';
+	$plugin_data       = get_plugin_data( $plugin_main_file );
+	$c4p_author_output = wp_kses(
+		$plugin_data['Author'],
+		array(
+			'a' => array(
+				'href' => array(),
+				'rel'  => array(),
+			),
+		)
+	);
 ?>
 
 <div class="wrap">
@@ -57,15 +66,7 @@
 						<div class="misc-pub-section">
 							<label>Author:</label>
 							<span>
-							<b><?php echo wp_kses(
-								$plugin_data['Author'],
-								array(
-									'a' => array(
-										'href' => array(),
-										'rel'  => array(),
-									),
-								)
-							); ?></b>
+							<b><?php echo $c4p_author_output; ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
