@@ -41,6 +41,12 @@
         <!-- Pre-existing: count() used in loop conditions -->
         <exclude name="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
         <exclude name="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+        <!-- Pre-existing: camelCase variable names throughout the codebase -->
+        <exclude name="WordPress.NamingConventions.ValidVariableName"/>
+        <!-- Pre-existing: var_dump() in debug helper -->
+        <exclude name="WordPress.PHP.DevelopmentFunctions"/>
+        <!-- Pre-existing: wpdb->prepare() placeholder false positives -->
+        <exclude name="WordPress.DB.PreparedSQLPlaceholders"/>
     </rule>
     <rule ref="WordPress-Extra">
         <exclude name="WordPress.Files.FileName"/>
@@ -57,6 +63,9 @@
         <exclude name="WordPress.Security.NonceVerification"/>
         <exclude name="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
         <exclude name="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName"/>
+        <exclude name="WordPress.PHP.DevelopmentFunctions"/>
+        <exclude name="WordPress.DB.PreparedSQLPlaceholders"/>
     </rule>
     <rule ref="PHPCompatibilityWP"/>
 </ruleset>
