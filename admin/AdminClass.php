@@ -57,7 +57,9 @@ class AdminClass {
 			if ( array_key_exists( 'c4pmessage', $_REQUEST ) ) {
 				$message = esc_html( urldecode( sanitize_text_field( $_REQUEST['c4pmessage'] ) ) );
 				if ( array_key_exists( 'c4pmessageType', $_REQUEST ) ) {
-					$messageType = esc_html( sanitize_text_field( $_REQUEST['c4pmessageType'] ) );
+					$allowed_types = array( 'success', 'error', 'warning', 'info' );
+					$requested_type = sanitize_text_field( $_REQUEST['c4pmessageType'] );
+					$messageType    = in_array( $requested_type, $allowed_types, true ) ? $requested_type : 'info';
 				}
 				$html .= '<div class="notice notice-' . $messageType . ' is-dismissible">';
 				$html .= '<p>' . $message . '</p>';
@@ -118,18 +120,19 @@ class AdminClass {
 				$action = sanitize_text_field( $_REQUEST['action'] );
 				if ( $action === 'c4p-logs--delete' && wp_verify_nonce( $_REQUEST['_wpnonce'], 'c4p-logs--delete' ) ) {
 					if ( array_key_exists( 'path', $_REQUEST ) ) {
-						$this->helpers->delete_logs( $_REQUEST['path'] );
+						$path = is_array( $_REQUEST['path'] ) ? array_map( 'absint', $_REQUEST['path'] ) : absint( $_REQUEST['path'] );
+						$this->helpers->delete_logs( $path );
 						$message = urlencode( 'Log(s) successfully deleted!' );
 						wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
 					} else {
 						$message = urlencode( 'Please select a few logs to delete and try again.' );
 						wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=warning' ) );
 					}
-				} elseif ( $action === 'c4p-logs--delete-all' ) {
+				} elseif ( $action === 'c4p-logs--delete-all' && wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-logs' ) ) {
 					$this->helpers->delete_logs( 'all' );
 					$message = urlencode( 'All Logs successfully deleted!' );
 					wp_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
-				} elseif ( $action === 'c4p-logs--export-csv' ) {
+				} elseif ( $action === 'c4p-logs--export-csv' && wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-logs' ) ) {
 					$this->helpers->export_logs_csv();
 				}
 			}
@@ -167,18 +170,18 @@ class AdminClass {
 		if ( empty( $this->helpers->get_option( 'log_ip' ) ) ) {
 			$ip = 'N/A';
 		} elseif ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-				$ip = $_SERVER['HTTP_CLIENT_IP'];
+			$ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
 		} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			$ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
 		} else {
-			$ip = $_SERVER['REMOTE_ADDR'];
+			$ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
 		}
-		$path    = $_SERVER['REQUEST_URI'];
+		$path    = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 		$referer = '';
 		if ( array_key_exists( 'HTTP_REFERER', $_SERVER ) ) {
-			$referer = $_SERVER['HTTP_REFERER'];
+			$referer = esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) );
 		}
-		$user_agent = $_SERVER['HTTP_USER_AGENT'];
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 		$sql_save   = $wpdb->prepare( 'INSERT INTO ' . $wpdb->prefix . $this->helpers->table_logs . ' (ip, path, referer, user_agent) VALUES (%s, %s, %s, %s)', $ip, $path, $referer, $user_agent );
 		$wpdb->query( $sql_save );
 		if ( ! empty( $is_email ) ) {

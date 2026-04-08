@@ -40,15 +40,15 @@ class LogsClass extends WP_List_Table {
 		$sql                   = 'SELECT * FROM ' . $wpdb->prefix . $helpers->table_logs;
 
 		if ( array_key_exists( 'orderby', $_GET ) ) {
-			$order_by = esc_html( $_GET['orderby'] );
-			$order    = strtoupper( esc_html( $_GET['order'] ) );
+			$order_by = sanitize_text_field( $_GET['orderby'] );
+			$order    = strtoupper( sanitize_text_field( $_GET['order'] ) );
 			if ( ! empty( $order_by ) && ! empty( $order ) ) {
 				$sql = self::manage_sorting( $order_by, $order, $sql );
 			}
 		}
 
 		if ( array_key_exists( 's', $_GET ) ) {
-			$search = esc_html( $_GET['s'] );
+			$search = sanitize_text_field( $_GET['s'] );
 			if ( ! empty( $search ) ) {
 				$sql = self::manage_search( $search, $sql );
 			}
@@ -96,8 +96,16 @@ class LogsClass extends WP_List_Table {
 	}
 
 	public function manage_search( $search, $sql ) {
-		$escaped_search = esc_sql( $search );
-		$sql           .= " WHERE (ip LIKE '%" . esc_sql( $escaped_search ) . "%' OR path LIKE '%" . $escaped_search . "%' OR referer LIKE '%" . $escaped_search . "%' OR user_agent LIKE '%" . $escaped_search . "%' OR created LIKE '%" . $escaped_search . "%')";
+		global $wpdb;
+		$like = '%' . $wpdb->esc_like( $search ) . '%';
+		$sql .= $wpdb->prepare(
+			' WHERE (ip LIKE %s OR path LIKE %s OR referer LIKE %s OR user_agent LIKE %s OR created LIKE %s)',
+			$like,
+			$like,
+			$like,
+			$like,
+			$like
+		);
 		return $sql;
 	}
 

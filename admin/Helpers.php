@@ -67,7 +67,7 @@ class Helpers {
 	public function is_option( $option_name ) {
 		global $wpdb;
 		if ( current_user_can( 'administrator' ) ) {
-			$query  = 'SELECT * FROM ' . $wpdb->prefix . $this->table_options . " WHERE name='" . $option_name . "'";
+			$query  = $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . $this->table_options . ' WHERE name = %s', $option_name );
 			$result = $wpdb->get_results( $query );
 			if ( empty( $result ) ) {
 				return false;
@@ -80,7 +80,7 @@ class Helpers {
 	public function get_option( $option_name ) {
 		global $wpdb;
 		if ( current_user_can( 'administrator' ) ) {
-			$query  = 'SELECT value FROM ' . $wpdb->prefix . $this->table_options . " WHERE name='" . $option_name . "'";
+			$query  = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . $this->table_options . ' WHERE name = %s', $option_name );
 			$result = $wpdb->get_var( $query );
 			return $result;
 		}
@@ -154,19 +154,22 @@ class Helpers {
 	public function create_logs( $logsData, $isDeletingOld ) {
 		global $wpdb;
 		if ( current_user_can( 'administrator' ) ) {
-			$count  = count( $logsData );
 			$logIDs = array();
-			$query  = 'INSERT INTO ' . $wpdb->prefix . $this->table_logs . ' (ip, path, referer, user_agent) VALUES';
-			foreach ( $logsData as $key => $log ) {
+			$result = false;
+			foreach ( $logsData as $log ) {
 				if ( ! empty( $log->id ) ) {
 					array_push( $logIDs, $log->id );
 				}
-				$query .= " ('$log->ip', '$log->path', '$log->referer', '$log->user_agent')";
-				if ( $key < $count - 1 ) {
-					$query .= ',';
-				}
+				$result = $wpdb->insert(
+					$wpdb->prefix . $this->table_logs,
+					array(
+						'ip'         => $log->ip,
+						'path'       => $log->path,
+						'referer'    => $log->referer,
+						'user_agent' => $log->user_agent,
+					)
+				);
 			}
-			$result = $wpdb->query( $query );
 			if ( ! is_wp_error( $result ) ) {
 				if ( ! empty( $isDeletingOld ) && $isDeletingOld ) {
 					self::delete_old_logs( $logIDs );
@@ -189,13 +192,17 @@ class Helpers {
 		global $wpdb;
 		if ( current_user_can( 'administrator' ) ) {
 			if ( $path === 'all' ) {
-				$query = 'TRUNCATE TABLE ' . $wpdb->prefix . $this->table_logs;
+				$query  = 'TRUNCATE TABLE ' . $wpdb->prefix . $this->table_logs;
+				$result = $wpdb->query( $query );
 			} elseif ( is_array( $path ) ) {
-				$query = 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id in (' . implode( ',', $path ) . ')';
+				$ids          = array_map( 'absint', $path );
+				$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+				$query        = $wpdb->prepare( 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id IN (' . $placeholders . ')', ...$ids );
+				$result       = $wpdb->query( $query );
 			} else {
-				$query = 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id=' . $path . '';
+				$query  = $wpdb->prepare( 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id = %d', $path );
+				$result = $wpdb->query( $query );
 			}
-			$result = $wpdb->query( $query );
 			return $result;
 		}
 	}
