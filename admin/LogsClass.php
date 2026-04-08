@@ -24,10 +24,7 @@ class LogsClass extends WP_List_Table {
 	 * @return null
 	 */
 	public function extra_tablenav( $which ) {
-		$top = '';
-		if ( $which === 'top' ) {
-		} elseif ( $which === 'bottom' ) {
-		}
+		// No additional navigation content needed.
 	}
 
 	public function prepare_items() {
@@ -54,9 +51,10 @@ class LogsClass extends WP_List_Table {
 			}
 		}
 
-		$sql_data = $wpdb->get_results( $sql );
-		$data     = array();
-		for ( $i = 0; $i < count( $sql_data ); $i++ ) {
+		$sql_data       = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$data           = array();
+		$sql_data_count = count( $sql_data );
+		for ( $i = 0; $i < $sql_data_count; $i++ ) {
 			$temp               = array();
 			$temp['id']         = $sql_data[ $i ]->id;
 			$temp['ip']         = sanitize_text_field( $sql_data[ $i ]->ip );
@@ -80,15 +78,15 @@ class LogsClass extends WP_List_Table {
 	}
 
 	public function manage_sorting( $order_by, $order, $sql ) {
-		if ( $order_by === 'created' ) {
+		if ( 'created' === $order_by ) {
 			$sql .= ' ORDER BY created';
-		} elseif ( $order_by === 'u' ) {
+		} elseif ( 'u' === $order_by ) {
 			$sql .= ' ORDER BY user_agent';
-		} elseif ( $order_by === 'i' ) {
+		} elseif ( 'i' === $order_by ) {
 			$sql .= ' ORDER BY ip';
-		} elseif ( $order_by === 'p' ) {
+		} elseif ( 'p' === $order_by ) {
 			$sql .= ' ORDER BY path';
-		} elseif ( $order_by === 'r' ) {
+		} elseif ( 'r' === $order_by ) {
 			$sql .= ' ORDER BY referer';
 		}
 		$sql .= ' ' . sanitize_sql_orderby( $order );
@@ -139,11 +137,13 @@ class LogsClass extends WP_List_Table {
 	}
 
 	public function get_sortable_columns() {
-		$sortable_columns['ip']         = 'ip';
-		$sortable_columns['path']       = 'path';
-		$sortable_columns['referer']    = 'referer';
-		$sortable_columns['user_agent'] = 'user_agent';
-		$sortable_columns['created']    = array( 'created', true );
+		$sortable_columns = array(
+			'ip'         => 'ip',
+			'path'       => 'path',
+			'referer'    => 'referer',
+			'user_agent' => 'user_agent',
+			'created'    => array( 'created', true ),
+		);
 		return $sortable_columns;
 	}
 

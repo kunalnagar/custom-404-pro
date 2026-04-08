@@ -2,13 +2,13 @@
 
 class ActivateClass {
 
-	static function _activate() {
+	private static function run_activation() {
 		global $wpdb;
 		$helpers                = Helpers::singleton();
-		$is_table_options_query = "SHOW TABLES LIKE '" . $wpdb->prefix . $helpers->table_options . "';";
-		$is_table_logs_query    = "SHOW TABLES LIKE '" . $wpdb->prefix . $helpers->table_logs . "';";
-		$is_table_options       = $wpdb->query( $is_table_options_query );
-		$is_table_logs          = $wpdb->query( $is_table_logs_query );
+		$is_table_options_query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->prefix . $helpers->table_options ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$is_table_logs_query    = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->prefix . $helpers->table_logs ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$is_table_options       = $wpdb->query( $is_table_options_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$is_table_logs          = $wpdb->query( $is_table_logs_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( empty( $is_table_options ) && empty( $is_table_logs ) ) {
 			self::create_tables();
 			self::initialize_options();
@@ -17,16 +17,16 @@ class ActivateClass {
 
 	public static function activate() {
 		global $wpdb;
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			if ( is_multisite() ) {
 				$sites = get_sites( array( 'fields' => 'ids' ) );
 				foreach ( $sites as $blog_id ) {
 					switch_to_blog( $blog_id );
-					self::_activate();
+					self::run_activation();
 					restore_current_blog();
 				}
 			} else {
-				self::_activate();
+				self::run_activation();
 			}
 		}
 	}
@@ -36,7 +36,7 @@ class ActivateClass {
 		$helpers       = Helpers::singleton();
 		$table_options = $wpdb->prefix . $helpers->table_options;
 		$table_logs    = $wpdb->prefix . $helpers->table_logs;
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			$charset_collate = $wpdb->get_charset_collate();
 			$sql_logs        = "CREATE TABLE $table_logs (
     			id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -58,15 +58,13 @@ class ActivateClass {
     		) $charset_collate;";
 			include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			dbDelta( $sql_logs );
-			echo $wpdb->last_error;
 			dbDelta( $sql_options );
-			echo $wpdb->last_error;
 		}
 	}
 
 	public static function initialize_options() {
 		global $wpdb;
-		if ( current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			$helpers = Helpers::singleton();
 			$helpers->initialize_table_options();
 		}

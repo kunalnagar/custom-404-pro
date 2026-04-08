@@ -1,7 +1,17 @@
 <?php
-	$plugin_main_file = dirname( dirname( dirname( __DIR__ ) ) ) . '/custom-404-pro/custom-404-pro.php';
-	$plugin_data      = get_plugin_data( $plugin_main_file );
-?>
+	$plugin_main_file  = dirname( dirname( dirname( __DIR__ ) ) ) . '/custom-404-pro/custom-404-pro.php';
+	$plugin_data       = get_plugin_data( $plugin_main_file );
+	$c4p_author_output = wp_kses(
+		$plugin_data['Author'],
+		array(
+			'a' => array(
+				'href' => array(),
+				'rel'  => array(),
+			),
+		)
+	);
+	?>
+
 
 <div class="wrap">
 	<h2>Custom 404 Pro Info</h2><br>
@@ -13,7 +23,7 @@
 					<div class="inside">
 						<div class="c4p-clearfix">
 							<div class="c4p-left">
-								<img src="<?php echo plugin_dir_url( __FILE__ ) . 'me.jpg'; ?>" class="c4p-author-image"/>
+								<img src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'me.jpg' ); ?>" class="c4p-author-image"/>
 							</div>
 							<div class="c4p-left" style="width: 70%">
 								<p>Hi.</p>
@@ -45,19 +55,19 @@
 						<div class="misc-pub-section">
 							<label>Name:</label>
 							<span>
-							<b><?php echo $plugin_data['Title']; ?></b>
+							<b><?php echo esc_html( $plugin_data['Title'] ); ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
 							<label>Version:</label>
 							<span>
-							<b><?php echo $plugin_data['Version']; ?></b>
+							<b><?php echo esc_html( $plugin_data['Version'] ); ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
 							<label>Author:</label>
 							<span>
-							<b><?php echo $plugin_data['Author']; ?></b>
+							<b><?php echo $c4p_author_output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already passed through wp_kses() above ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
