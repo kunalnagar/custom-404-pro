@@ -3,7 +3,7 @@ Contributors: kunalnagar
 Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, 404 error page, custom 404 page, broken link
 Requires at least: 3.0.1
-Tested up to: 6.6
+Tested up to: 6.9.4
 Stable tag: 3.12.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
