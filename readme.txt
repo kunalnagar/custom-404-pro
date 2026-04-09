@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, 404 error page, custom 404 page, broken link
 Requires at least: 3.0.1
 Tested up to: 6.9.4
-Stable tag: 3.12.3
+Stable tag: 3.12.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,9 @@ Uninstall the plugin from the Plugins page (important!) and reinstall it. Never 
 3. Global Settings
 
 == Changelog ==
+
+= 3.12.4 =
+* Enforce full WordPress coding standards: PHPDoc comments, input sanitization, file naming convention
 
 = 3.12.3 =
 * Improve codebase to meet WordPress coding standards
