@@ -35,9 +35,17 @@ class PluginClass {
 	}
 
 	/**
+	 * Loads the plugin text domain for translation.
+	 */
+	public function load_textdomain() {
+		load_plugin_textdomain( 'custom-404-pro', false, dirname( plugin_basename( __DIR__ ) ) . '/languages' );
+	}
+
+	/**
 	 * Registers all WordPress action hooks for the plugin.
 	 */
 	private function define_admin_hooks() {
+		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 		add_action( 'admin_menu', array( $this->plugin_admin, 'create_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_styles' ) );
