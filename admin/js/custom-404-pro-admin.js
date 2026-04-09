@@ -1,4 +1,10 @@
-( function( $ ){
+/**
+ * Admin JS for Custom 404 Pro settings page.
+ *
+ * @package Custom_404_Pro
+ */
+
+( function ( $ ) {
 	$( document ).ready(
 		function () {
 				$( '#c4p_mode' ).on(
@@ -10,7 +16,7 @@
 						$( '#c4p_page, #c4p_url' ).hide();
 						console.warn( val );
 						if (val === 'page') {
-							  $( '#c4p_page' ).show();
+								$( '#c4p_page' ).show();
 						} else if (val === 'url') {
 							$( '#mode_url' ).attr( 'required', 'required' );
 							$( '#c4p_url' ).show();

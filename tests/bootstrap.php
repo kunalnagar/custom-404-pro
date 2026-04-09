@@ -1,9 +1,13 @@
 <?php
+/**
+ * Test bootstrap: stubs $wpdb so class constructors can reference it without WordPress loaded.
+ *
+ * @package Custom_404_Pro
+ */
 
-// Stub $wpdb so class constructors can reference it without WordPress loaded
 global $wpdb;
-$wpdb         = new stdClass();
+$wpdb         = new stdClass(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- intentional stub for unit tests
 $wpdb->prefix = 'wp_';
 
-require_once dirname( __DIR__ ) . '/admin/Helpers.php';
-require_once dirname( __DIR__ ) . '/admin/AdminClass.php';
+require_once dirname( __DIR__ ) . '/admin/class-helpers.php';
+require_once dirname( __DIR__ ) . '/admin/class-adminclass.php';

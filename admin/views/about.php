@@ -1,16 +1,22 @@
 <?php
-	$plugin_main_file  = dirname( dirname( dirname( __DIR__ ) ) ) . '/custom-404-pro/custom-404-pro.php';
-	$plugin_data       = get_plugin_data( $plugin_main_file );
-	$c4p_author_output = wp_kses(
-		$plugin_data['Author'],
-		array(
-			'a' => array(
-				'href' => array(),
-				'rel'  => array(),
-			),
-		)
-	);
-	?>
+/**
+ * About page view.
+ *
+ * @package Custom_404_Pro
+ */
+
+$plugin_main_file  = dirname( dirname( dirname( __DIR__ ) ) ) . '/custom-404-pro/custom-404-pro.php';
+$plugin_data       = get_plugin_data( $plugin_main_file );
+$c4p_author_output = wp_kses(
+	$plugin_data['Author'],
+	array(
+		'a' => array(
+			'href' => array(),
+			'rel'  => array(),
+		),
+	)
+);
+?>
 
 
 <div class="wrap">

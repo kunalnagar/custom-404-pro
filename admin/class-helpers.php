@@ -1,13 +1,48 @@
 <?php
+/**
+ * Helper utilities for the plugin.
+ *
+ * @package Custom_404_Pro
+ */
 
+/**
+ * Helpers class.
+ */
 class Helpers {
 
+	/**
+	 * Singleton instance.
+	 *
+	 * @var Helpers
+	 */
 	private static $instance;
 
+	/**
+	 * Options table name (without prefix).
+	 *
+	 * @var string
+	 */
 	public $table_options;
+
+	/**
+	 * Logs table name (without prefix).
+	 *
+	 * @var string
+	 */
 	public $table_logs;
+
+	/**
+	 * Default option values.
+	 *
+	 * @var array
+	 */
 	public $options_defaults;
 
+	/**
+	 * Returns the singleton instance of this class.
+	 *
+	 * @return Helpers
+	 */
 	public static function singleton() {
 		static $inst = null;
 		if ( null === $inst ) {
@@ -16,6 +51,9 @@ class Helpers {
 		return $inst;
 	}
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 		global $wpdb;
 		$this->table_options    = 'custom_404_pro_options';
@@ -38,6 +76,13 @@ class Helpers {
 		}
 	}
 
+	/**
+	 * Generates an admin notice HTML string.
+	 *
+	 * @param string $type    Notice type (success, error, warning, info).
+	 * @param string $message Notice message.
+	 * @return string HTML for the notice.
+	 */
 	public function admin_notice( $type, $message ) {
 		$html  = '';
 		$html .= '<div class="notice notice-' . $type . '">';
@@ -46,6 +91,9 @@ class Helpers {
 		return $html;
 	}
 
+	/**
+	 * Inserts default option rows into the options table.
+	 */
 	public function initialize_table_options() {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
@@ -58,15 +106,21 @@ class Helpers {
 					$sql .= "('" . $option->name . "', '" . $option->value . "')";
 				}
 			}
-			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		}
 	}
 
+	/**
+	 * Checks whether an option exists in the options table.
+	 *
+	 * @param string $option_name Option name.
+	 * @return object|false Row object if found, false if not.
+	 */
 	public function is_option( $option_name ) {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
 			$query  = $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . $this->table_options . ' WHERE name = %s', $option_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			if ( empty( $result ) ) {
 				return false;
 			} else {
@@ -75,15 +129,28 @@ class Helpers {
 		}
 	}
 
+	/**
+	 * Retrieves a single option value from the options table.
+	 *
+	 * @param string $option_name Option name.
+	 * @return string|null Option value or null.
+	 */
 	public function get_option( $option_name ) {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
 			$query  = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . $this->table_options . ' WHERE name = %s', $option_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$result = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$result = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			return $result;
 		}
 	}
 
+	/**
+	 * Inserts a new option into the options table.
+	 *
+	 * @param string $option_name  Option name.
+	 * @param mixed  $option_value Option value.
+	 * @return int|false Number of rows inserted, or false on error.
+	 */
 	public function insert_option( $option_name, $option_value ) {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
@@ -98,6 +165,13 @@ class Helpers {
 		}
 	}
 
+	/**
+	 * Updates an existing option in the options table.
+	 *
+	 * @param string $option_name  Option name.
+	 * @param mixed  $option_value New option value.
+	 * @return int|false Number of rows updated, or false on error.
+	 */
 	public function update_option( $option_name, $option_value ) {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
@@ -110,6 +184,13 @@ class Helpers {
 		}
 	}
 
+	/**
+	 * Inserts or updates an option in the options table.
+	 *
+	 * @param string $option_name  Option name.
+	 * @param mixed  $option_value Option value.
+	 * @return int|false Number of rows affected, or false on error.
+	 */
 	public function upsert_option( $option_name, $option_value ) {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
@@ -122,24 +203,39 @@ class Helpers {
 		}
 	}
 
+	/**
+	 * Returns the column definitions for the logs table.
+	 *
+	 * @return array|null Array of column objects, or null.
+	 */
 	public function get_logs_columns() {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
 			$query  = 'SHOW COLUMNS FROM ' . $wpdb->prefix . $this->table_logs; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			return $result;
 		}
 	}
 
+	/**
+	 * Returns the count of legacy log posts.
+	 *
+	 * @return int Number of old log posts.
+	 */
 	public function get_old_logs_count() {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
-			$query  = "SELECT COUNT(*) FROM {$wpdb->prefix}posts WHERE post_type='c4p_log'"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$result = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$query  = $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}posts WHERE post_type = %s", 'c4p_log' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$result = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			return (int) $result;
 		}
 	}
 
+	/**
+	 * Deletes legacy log posts by ID.
+	 *
+	 * @param array $log_ids Array of post IDs to delete.
+	 */
 	public function delete_old_logs( $log_ids ) {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
@@ -149,6 +245,13 @@ class Helpers {
 		}
 	}
 
+	/**
+	 * Creates log entries in the logs table from legacy post data.
+	 *
+	 * @param array $logs_data      Array of log data objects.
+	 * @param bool  $is_deleting_old Whether to delete legacy posts after migration.
+	 * @return int|false Number of rows inserted, or false on error.
+	 */
 	public function create_logs( $logs_data, $is_deleting_old ) {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
@@ -177,34 +280,48 @@ class Helpers {
 		}
 	}
 
+	/**
+	 * Retrieves all log entries from the logs table.
+	 *
+	 * @return array|null Array of log rows, or null.
+	 */
 	public function get_logs() {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
 			$query  = 'SELECT * FROM ' . $wpdb->prefix . $this->table_logs; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$result = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$result = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			return $result;
 		}
 	}
 
+	/**
+	 * Deletes log entries from the logs table.
+	 *
+	 * @param string|int|array $path 'all' to truncate, array of IDs for bulk delete, or single ID.
+	 * @return int|false Number of rows affected, or false on error.
+	 */
 	public function delete_logs( $path ) {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
 			if ( 'all' === $path ) {
 				$query  = 'TRUNCATE TABLE ' . $wpdb->prefix . $this->table_logs; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				$result = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$result = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			} elseif ( is_array( $path ) ) {
 				$ids          = array_map( 'absint', $path );
 				$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
-				$query        = $wpdb->prepare( 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id IN (' . $placeholders . ')', ...$ids ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.PreparedSQLPlaceholders
-				$result       = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$query        = $wpdb->prepare( 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id IN (' . $placeholders . ')', ...$ids ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.PreparedSQLPlaceholders, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				$result       = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			} else {
 				$query  = $wpdb->prepare( 'DELETE FROM ' . $wpdb->prefix . $this->table_logs . ' WHERE id = %d', $path ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				$result = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$result = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 			}
 			return $result;
 		}
 	}
 
+	/**
+	 * Exports all log entries as a CSV file download.
+	 */
 	public function export_logs_csv() {
 		if ( current_user_can( 'manage_options' ) ) {
 			$filename   = 'logs_' . time() . '.csv';

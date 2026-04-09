@@ -1,8 +1,14 @@
 <?php
+/**
+ * General settings view.
+ *
+ * @package Custom_404_Pro
+ */
+
 global $wpdb;
 $helpers                 = Helpers::singleton();
 $sql                     = 'SELECT * FROM ' . $wpdb->prefix . $helpers->table_options; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-$result                  = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+$result                  = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 $row_send_email          = $result[3];
 $row_logging_enabled     = $result[4];
 $row_redirect_error_code = $result[5];

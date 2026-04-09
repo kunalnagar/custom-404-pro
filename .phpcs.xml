@@ -16,14 +16,8 @@
     <arg name="warning-severity" value="0"/>
 
     <config name="minimum_supported_wp_version" value="5.0"/>
-    <config name="testVersion" value="7.4-"/>
 
     <rule ref="WordPress-Core">
-        <!--
-            File naming (e.g. class-helpers.php) would require renaming all existing files
-            and updating every include path — intentionally deferred as a separate refactor.
-        -->
-        <exclude name="WordPress.Files.FileName"/>
         <!--
             Docblocks for all classes/methods/properties are intentionally deferred.
             Adding them to the entire codebase is a separate effort.
@@ -50,12 +44,10 @@
         <exclude name="WordPress.Security.NonceVerification"/>
     </rule>
     <rule ref="WordPress-Extra">
-        <exclude name="WordPress.Files.FileName"/>
         <exclude name="Squiz.Commenting"/>
         <exclude name="WordPress.DB.DirectDatabaseQuery"/>
         <exclude name="WordPress.DB.PreparedSQL.NotPrepared"/>
         <exclude name="WordPress.DB.PreparedSQLPlaceholders"/>
         <exclude name="WordPress.Security.NonceVerification"/>
     </rule>
-    <rule ref="PHPCompatibilityWP"/>
 </ruleset>
