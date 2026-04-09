@@ -58,6 +58,9 @@ Uninstall the plugin from the Plugins page (important!) and reinstall it. Never 
 = 3.12.6 =
 * Add load_plugin_textdomain support for translations
 
+= 3.12.5 =
+* Add Polylang and WPML support for 404 redirect page
+
 = 3.12.4 =
 * Enforce full WordPress coding standards: PHPDoc comments, input sanitization, file naming convention
 
