@@ -1,3 +1,6 @@
 .idea
 .DS_Store
 .prettierignore
+.vscode/
+.phpunit.result.cache
+vendor/

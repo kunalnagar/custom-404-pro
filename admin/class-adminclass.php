@@ -193,12 +193,37 @@ class AdminClass {
 				self::custom_404_pro_log( $row_send_email->value );
 			}
 			if ( 'page' === $row_mode->value ) {
-				$page = get_post( $row_mode_page->value );
+				$page_id = $this->resolve_multilingual_page_id( (int) $row_mode_page->value );
+				$page    = get_post( $page_id );
 				wp_safe_redirect( $page->guid, $row_redirect_error_code->value );
 			} elseif ( 'url' === $row_mode->value ) {
 				wp_safe_redirect( $row_mode_url->value, $row_redirect_error_code->value );
 			}
 		}
+	}
+
+	/**
+	 * Resolves the 404 redirect page ID for the current language.
+	 *
+	 * Checks for Polylang and WPML and returns the translated page ID when
+	 * available, falling back to the original ID when no translation exists.
+	 *
+	 * @param int $page_id The configured page ID.
+	 * @return int The resolved page ID for the current language.
+	 */
+	public function resolve_multilingual_page_id( int $page_id ): int {
+		// Polylang support: redirect to the translated page for the current language.
+		if ( function_exists( 'pll_get_post' ) ) {
+			$translated_id = pll_get_post( $page_id, pll_current_language() );
+			if ( $translated_id ) {
+				$page_id = $translated_id;
+			}
+		}
+
+		// WPML support: filter resolves the translated object ID (no-op when WPML is inactive).
+		$page_id = (int) apply_filters( 'wpml_object_id', $page_id, 'page', true );
+
+		return $page_id;
 	}
 
 	/**
