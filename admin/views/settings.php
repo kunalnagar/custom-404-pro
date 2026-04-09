@@ -1,6 +1,11 @@
 <?php
+/**
+ * Settings page view.
+ *
+ * @package Custom_404_Pro
+ */
 
-$c4p_tab    = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+$c4p_tab    = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 $active_tab = empty( $c4p_tab ) ? 'global-redirect' : $c4p_tab;
 
 ?>

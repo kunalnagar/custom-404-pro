@@ -1,11 +1,22 @@
 <?php
+/**
+ * Logs list table class.
+ *
+ * @package Custom_404_Pro
+ */
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	include_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
+/**
+ * Logs class.
+ */
 class LogsClass extends WP_List_Table {
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 		global $status, $page;
 		parent::__construct(
@@ -18,15 +29,18 @@ class LogsClass extends WP_List_Table {
 	}
 
 	/**
-	 * Add stuff on top or bottom of the Logs Table
+	 * Add stuff on top or bottom of the Logs Table.
 	 *
-	 * @param  [String] $which top/bottom
-	 * @return null
+	 * @param string $which top/bottom.
+	 * @return void
 	 */
 	public function extra_tablenav( $which ) {
 		// No additional navigation content needed.
 	}
 
+	/**
+	 * Prepares the list of items for displaying.
+	 */
 	public function prepare_items() {
 		global $wpdb;
 		$columns               = self::get_columns();
@@ -36,16 +50,16 @@ class LogsClass extends WP_List_Table {
 		$helpers               = Helpers::singleton();
 		$sql                   = 'SELECT * FROM ' . $wpdb->prefix . $helpers->table_logs;
 
-		if ( array_key_exists( 'orderby', $_GET ) ) {
-			$order_by = sanitize_text_field( $_GET['orderby'] );
-			$order    = strtoupper( sanitize_text_field( $_GET['order'] ) );
+		if ( array_key_exists( 'orderby', $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$order_by = sanitize_text_field( wp_unslash( $_GET['orderby'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$order    = isset( $_GET['order'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_GET['order'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ! empty( $order_by ) && ! empty( $order ) ) {
 				$sql = self::manage_sorting( $order_by, $order, $sql );
 			}
 		}
 
-		if ( array_key_exists( 's', $_GET ) ) {
-			$search = sanitize_text_field( $_GET['s'] );
+		if ( array_key_exists( 's', $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$search = sanitize_text_field( wp_unslash( $_GET['s'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ! empty( $search ) ) {
 				$sql = self::manage_search( $search, $sql );
 			}
@@ -77,6 +91,14 @@ class LogsClass extends WP_List_Table {
 		$this->items = $data;
 	}
 
+	/**
+	 * Handles sorting of the logs table.
+	 *
+	 * @param string $order_by Column to sort by.
+	 * @param string $order Sort direction (ASC or DESC).
+	 * @param string $sql SQL query string.
+	 * @return string Modified SQL query string.
+	 */
 	public function manage_sorting( $order_by, $order, $sql ) {
 		if ( 'created' === $order_by ) {
 			$sql .= ' ORDER BY created';
@@ -93,6 +115,13 @@ class LogsClass extends WP_List_Table {
 		return $sql;
 	}
 
+	/**
+	 * Handles search filtering of the logs table.
+	 *
+	 * @param string $search Search string.
+	 * @param string $sql SQL query string.
+	 * @return string Modified SQL query string.
+	 */
 	public function manage_search( $search, $sql ) {
 		global $wpdb;
 		$like = '%' . $wpdb->esc_like( $search ) . '%';
@@ -107,6 +136,11 @@ class LogsClass extends WP_List_Table {
 		return $sql;
 	}
 
+	/**
+	 * Returns the columns for the logs table.
+	 *
+	 * @return array Column definitions.
+	 */
 	public function get_columns() {
 		$columns = array(
 			'cb'         => "<input type='checkbox' />",
@@ -119,6 +153,13 @@ class LogsClass extends WP_List_Table {
 		return $columns;
 	}
 
+	/**
+	 * Renders the default column value.
+	 *
+	 * @param array  $item Row data.
+	 * @param string $column_name Column name.
+	 * @return mixed Column value.
+	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'cb':
@@ -136,6 +177,11 @@ class LogsClass extends WP_List_Table {
 		}
 	}
 
+	/**
+	 * Returns the sortable columns.
+	 *
+	 * @return array Sortable column definitions.
+	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
 			'ip'         => 'ip',
@@ -147,10 +193,17 @@ class LogsClass extends WP_List_Table {
 		return $sortable_columns;
 	}
 
+	/**
+	 * Renders the IP column with row actions.
+	 *
+	 * @param array $item Row data.
+	 * @return string Column HTML.
+	 */
 	public function column_ip( $item ) {
-		$nonce   = wp_create_nonce( 'c4p-logs--delete' );
-		$actions = array(
-			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s&_wpnonce=%s">Delete</a>', esc_html( $_REQUEST['page'] ), 'c4p-logs--delete', $item['id'], $nonce ),
+		$nonce     = wp_create_nonce( 'c4p-logs--delete' );
+		$page_slug = isset( $_REQUEST['page'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$actions   = array(
+			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s&_wpnonce=%s">Delete</a>', esc_html( $page_slug ), 'c4p-logs--delete', $item['id'], $nonce ),
 		);
 		return sprintf(
 			'%1$s %2$s',
@@ -161,10 +214,21 @@ class LogsClass extends WP_List_Table {
 		);
 	}
 
+	/**
+	 * Renders the checkbox column.
+	 *
+	 * @param array $item Row data.
+	 * @return string Column HTML.
+	 */
 	public function column_cb( $item ) {
 		return '<input type="checkbox" name="path[]" value="' . $item['id'] . '" />';
 	}
 
+	/**
+	 * Returns the bulk actions for the logs table.
+	 *
+	 * @return array Bulk action definitions.
+	 */
 	public function get_bulk_actions() {
 		$actions = array(
 			'c4p-logs--delete'     => 'Delete',

@@ -1,1 +1,6 @@
-<?php // Silence is golden
+<?php
+/**
+ * Silence is golden.
+ *
+ * @package Custom_404_Pro
+ */

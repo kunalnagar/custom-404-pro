@@ -1,20 +1,34 @@
 <?php
+/**
+ * Handles plugin activation.
+ *
+ * @package Custom_404_Pro
+ */
 
+/**
+ * Activation class.
+ */
 class ActivateClass {
 
+	/**
+	 * Creates tables and initialises options for a single site.
+	 */
 	private static function run_activation() {
 		global $wpdb;
 		$helpers                = Helpers::singleton();
 		$is_table_options_query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->prefix . $helpers->table_options ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$is_table_logs_query    = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->prefix . $helpers->table_logs ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$is_table_options       = $wpdb->query( $is_table_options_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$is_table_logs          = $wpdb->query( $is_table_logs_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$is_table_options       = $wpdb->query( $is_table_options_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$is_table_logs          = $wpdb->query( $is_table_logs_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		if ( empty( $is_table_options ) && empty( $is_table_logs ) ) {
 			self::create_tables();
 			self::initialize_options();
 		}
 	}
 
+	/**
+	 * Runs on plugin activation, handling multisite if needed.
+	 */
 	public static function activate() {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
@@ -31,6 +45,9 @@ class ActivateClass {
 		}
 	}
 
+	/**
+	 * Creates the plugin database tables.
+	 */
 	public static function create_tables() {
 		global $wpdb;
 		$helpers       = Helpers::singleton();
@@ -62,6 +79,9 @@ class ActivateClass {
 		}
 	}
 
+	/**
+	 * Inserts default option values into the options table.
+	 */
 	public static function initialize_options() {
 		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
