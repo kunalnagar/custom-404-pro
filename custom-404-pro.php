@@ -3,7 +3,7 @@
  * Plugin Name: Custom 404 Pro
  * Plugin URI: https://wordpress.org/plugins/custom-404-pro/
  * Description: Override the default 404 page with any page or a custom URL from the Admin Panel.
- * Version: 3.12.4
+ * Version: 3.12.6
  * Author: Kunal Nagar
  * Author URI: https://www.kunalnagar.in
  * License: GPL-2.0+
