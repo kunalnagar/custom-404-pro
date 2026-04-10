@@ -10,7 +10,8 @@
     },
     "scripts": {
         "lint": "phpcs",
-        "test": "phpunit"
+        "test": "phpunit",
+        "test:integration": "phpunit -c phpunit-integration.xml"
     },
     "config": {
         "allow-plugins": {
