@@ -8,6 +8,7 @@
     <testsuites>
         <testsuite name="Custom 404 Pro">
             <directory>tests</directory>
+            <exclude>tests/integration</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
