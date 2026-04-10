@@ -47,8 +47,16 @@ class C404P_Integration_ActivationTest extends WP_UnitTestCase {
 		global $wpdb;
 		ActivateClass::create_tables();
 		$helpers = new Helpers();
-		$result  = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->prefix . $helpers->table_options ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$this->assertNotEmpty( $result, 'Options table should exist after create_tables().' );
+		// Use information_schema instead of SHOW TABLES LIKE — the underscore in the
+		// table name acts as a single-character wildcard in LIKE patterns, which can
+		// produce inconsistent results. information_schema uses exact string matching.
+		$result = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = %s',
+				$wpdb->prefix . $helpers->table_options
+			)
+		);
+		$this->assertSame( '1', $result, 'Options table should exist after create_tables().' );
 	}
 
 	/**
@@ -58,8 +66,13 @@ class C404P_Integration_ActivationTest extends WP_UnitTestCase {
 		global $wpdb;
 		ActivateClass::create_tables();
 		$helpers = new Helpers();
-		$result  = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->prefix . $helpers->table_logs ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$this->assertNotEmpty( $result, 'Logs table should exist after create_tables().' );
+		$result  = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = %s',
+				$wpdb->prefix . $helpers->table_logs
+			)
+		);
+		$this->assertSame( '1', $result, 'Logs table should exist after create_tables().' );
 	}
 
 	/**

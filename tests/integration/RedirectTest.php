@@ -65,6 +65,11 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 		$this->redirect_url    = null;
 		$this->redirect_status = null;
 
+		// wp_safe_redirect() calls wp_validate_redirect() which rejects cross-domain
+		// URLs (test site is example.org). Allow the domains used in tests so the
+		// redirect URL reaches our capture filter unchanged.
+		add_filter( 'allowed_redirect_hosts', array( $this, 'allow_test_hosts' ) );
+
 		// Intercept wp_safe_redirect() before it sends headers / calls exit().
 		add_filter( 'wp_redirect', array( $this, 'capture_redirect' ), 10, 2 );
 
@@ -79,6 +84,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	public function tearDown(): void {
 		global $wpdb;
 
+		remove_filter( 'allowed_redirect_hosts', array( $this, 'allow_test_hosts' ) );
 		remove_filter( 'wp_redirect', array( $this, 'capture_redirect' ), 10 );
 
 		unset( $GLOBALS['wp_query'] );
@@ -87,6 +93,17 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 		$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . $this->helpers->table_logs ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 
 		parent::tearDown();
+	}
+
+	/**
+	 * allowed_redirect_hosts filter — permits external domains used in tests.
+	 *
+	 * @param array $hosts Allowed hosts.
+	 * @return array
+	 */
+	public function allow_test_hosts( $hosts ) {
+		$hosts[] = 'example.com';
+		return $hosts;
 	}
 
 	/**
