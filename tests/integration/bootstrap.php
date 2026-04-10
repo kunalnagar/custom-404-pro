@@ -16,6 +16,10 @@ if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 	exit( 1 );
 }
 
+// The WP test suite (5.9+) requires the PHPUnit Polyfills library.
+// Point it to our Composer-installed copy before loading the WP bootstrap.
+define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__, 2 ) . '/vendor/yoast/phpunit-polyfills' );
+
 // Load WP test functions so we can hook into muplugins_loaded.
 require_once $_tests_dir . '/includes/functions.php';
 
