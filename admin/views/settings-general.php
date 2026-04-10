@@ -6,18 +6,16 @@
  */
 
 global $wpdb;
-$helpers                 = Helpers::singleton();
-$sql                     = 'SELECT * FROM ' . $wpdb->prefix . $helpers->table_options; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-$result                  = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-$row_send_email          = $result[3];
-$row_logging_enabled     = $result[4];
-$row_redirect_error_code = $result[5];
-if ( array_key_exists( 6, $result ) ) {
-	$row_log_ip = $result[6];
-} else {
-	$row_log_ip        = new stdClass();
-	$row_log_ip->value = true;
+$helpers = Helpers::singleton();
+$rows    = $wpdb->get_results( 'SELECT name, value FROM ' . $wpdb->prefix . $helpers->table_options ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+$options = array();
+foreach ( $rows as $row ) {
+	$options[ $row->name ] = $row->value;
 }
+$send_email          = $options['send_email'] ?? '';
+$logging_enabled     = $options['logging_enabled'] ?? '';
+$redirect_error_code = isset( $options['redirect_error_code'] ) ? (int) $options['redirect_error_code'] : 302;
+$log_ip              = $options['log_ip'] ?? true;
 ?>
 <div class="wrap">
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -26,7 +24,7 @@ if ( array_key_exists( 6, $result ) ) {
 			<tr>
 				<th>Email</th>
 				<td>
-					<input type="checkbox" id="c4p_log_email" name="send_email" <?php echo true === (bool) $row_send_email->value ? 'checked' : ''; ?> />
+					<input type="checkbox" id="c4p_log_email" name="send_email" <?php echo (bool) $send_email ? 'checked' : ''; ?> />
 					<p class="description">
 						If you check this, <b>and logging is enabled</b>, an email will be sent on every error log on the admin's email account. If you're just starting out, it is recommended you uncheck this. Enable it based on your error volume to avoid flooding of your email inbox.
 					</p>
@@ -36,10 +34,10 @@ if ( array_key_exists( 6, $result ) ) {
 				<th>Logging Status</th>
 				<td>
 					<select name="logging_enabled">
-						<option value="enabled" <?php echo true === (bool) $row_logging_enabled->value ? 'selected' : ''; ?>>
+						<option value="enabled" <?php echo (bool) $logging_enabled ? 'selected' : ''; ?>>
 							Enabled
 						</option>
-						<option value="disabled" <?php echo false === (bool) $row_logging_enabled->value ? 'selected' : ''; ?>>
+						<option value="disabled" <?php echo ! (bool) $logging_enabled ? 'selected' : ''; ?>>
 							Disabled
 						</option>
 					</select>
@@ -51,7 +49,7 @@ if ( array_key_exists( 6, $result ) ) {
 			<tr>
 				<th>Log IP</th>
 				<td>
-					<input type="checkbox" id="c4p_log_ip" name="log_ip" <?php echo true === (bool) $row_log_ip->value ? 'checked' : ''; ?> />
+					<input type="checkbox" id="c4p_log_ip" name="log_ip" <?php echo (bool) $log_ip ? 'checked' : ''; ?> />
 					<p class="description">
 						By default, the IP address of the 404 user agent is captured. If you would like to disable this for privacy reasons, please uncheck this box. When no IP is recorded, it will appear as <b>N/A</b> in the Logs Table as well as the email.
 					</p>
@@ -61,13 +59,13 @@ if ( array_key_exists( 6, $result ) ) {
 				<th>Redirect Code</th>
 				<td>
 					<select name="redirect_error_code">
-						<option value="301" <?php echo 301 === (int) $row_redirect_error_code->value ? 'selected' : ''; ?>>301
+						<option value="301" <?php echo 301 === $redirect_error_code ? 'selected' : ''; ?>>301
 						</option>
-						<option value="302" <?php echo 302 === (int) $row_redirect_error_code->value ? 'selected' : ''; ?>>302
+						<option value="302" <?php echo 302 === $redirect_error_code ? 'selected' : ''; ?>>302
 						</option>
-						<option value="307" <?php echo 307 === (int) $row_redirect_error_code->value ? 'selected' : ''; ?>>307
+						<option value="307" <?php echo 307 === $redirect_error_code ? 'selected' : ''; ?>>307
 						</option>
-						<option value="308" <?php echo 308 === (int) $row_redirect_error_code->value ? 'selected' : ''; ?>>308
+						<option value="308" <?php echo 308 === $redirect_error_code ? 'selected' : ''; ?>>308
 						</option>
 					</select>
 					<p class="description">

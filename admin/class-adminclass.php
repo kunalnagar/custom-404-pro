@@ -181,23 +181,20 @@ class AdminClass {
 	public function custom_404_pro_redirect() {
 		global $wpdb;
 		if ( is_404() ) {
-			$sql                     = 'SELECT * FROM ' . $wpdb->prefix . $this->helpers->table_options; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$sql_result              = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-			$row_mode                = $sql_result[0];
-			$row_mode_page           = $sql_result[1];
-			$row_mode_url            = $sql_result[2];
-			$row_send_email          = $sql_result[3];
-			$row_logging_enabled     = $sql_result[4];
-			$row_redirect_error_code = $sql_result[5];
-			if ( $row_logging_enabled->value ) {
-				self::custom_404_pro_log( $row_send_email->value );
+			$rows    = $wpdb->get_results( 'SELECT name, value FROM ' . $wpdb->prefix . $this->helpers->table_options ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$options = array();
+			foreach ( $rows as $row ) {
+				$options[ $row->name ] = $row->value;
 			}
-			if ( 'page' === $row_mode->value ) {
-				$page_id = $this->resolve_multilingual_page_id( (int) $row_mode_page->value );
+			if ( ! empty( $options['logging_enabled'] ) ) {
+				self::custom_404_pro_log( $options['send_email'] ?? '' );
+			}
+			if ( 'page' === ( $options['mode'] ?? '' ) ) {
+				$page_id = $this->resolve_multilingual_page_id( (int) ( $options['mode_page'] ?? 0 ) );
 				$page    = get_post( $page_id );
-				wp_safe_redirect( $page->guid, $row_redirect_error_code->value );
-			} elseif ( 'url' === $row_mode->value ) {
-				wp_safe_redirect( $row_mode_url->value, $row_redirect_error_code->value );
+				wp_safe_redirect( $page->guid, (int) ( $options['redirect_error_code'] ?? 302 ) );
+			} elseif ( 'url' === ( $options['mode'] ?? '' ) ) {
+				wp_safe_redirect( $options['mode_url'] ?? '', (int) ( $options['redirect_error_code'] ?? 302 ) );
 			}
 		}
 	}
