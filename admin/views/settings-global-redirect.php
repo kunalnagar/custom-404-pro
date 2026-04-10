@@ -18,6 +18,9 @@ $redirect_mode_url  = '';
 if ( 'page' === $redirect_mode ) {
 	$sql_mode_page      = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options WHERE name = %s', 'mode_page' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	$redirect_mode_page = $wpdb->get_var( $sql_mode_page ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+	// Resolve the stored default-language ID to the current admin language so
+	// the correct page appears selected when WPML or Polylang is active.
+	$redirect_mode_page = $this->resolve_multilingual_page_id( (int) $redirect_mode_page );
 } elseif ( 'url' === $redirect_mode ) {
 	$sql_mode_url      = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options WHERE name = %s', 'mode_url' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	$redirect_mode_url = $wpdb->get_var( $sql_mode_url ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
