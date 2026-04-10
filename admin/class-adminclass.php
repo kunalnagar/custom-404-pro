@@ -309,6 +309,36 @@ class AdminClass {
 	}
 
 	/**
+	 * Normalizes a page ID to its default-language equivalent.
+	 *
+	 * When WPML or Polylang is active the admin page dropdown is filtered to the
+	 * current language, so the submitted page ID may be a translation rather than
+	 * the original. Storing the default-language ID lets resolve_multilingual_page_id()
+	 * derive the correct translation at redirect time, regardless of which language
+	 * admin last saved the setting.
+	 *
+	 * @param int $page_id Page ID submitted by the settings form.
+	 * @return int Default-language page ID, or the original ID when no multilingual plugin is active.
+	 */
+	private function normalize_page_id_to_default_language( int $page_id ): int {
+		// WPML: translate submitted ID to the default language before storing.
+		if ( has_filter( 'wpml_object_id' ) ) {
+			$default_lang = apply_filters( 'wpml_default_language', null );
+			$page_id      = (int) apply_filters( 'wpml_object_id', $page_id, 'page', true, $default_lang );
+		}
+
+		// Polylang: translate submitted ID to the default language before storing.
+		if ( function_exists( 'pll_default_language' ) && function_exists( 'pll_get_post' ) ) {
+			$translated = pll_get_post( $page_id, pll_default_language() );
+			if ( $translated ) {
+				$page_id = $translated;
+			}
+		}
+
+		return $page_id;
+	}
+
+	/**
 	 * Updates the redirect mode options.
 	 *
 	 * @param string $mode Mode value (page, url, or empty).
@@ -323,7 +353,7 @@ class AdminClass {
 			switch ( $mode ) {
 				case 'page':
 					$mode_val      = 'page';
-					$mode_page_val = $page;
+					$mode_page_val = (string) $this->normalize_page_id_to_default_language( (int) $page );
 					$mode_url_val  = '';
 					break;
 				case 'url':

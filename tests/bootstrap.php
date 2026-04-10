@@ -44,6 +44,18 @@ function add_filter( string $tag, callable $callback ) {
 }
 
 /**
+ * Stub for WordPress has_filter().
+ *
+ * Returns true when at least one callback is registered for $tag via add_filter().
+ *
+ * @param string $tag The filter hook name.
+ * @return bool
+ */
+function has_filter( string $tag ): bool {
+	return ! empty( $GLOBALS['_test_filters'][ $tag ] );
+}
+
+/**
  * Stub for Polylang pll_get_post().
  *
  * Returns the value of $GLOBALS['_pll_get_post_return']; defaults to false.
@@ -65,6 +77,17 @@ function pll_get_post( int $post_id, string $lang ) { // phpcs:ignore VariableAn
  */
 function pll_current_language(): string {
 	return $GLOBALS['_pll_current_language'] ?? 'en';
+}
+
+/**
+ * Stub for Polylang pll_default_language().
+ *
+ * Returns the value of $GLOBALS['_pll_default_language']; defaults to 'en'.
+ *
+ * @return string
+ */
+function pll_default_language(): string {
+	return $GLOBALS['_pll_default_language'] ?? 'en';
 }
 
 /**
