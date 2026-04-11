@@ -47,16 +47,14 @@ class C404P_Integration_ActivationTest extends WP_UnitTestCase {
 		global $wpdb;
 		ActivateClass::create_tables();
 		$helpers = new Helpers();
-		// Use information_schema instead of SHOW TABLES LIKE — the underscore in the
-		// table name acts as a single-character wildcard in LIKE patterns, which can
-		// produce inconsistent results. information_schema uses exact string matching.
-		$result = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = %s',
-				$wpdb->prefix . $helpers->table_options
-			)
-		);
-		$this->assertSame( '1', $result, 'Options table should exist after create_tables().' );
+		// SELECT COUNT(*) returns '0' (not null) when the table exists but is empty.
+		// It returns null only when the table does not exist (MySQL error). This makes
+		// it a reliable existence check that avoids LIKE wildcard and information_schema
+		// privilege issues.
+		$wpdb->suppress_errors( true );
+		$result = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . $helpers->table_options ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->suppress_errors( false );
+		$this->assertNotNull( $result, 'Options table should exist after create_tables().' );
 	}
 
 	/**
@@ -66,13 +64,10 @@ class C404P_Integration_ActivationTest extends WP_UnitTestCase {
 		global $wpdb;
 		ActivateClass::create_tables();
 		$helpers = new Helpers();
-		$result  = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = %s',
-				$wpdb->prefix . $helpers->table_logs
-			)
-		);
-		$this->assertSame( '1', $result, 'Logs table should exist after create_tables().' );
+		$wpdb->suppress_errors( true );
+		$result = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . $helpers->table_logs ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->suppress_errors( false );
+		$this->assertNotNull( $result, 'Logs table should exist after create_tables().' );
 	}
 
 	/**
