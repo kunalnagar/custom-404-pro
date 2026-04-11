@@ -6,15 +6,20 @@
         "squizlabs/php_codesniffer": "^3.9",
         "wp-coding-standards/wpcs": "^3.1",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "phpunit/phpunit": "^9.6"
+        "phpunit/phpunit": "^9.6",
+        "yoast/phpunit-polyfills": "^1.0"
     },
     "scripts": {
         "lint": "phpcs",
-        "test": "phpunit"
+        "test": "phpunit",
+        "test:integration": "phpunit -c phpunit-integration.xml"
     },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "platform": {
+            "php": "8.1"
         }
     }
 }

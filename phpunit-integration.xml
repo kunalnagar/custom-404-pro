@@ -2,13 +2,12 @@
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
-    bootstrap="tests/bootstrap.php"
+    bootstrap="tests/integration/bootstrap.php"
     colors="true"
 >
     <testsuites>
-        <testsuite name="Custom 404 Pro">
-            <directory>tests</directory>
-            <exclude>tests/integration</exclude>
+        <testsuite name="Custom 404 Pro Integration">
+            <directory>tests/integration</directory>
         </testsuite>
     </testsuites>
 </phpunit>
