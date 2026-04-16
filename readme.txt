@@ -84,6 +84,7 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 
 = 3.12.9 =
 * Migrate plugin settings from a custom database table to native wp_options for better compatibility and performance
+* Add configurable email notification cooldown to prevent inbox flooding on high 404 traffic (15 min / 30 min / 1 hr / 6 hr / 24 hr)
 
 = 3.12.8 =
 * Fix IP logging toggle not persisting correctly due to positional row access
