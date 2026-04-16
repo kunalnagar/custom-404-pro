@@ -60,7 +60,7 @@ class HelpersTest extends TestCase {
 	 */
 	public function test_defaults_contains_all_required_keys() {
 		$helpers  = new Helpers();
-		$required = array( 'mode', 'mode_page', 'mode_url', 'send_email', 'logging_enabled', 'redirect_error_code', 'log_ip' );
+		$required = array( 'mode', 'mode_page', 'mode_url', 'send_email', 'logging_enabled', 'redirect_error_code', 'log_ip', 'email_cooldown' );
 		foreach ( $required as $key ) {
 			$this->assertArrayHasKey( $key, $helpers->defaults(), "defaults() should contain key '{$key}'." );
 		}
