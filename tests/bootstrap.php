@@ -10,9 +10,10 @@ $wpdb         = new stdClass(); // phpcs:ignore WordPress.WP.GlobalVariablesOver
 $wpdb->prefix = 'wp_';
 
 // Simple filter/action registries used by stubs below.
-$GLOBALS['_test_filters'] = array();
-$GLOBALS['_test_actions'] = array();
+$GLOBALS['_test_filters']                 = array();
+$GLOBALS['_test_actions']                 = array();
 $GLOBALS['_load_plugin_textdomain_calls'] = array();
+$GLOBALS['_test_options']                 = array();
 
 /**
  * Stub for WordPress apply_filters().
@@ -138,6 +139,65 @@ function load_plugin_textdomain( string $domain, $deprecated = false, $plugin_re
 		'domain'          => $domain,
 		'plugin_rel_path' => $plugin_rel_path,
 	);
+}
+
+/**
+ * Stub for WordPress get_option().
+ *
+ * Returns the value stored in the test options registry, or $default if not set.
+ *
+ * @param string $option  Option name.
+ * @param mixed  $default Default value.
+ * @return mixed
+ */
+function get_option( string $option, $default = false ) {
+	return array_key_exists( $option, $GLOBALS['_test_options'] )
+		? $GLOBALS['_test_options'][ $option ]
+		: $default;
+}
+
+/**
+ * Stub for WordPress update_option().
+ *
+ * Stores a value in the test options registry.
+ *
+ * @param string $option Option name.
+ * @param mixed  $value  Value to store.
+ * @return bool Always true.
+ */
+function update_option( string $option, $value ) {
+	$GLOBALS['_test_options'][ $option ] = $value;
+	return true;
+}
+
+/**
+ * Stub for WordPress add_option().
+ *
+ * Stores a value only when the option is not already set (mirrors WordPress behaviour).
+ *
+ * @param string $option Option name.
+ * @param mixed  $value  Value to store.
+ * @return bool True if the option was added, false if it already existed.
+ */
+function add_option( string $option, $value ) {
+	if ( array_key_exists( $option, $GLOBALS['_test_options'] ) ) {
+		return false;
+	}
+	$GLOBALS['_test_options'][ $option ] = $value;
+	return true;
+}
+
+/**
+ * Stub for WordPress delete_option().
+ *
+ * Removes a value from the test options registry.
+ *
+ * @param string $option Option name.
+ * @return bool Always true.
+ */
+function delete_option( string $option ): bool {
+	unset( $GLOBALS['_test_options'][ $option ] );
+	return true;
 }
 
 require_once dirname( __DIR__ ) . '/admin/class-helpers.php';

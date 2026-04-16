@@ -49,7 +49,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	private $helpers;
 
 	/**
-	 * Set up: create tables, seed default options, configure 404 state.
+	 * Set up: create the logs table, seed default settings, configure 404 state.
 	 */
 	public function setUp(): void {
 		parent::setUp();
@@ -58,7 +58,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 		wp_set_current_user( $admin_id );
 
 		ActivateClass::create_tables();
-		ActivateClass::initialize_options();
+		ActivateClass::initialize_options(); // seeds wp_options defaults via add_option()
 
 		$this->helpers         = new Helpers();
 		$this->admin           = new AdminClass();
@@ -79,7 +79,11 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Tear down: remove filter, reset globals, drop custom tables.
+	 * Tear down: remove filters, reset globals, drop the logs table.
+	 *
+	 * Settings are stored in wp_options (DML) so they are rolled back automatically
+	 * by WP_UnitTestCase. Only the logs table requires a manual DROP because
+	 * CREATE TABLE is DDL and implicitly commits.
 	 */
 	public function tearDown(): void {
 		global $wpdb;
@@ -89,7 +93,6 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 
 		unset( $GLOBALS['wp_query'] );
 
-		$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . $this->helpers->table_options ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . $this->helpers->table_logs ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 
 		parent::tearDown();
@@ -136,8 +139,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	 * URL mode should redirect to the configured URL.
 	 */
 	public function test_redirect_sends_correct_url_in_url_mode() {
-		$this->helpers->update_option( 'mode', 'url' );
-		$this->helpers->update_option( 'mode_url', 'https://example.com/custom-error' );
+		$this->helpers->update_settings( array( 'mode' => 'url', 'mode_url' => 'https://example.com/custom-error' ) );
 
 		$this->admin->custom_404_pro_redirect();
 
@@ -148,9 +150,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	 * The HTTP status code from the redirect_error_code option should be used.
 	 */
 	public function test_redirect_uses_configured_status_code() {
-		$this->helpers->update_option( 'mode', 'url' );
-		$this->helpers->update_option( 'mode_url', 'https://example.com' );
-		$this->helpers->update_option( 'redirect_error_code', '301' );
+		$this->helpers->update_settings( array( 'mode' => 'url', 'mode_url' => 'https://example.com', 'redirect_error_code' => 301 ) );
 
 		$this->admin->custom_404_pro_redirect();
 
@@ -170,8 +170,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 		);
 		$page    = get_post( $page_id );
 
-		$this->helpers->update_option( 'mode', 'page' );
-		$this->helpers->update_option( 'mode_page', (string) $page_id );
+		$this->helpers->update_settings( array( 'mode' => 'page', 'mode_page' => (string) $page_id ) );
 
 		$this->admin->custom_404_pro_redirect();
 
@@ -184,8 +183,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	public function test_redirect_does_not_fire_when_not_404() {
 		$GLOBALS['wp_query']->is_404 = false;
 
-		$this->helpers->update_option( 'mode', 'url' );
-		$this->helpers->update_option( 'mode_url', 'https://example.com' );
+		$this->helpers->update_settings( array( 'mode' => 'url', 'mode_url' => 'https://example.com' ) );
 
 		$this->admin->custom_404_pro_redirect();
 
@@ -196,9 +194,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	 * A log entry should be created when logging is enabled.
 	 */
 	public function test_redirect_creates_log_entry_when_logging_enabled() {
-		$this->helpers->update_option( 'logging_enabled', '1' );
-		$this->helpers->update_option( 'mode', 'url' );
-		$this->helpers->update_option( 'mode_url', 'https://example.com' );
+		$this->helpers->update_settings( array( 'logging_enabled' => true, 'mode' => 'url', 'mode_url' => 'https://example.com' ) );
 
 		$this->admin->custom_404_pro_redirect();
 
@@ -210,9 +206,8 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	 * No log entry should be created when logging is disabled (default).
 	 */
 	public function test_redirect_does_not_log_when_logging_disabled() {
-		// Default logging_enabled is '' after initialize_options().
-		$this->helpers->update_option( 'mode', 'url' );
-		$this->helpers->update_option( 'mode_url', 'https://example.com' );
+		// Default logging_enabled is false after initialize_options().
+		$this->helpers->update_settings( array( 'mode' => 'url', 'mode_url' => 'https://example.com' ) );
 
 		$this->admin->custom_404_pro_redirect();
 

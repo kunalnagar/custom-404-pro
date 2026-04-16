@@ -5,25 +5,19 @@
  * @package Custom_404_Pro
  */
 
-global $wpdb;
-$args               = array(
-	'post_type'   => 'page',
-	'post_status' => 'publish',
-);
-$wp_pages           = get_pages( $args );
-$sql_mode           = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options WHERE name = %s', 'mode' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-$redirect_mode      = $wpdb->get_var( $sql_mode ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+$helpers            = Helpers::singleton();
+$options            = $helpers->get_settings();
+$wp_pages           = get_pages( array( 'post_status' => 'publish' ) );
+$redirect_mode      = $options['mode'] ?? '';
 $redirect_mode_page = '';
 $redirect_mode_url  = '';
+
 if ( 'page' === $redirect_mode ) {
-	$sql_mode_page      = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options WHERE name = %s', 'mode_page' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-	$redirect_mode_page = $wpdb->get_var( $sql_mode_page ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 	// Resolve the stored default-language ID to the current admin language so
 	// the correct page appears selected when WPML or Polylang is active.
-	$redirect_mode_page = $this->resolve_multilingual_page_id( (int) $redirect_mode_page );
+	$redirect_mode_page = $this->resolve_multilingual_page_id( (int) ( $options['mode_page'] ?? 0 ) );
 } elseif ( 'url' === $redirect_mode ) {
-	$sql_mode_url      = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . 'custom_404_pro_options WHERE name = %s', 'mode_url' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-	$redirect_mode_url = $wpdb->get_var( $sql_mode_url ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+	$redirect_mode_url = $options['mode_url'] ?? '';
 }
 ?>
 <div class="wrap">

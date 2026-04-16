@@ -6,7 +6,7 @@
  */
 
 /**
- * Tests every public CRUD method in Helpers against a real MySQL database.
+ * Tests every public method in Helpers that touches the database.
  */
 class C404P_Integration_HelpersDbTest extends WP_UnitTestCase {
 
@@ -22,7 +22,7 @@ class C404P_Integration_HelpersDbTest extends WP_UnitTestCase {
 	private $helpers;
 
 	/**
-	 * Set up: create tables and a Helpers instance with admin privileges.
+	 * Set up: create the logs table and a Helpers instance with admin privileges.
 	 */
 	public function setUp(): void {
 		parent::setUp();
@@ -33,83 +33,43 @@ class C404P_Integration_HelpersDbTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Tear down: drop both custom tables.
+	 * Tear down: drop the logs table.
 	 */
 	public function tearDown(): void {
 		global $wpdb;
-		$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . $this->helpers->table_options ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . $this->helpers->table_logs ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		parent::tearDown();
 	}
 
 	// -------------------------------------------------------------------------
-	// Options CRUD
+	// Settings via wp_options
 	// -------------------------------------------------------------------------
 
 	/**
-	 * insert_option() should persist the value so get_option() returns it.
+	 * get_settings() should return defaults when no option is stored.
 	 */
-	public function test_insert_option_persists_value_in_database() {
-		$this->helpers->insert_option( 'test_key', 'test_value' );
-		$this->assertSame( 'test_value', $this->helpers->get_option( 'test_key' ) );
+	public function test_get_settings_returns_defaults_when_no_option_stored() {
+		$this->assertSame( $this->helpers->defaults(), $this->helpers->get_settings() );
 	}
 
 	/**
-	 * get_option() should return null for a key that was never inserted.
+	 * update_settings() should persist values readable by get_settings().
 	 */
-	public function test_get_option_returns_null_for_nonexistent_key() {
-		$this->assertNull( $this->helpers->get_option( 'nonexistent_key' ) );
+	public function test_update_settings_persists_values() {
+		$this->helpers->update_settings( array( 'mode' => 'url', 'mode_url' => 'https://example.com' ) );
+		$settings = $this->helpers->get_settings();
+		$this->assertSame( 'url', $settings['mode'] );
+		$this->assertSame( 'https://example.com', $settings['mode_url'] );
 	}
 
 	/**
-	 * update_option() should change the stored value.
+	 * update_settings() should merge with existing values rather than replace them.
 	 */
-	public function test_update_option_modifies_existing_row() {
-		$this->helpers->insert_option( 'fruit', 'apple' );
-		$this->helpers->update_option( 'fruit', 'orange' );
-		$this->assertSame( 'orange', $this->helpers->get_option( 'fruit' ) );
-	}
-
-	/**
-	 * is_option() should return a row object for a key that exists.
-	 */
-	public function test_is_option_returns_row_object_for_existing_key() {
-		$this->helpers->insert_option( 'exists', '1' );
-		$row = $this->helpers->is_option( 'exists' );
-		$this->assertIsObject( $row );
-		$this->assertSame( 'exists', $row->name );
-	}
-
-	/**
-	 * is_option() should return false for a key that does not exist.
-	 */
-	public function test_is_option_returns_false_for_missing_key() {
-		$this->assertFalse( $this->helpers->is_option( 'missing_key' ) );
-	}
-
-	/**
-	 * upsert_option() should insert a row when the option does not yet exist.
-	 */
-	public function test_upsert_option_inserts_when_option_does_not_exist() {
-		$this->helpers->upsert_option( 'new_key', 'new_val' );
-		$this->assertSame( 'new_val', $this->helpers->get_option( 'new_key' ) );
-	}
-
-	/**
-	 * upsert_option() should update the value without creating a duplicate row.
-	 */
-	public function test_upsert_option_updates_and_does_not_duplicate() {
-		global $wpdb;
-		$this->helpers->insert_option( 'existing', 'first' );
-		$this->helpers->upsert_option( 'existing', 'second' );
-		$this->assertSame( 'second', $this->helpers->get_option( 'existing' ) );
-		$count = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				'SELECT COUNT(*) FROM ' . $wpdb->prefix . $this->helpers->table_options . ' WHERE name = %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				'existing'
-			)
-		);
-		$this->assertSame( 1, $count, 'upsert_option() should not create duplicate rows.' );
+	public function test_update_settings_merges_with_existing_values() {
+		$this->helpers->update_settings( array( 'redirect_error_code' => 301 ) );
+		$this->helpers->update_settings( array( 'mode' => 'url' ) );
+		$this->assertSame( 301, (int) $this->helpers->get_setting( 'redirect_error_code' ) );
+		$this->assertSame( 'url', $this->helpers->get_setting( 'mode' ) );
 	}
 
 	// -------------------------------------------------------------------------

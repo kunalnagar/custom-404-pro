@@ -18,13 +18,6 @@ class Helpers {
 	private static $instance;
 
 	/**
-	 * Options table name (without prefix).
-	 *
-	 * @var string
-	 */
-	public $table_options;
-
-	/**
 	 * Logs table name (without prefix).
 	 *
 	 * @var string
@@ -32,11 +25,11 @@ class Helpers {
 	public $table_logs;
 
 	/**
-	 * Default option values.
+	 * wp_options key used to store all plugin settings.
 	 *
-	 * @var array
+	 * @var string
 	 */
-	public $options_defaults;
+	const OPTION_KEY = 'custom_404_pro_settings';
 
 	/**
 	 * Returns the singleton instance of this class.
@@ -55,25 +48,62 @@ class Helpers {
 	 * Constructor.
 	 */
 	public function __construct() {
-		global $wpdb;
-		$this->table_options    = 'custom_404_pro_options';
-		$this->table_logs       = 'custom_404_pro_logs';
-		$this->options_defaults = array();
-		$options_defaults_temp  = array(
+		$this->table_logs = 'custom_404_pro_logs';
+	}
+
+	/**
+	 * Returns the default values for all plugin settings.
+	 *
+	 * @return array
+	 */
+	public function defaults(): array {
+		return array(
 			'mode'                => '',
 			'mode_page'           => '',
 			'mode_url'            => '',
-			'send_email'          => '',
-			'logging_enabled'     => '',
+			'send_email'          => false,
+			'logging_enabled'     => false,
 			'redirect_error_code' => 302,
 			'log_ip'              => true,
 		);
-		foreach ( $options_defaults_temp as $key => $value ) {
-			$obj        = new stdClass();
-			$obj->name  = $key;
-			$obj->value = $value;
-			array_push( $this->options_defaults, $obj );
+	}
+
+	/**
+	 * Returns all plugin settings, falling back to defaults for any missing keys.
+	 *
+	 * @return array
+	 */
+	public function get_settings(): array {
+		$saved = get_option( self::OPTION_KEY );
+		if ( ! is_array( $saved ) ) {
+			return $this->defaults();
 		}
+		return array_merge( $this->defaults(), $saved );
+	}
+
+	/**
+	 * Returns a single setting value by key.
+	 *
+	 * @param string $key Setting key.
+	 * @return mixed Setting value, or the default for that key if not set.
+	 */
+	public function get_setting( string $key ) {
+		$settings = $this->get_settings();
+		return $settings[ $key ] ?? $this->defaults()[ $key ] ?? null;
+	}
+
+	/**
+	 * Merges the supplied values into the current settings and persists them.
+	 *
+	 * Only the keys present in $new_settings are updated; all other settings
+	 * retain their current values.
+	 *
+	 * @param array $new_settings Key/value pairs to update.
+	 * @return bool True on success, false on failure.
+	 */
+	public function update_settings( array $new_settings ): bool {
+		$merged = array_merge( $this->get_settings(), $new_settings );
+		return (bool) update_option( self::OPTION_KEY, $merged );
 	}
 
 	/**
@@ -89,118 +119,6 @@ class Helpers {
 		$html .= '   <p>' . $message . '</p>';
 		$html .= '</div>';
 		return $html;
-	}
-
-	/**
-	 * Inserts default option rows into the options table.
-	 */
-	public function initialize_table_options() {
-		global $wpdb;
-		if ( current_user_can( 'manage_options' ) ) {
-			$count = count( $this->options_defaults );
-			$sql   = 'INSERT INTO ' . $wpdb->prefix . $this->table_options . ' (name, value) VALUES '; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			foreach ( $this->options_defaults as $key => $option ) {
-				if ( ( $count - 1 ) !== $key ) {
-					$sql .= "('" . $option->name . "', '" . $option->value . "'),";
-				} else {
-					$sql .= "('" . $option->name . "', '" . $option->value . "')";
-				}
-			}
-			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-		}
-	}
-
-	/**
-	 * Checks whether an option exists in the options table.
-	 *
-	 * @param string $option_name Option name.
-	 * @return object|false Row object if found, false if not.
-	 */
-	public function is_option( $option_name ) {
-		global $wpdb;
-		if ( current_user_can( 'manage_options' ) ) {
-			$query  = $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . $this->table_options . ' WHERE name = %s', $option_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$result = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-			if ( empty( $result ) ) {
-				return false;
-			} else {
-				return $result[0];
-			}
-		}
-	}
-
-	/**
-	 * Retrieves a single option value from the options table.
-	 *
-	 * @param string $option_name Option name.
-	 * @return string|null Option value or null.
-	 */
-	public function get_option( $option_name ) {
-		global $wpdb;
-		if ( current_user_can( 'manage_options' ) ) {
-			$query  = $wpdb->prepare( 'SELECT value FROM ' . $wpdb->prefix . $this->table_options . ' WHERE name = %s', $option_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$result = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-			return $result;
-		}
-	}
-
-	/**
-	 * Inserts a new option into the options table.
-	 *
-	 * @param string $option_name  Option name.
-	 * @param mixed  $option_value Option value.
-	 * @return int|false Number of rows inserted, or false on error.
-	 */
-	public function insert_option( $option_name, $option_value ) {
-		global $wpdb;
-		if ( current_user_can( 'manage_options' ) ) {
-			$result = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-				$wpdb->prefix . $this->table_options,
-				array(
-					'name'  => $option_name,
-					'value' => $option_value,
-				)
-			);
-			return $result;
-		}
-	}
-
-	/**
-	 * Updates an existing option in the options table.
-	 *
-	 * @param string $option_name  Option name.
-	 * @param mixed  $option_value New option value.
-	 * @return int|false Number of rows updated, or false on error.
-	 */
-	public function update_option( $option_name, $option_value ) {
-		global $wpdb;
-		if ( current_user_can( 'manage_options' ) ) {
-			$result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$wpdb->prefix . $this->table_options,
-				array( 'value' => $option_value ),
-				array( 'name' => $option_name )
-			);
-			return $result;
-		}
-	}
-
-	/**
-	 * Inserts or updates an option in the options table.
-	 *
-	 * @param string $option_name  Option name.
-	 * @param mixed  $option_value Option value.
-	 * @return int|false Number of rows affected, or false on error.
-	 */
-	public function upsert_option( $option_name, $option_value ) {
-		global $wpdb;
-		if ( current_user_can( 'manage_options' ) ) {
-			if ( self::is_option( $option_name ) ) {
-				$result = self::update_option( $option_name, $option_value );
-			} else {
-				$result = self::insert_option( $option_name, $option_value );
-			}
-			return $result;
-		}
 	}
 
 	/**
@@ -237,7 +155,6 @@ class Helpers {
 	 * @param array $log_ids Array of post IDs to delete.
 	 */
 	public function delete_old_logs( $log_ids ) {
-		global $wpdb;
 		if ( current_user_can( 'manage_options' ) ) {
 			foreach ( $log_ids as $id ) {
 				wp_delete_post( $id, true );

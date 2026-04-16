@@ -133,14 +133,17 @@ class AdminClass {
 			$send_email                = isset( $_POST['send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['send_email'] ) ) : '';
 			$logging_enabled           = isset( $_POST['logging_enabled'] ) ? sanitize_text_field( wp_unslash( $_POST['logging_enabled'] ) ) : '';
 			$log_ip                    = isset( $_POST['log_ip'] ) ? sanitize_text_field( wp_unslash( $_POST['log_ip'] ) ) : '';
-			$field_redirect_error_code = isset( $_POST['redirect_error_code'] ) ? sanitize_text_field( wp_unslash( $_POST['redirect_error_code'] ) ) : '';
-			$field_send_email          = ( 'on' === $send_email );
-			$field_logging_enabled     = ( 'enabled' === $logging_enabled );
-			$field_log_ip              = ( 'on' === $log_ip );
-			$this->helpers->update_option( 'send_email', $field_send_email );
-			$this->helpers->update_option( 'logging_enabled', $field_logging_enabled );
-			$this->helpers->update_option( 'redirect_error_code', $field_redirect_error_code );
-			$this->helpers->upsert_option( 'log_ip', $field_log_ip );
+			$field_redirect_error_code = isset( $_POST['redirect_error_code'] ) ? absint( wp_unslash( $_POST['redirect_error_code'] ) ) : 302;
+			$allowed_codes             = array( 301, 302, 307, 308 );
+			$field_redirect_error_code = in_array( $field_redirect_error_code, $allowed_codes, true ) ? $field_redirect_error_code : 302;
+			$this->helpers->update_settings(
+				array(
+					'send_email'          => ( 'on' === $send_email ),
+					'logging_enabled'     => ( 'enabled' === $logging_enabled ),
+					'log_ip'              => ( 'on' === $log_ip ),
+					'redirect_error_code' => $field_redirect_error_code,
+				)
+			);
 			$message = rawurlencode( 'Saved!' );
 			wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=general&c4pmessage=' . $message . '&c4pmessageType=success' ) );
 		}
@@ -179,13 +182,8 @@ class AdminClass {
 	 * Handles 404 detection and redirects.
 	 */
 	public function custom_404_pro_redirect() {
-		global $wpdb;
 		if ( is_404() ) {
-			$rows    = $wpdb->get_results( 'SELECT name, value FROM ' . $wpdb->prefix . $this->helpers->table_options ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$options = array();
-			foreach ( $rows as $row ) {
-				$options[ $row->name ] = $row->value;
-			}
+			$options = $this->helpers->get_settings();
 			if ( ! empty( $options['logging_enabled'] ) ) {
 				self::custom_404_pro_log( $options['send_email'] ?? '' );
 			}
@@ -230,10 +228,7 @@ class AdminClass {
 	 */
 	private function custom_404_pro_log( $is_email ) {
 		global $wpdb;
-		if ( ! $this->helpers->is_option( 'log_ip' ) ) {
-			$this->helpers->insert_option( 'log_ip', true );
-		}
-		if ( empty( $this->helpers->get_option( 'log_ip' ) ) ) {
+		if ( empty( $this->helpers->get_setting( 'log_ip' ) ) ) {
 			$ip = 'N/A';
 		} elseif ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 			$ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
@@ -344,29 +339,35 @@ class AdminClass {
 	 */
 	private function update_mode( $mode, $page, $url ) {
 		if ( current_user_can( 'manage_options' ) ) {
-			$mode_val      = '';
-			$mode_page_val = '';
-			$mode_url_val  = '';
 			switch ( $mode ) {
 				case 'page':
-					$mode_val      = 'page';
-					$mode_page_val = (string) $this->normalize_page_id_to_default_language( (int) $page );
-					$mode_url_val  = '';
+					$this->helpers->update_settings(
+						array(
+							'mode'      => 'page',
+							'mode_page' => (string) $this->normalize_page_id_to_default_language( (int) $page ),
+							'mode_url'  => '',
+						)
+					);
 					break;
 				case 'url':
-					$mode_val      = 'url';
-					$mode_page_val = '';
-					$mode_url_val  = $url;
+					$this->helpers->update_settings(
+						array(
+							'mode'      => 'url',
+							'mode_page' => '',
+							'mode_url'  => $url,
+						)
+					);
 					break;
-				case '':
-					$mode_val      = '';
-					$mode_page_val = '';
-					$mode_url_val  = '';
+				default:
+					$this->helpers->update_settings(
+						array(
+							'mode'      => '',
+							'mode_page' => '',
+							'mode_url'  => '',
+						)
+					);
 					break;
 			}
-			$this->helpers->update_option( 'mode', $mode_val );
-			$this->helpers->update_option( 'mode_page', $mode_page_val );
-			$this->helpers->update_option( 'mode_url', $mode_url_val );
 		}
 	}
 }

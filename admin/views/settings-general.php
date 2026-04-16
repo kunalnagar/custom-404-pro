@@ -5,15 +5,10 @@
  * @package Custom_404_Pro
  */
 
-global $wpdb;
-$helpers = Helpers::singleton();
-$rows    = $wpdb->get_results( 'SELECT name, value FROM ' . $wpdb->prefix . $helpers->table_options ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-$options = array();
-foreach ( $rows as $row ) {
-	$options[ $row->name ] = $row->value;
-}
-$send_email          = $options['send_email'] ?? '';
-$logging_enabled     = $options['logging_enabled'] ?? '';
+$helpers             = Helpers::singleton();
+$options             = $helpers->get_settings();
+$send_email          = $options['send_email'] ?? false;
+$logging_enabled     = $options['logging_enabled'] ?? false;
 $redirect_error_code = isset( $options['redirect_error_code'] ) ? (int) $options['redirect_error_code'] : 302;
 $log_ip              = $options['log_ip'] ?? true;
 ?>
