@@ -42,6 +42,7 @@ class PluginClass {
 	 * automatically on the first page load of the new version.
 	 */
 	public function maybe_migrate_legacy_options() {
+		include_once plugin_dir_path( __FILE__ ) . 'class-activateclass.php';
 		ActivateClass::maybe_migrate_legacy_options();
 	}
 
