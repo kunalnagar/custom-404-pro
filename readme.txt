@@ -1,57 +1,84 @@
 === Custom 404 Pro ===
 Contributors: kunalnagar
 Donate link: https://www.paypal.me/kunalnagar88/10
-Tags: 404, 404 error page, custom 404 page, broken link
+Tags: 404, redirect, custom 404, error page, logging
 Requires at least: 3.0.1
 Tested up to: 6.9.4
 Stable tag: 3.12.9
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Override the default 404 page with any page from the Admin Panel or a Custom URL.
+Take control of every 404 on your site — redirect visitors to a custom page or URL, log what broke, and get notified when it matters.
 
 == Description ==
 
-Allows users to replace the default 404 page with a custom page from the Pages section in the Admin Panel. Or you can specify a complete URL to redirect on 404.
+**Custom 404 Pro** replaces WordPress's default 404 behaviour with a proper redirect. Instead of leaving visitors on a dead-end error page, you can send them to any page on your site or an external URL — with the HTTP status code of your choice.
 
-= Important Note =
+= Redirect Modes =
 
-Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issues). I will not be using the WordPress.org support area.
+* **WordPress Page** — pick any published page from a dropdown; the plugin redirects to it automatically.
+* **Custom URL** — enter any absolute URL to redirect 404s off-site or to a specific path.
+* **HTTP Status Code** — choose 301, 302, 307, or 308 to match your SEO or caching requirements.
 
-= Features =
+= 404 Logging =
 
-* Full 404 Page Control
-* Record 404 Page Data
-* Custom Page Redirect
-* Custom URL Redirect
+When logging is enabled, the plugin records every 404 hit to a database table so you can see exactly what is broken:
 
-= How does it work? =
+* Request path
+* Visitor IP address (can be disabled for privacy/GDPR compliance)
+* Referrer URL
+* User agent
+* Timestamp
 
-* WordPress Page: Choose a custom page from the Admin Panel
-* URL: Enter a custom URL for 404
-* Stats: List of all 404s
+Logs are searchable and can be deleted individually, in bulk, or all at once. They can also be exported as a CSV file.
+
+= Email Notifications =
+
+Optionally receive an admin email each time a 404 is logged. Designed for low-traffic monitoring — if you expect high 404 volume, keep this off to avoid inbox flooding.
+
+= Multisite Support =
+
+Works correctly on WordPress Multisite installations — activation creates the logs table for each site in the network.
+
+= Multilingual Support =
+
+Compatible with **Polylang** and **WPML**. The redirect page is resolved to the correct language variant for the current visitor automatically.
 
 == Installation ==
 
-* Extract the downloaded ZIP file.
-* Copy the custom-404-pro folder to the wp-content/plugins directory.
-* Activate from the Plugins Section.
+1. Upload the `custom-404-pro` folder to the `/wp-content/plugins/` directory, or install it directly from the WordPress Plugin Directory.
+2. Activate the plugin from the **Plugins** screen.
+3. Go to **Custom 404 Pro → Settings → Global Redirect** and choose a redirect mode (WordPress Page or Custom URL).
+4. Optionally, go to **Custom 404 Pro → Settings → General** to enable logging and email notifications.
 
 == Frequently Asked Questions ==
 
-= Why is the 404 custom redirect not working? =
+= Does this plugin work with page caching plugins? =
 
-Some users have reported an issue with the Divi theme where the 404 redirect does not work. In such cases, please disable the Divi theme and try again. It's usually a good practice to start disabling themes/plugins one by one and work your way backward to see what might be causing the issue.
+Yes, but make sure your caching plugin is not caching 404 responses. If it is, the redirect may not fire. Check your caching plugin's exclusion settings and add 404 status codes or the affected paths to the exclusion list.
 
-= Why are my plugin preferences not being saved? =
+= Why is the 404 redirect not working with the Divi theme? =
 
-Uninstall the plugin from the Plugins page (important!) and reinstall it. Never remove plugin folders directly from your WordPress installation as this DOES NOT cleanup plugin database tables.
+Some users have reported a conflict with the Divi theme. Try switching to a default WordPress theme to confirm the plugin is working, then disable other plugins one by one to isolate the conflict.
+
+= Can I disable IP logging for GDPR compliance? =
+
+Yes. Go to **Settings → General** and uncheck **Log IP**. All future log entries will record `N/A` instead of the visitor's IP address. Existing entries are not modified.
+
+= Why are my settings not saving after a reinstall? =
+
+Always uninstall the plugin from the **Plugins** screen (do not delete the folder directly from the server). Deleting the folder bypasses the uninstall hook and leaves orphaned data in the database. Reinstalling over stale data can cause unexpected behaviour.
+
+= How do I report a bug or request a feature? =
+
+Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/issues). The WordPress.org support forum is not monitored.
 
 == Screenshots ==
 
-1. Activate the plugin from the WordPress Admin Panel
-2. 404 Logs
-3. Global Settings
+1. 404 Logs table — searchable, exportable, with bulk-delete support
+2. Global Redirect settings — choose a WordPress page or a custom URL
+3. General settings — logging, email notifications, IP recording, and redirect status code
 
 == Changelog ==
 
