@@ -35,11 +35,12 @@ class AdminClassTest extends TestCase {
 	}
 
 	/**
-	 * Resets multilingual stubs and filter registry before each test.
+	 * Resets multilingual stubs, filter registry, and transient store before each test.
 	 */
 	protected function setUp(): void {
 		parent::setUp();
 		$GLOBALS['_test_filters']        = array();
+		$GLOBALS['_test_transients']     = array();
 		$GLOBALS['_pll_get_post_return'] = false;
 		unset( $GLOBALS['_pll_current_language'] );
 		unset( $GLOBALS['_pll_default_language'] );
@@ -147,5 +148,36 @@ class AdminClassTest extends TestCase {
 		$GLOBALS['_pll_get_post_return']  = false; // pll_get_post returns false → no translation.
 		$admin = new AdminClass();
 		$this->assertSame( 20, $this->normalize( $admin, 20 ) );
+	}
+
+	// ------------------------------------------------------------------
+	// is_email_on_cooldown
+	// ------------------------------------------------------------------
+
+	/**
+	 * Asserts that is_email_on_cooldown() returns false when no transient has been set.
+	 */
+	public function test_is_email_on_cooldown_returns_false_when_no_transient_set() {
+		$admin = new AdminClass();
+		$this->assertFalse( $admin->is_email_on_cooldown() );
+	}
+
+	/**
+	 * Asserts that is_email_on_cooldown() returns true when the cooldown transient is set.
+	 */
+	public function test_is_email_on_cooldown_returns_true_when_transient_is_set() {
+		set_transient( 'custom_404_pro_email_cooldown', true, HOUR_IN_SECONDS );
+		$admin = new AdminClass();
+		$this->assertTrue( $admin->is_email_on_cooldown() );
+	}
+
+	/**
+	 * Asserts that is_email_on_cooldown() returns false after the cooldown transient is deleted.
+	 */
+	public function test_is_email_on_cooldown_returns_false_after_transient_deleted() {
+		set_transient( 'custom_404_pro_email_cooldown', true, HOUR_IN_SECONDS );
+		delete_transient( 'custom_404_pro_email_cooldown' );
+		$admin = new AdminClass();
+		$this->assertFalse( $admin->is_email_on_cooldown() );
 	}
 }

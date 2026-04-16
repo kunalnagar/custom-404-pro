@@ -1,47 +1,171 @@
-## Custom 404 Pro
+# Custom 404 Pro
 
 ![Banner](banner-772x250.png "Banner")
 
-Override the default 404 page with **any page** from the Admin Panel or a **Custom URL**.
+Take full control of your WordPress 404 experience. Custom 404 Pro lets you redirect 404 errors to any page on your site or an external URL, log every broken URL your visitors hit, and stay notified — without getting buried in email.
 
-As always, if you do like the plugin, please take a minute and give it a rating. Thanks!
+---
 
-### Features
+## Features
 
-* Log a 404 error
-* Redirect 404 errors using popular redirect codes (301, 302 etc)
-* Export Logs (.csv)
-* Email the WordPress Admin when a 404 occurs
+### 404 Redirect Control
 
-### Installation
+- **Redirect to a WordPress page** — choose any published page from a dropdown; it just works.
+- **Redirect to a custom URL** — point 404s at any external destination.
+- **Configurable HTTP status code** — choose 301, 302, 307, or 308 depending on whether the redirect is permanent or temporary.
+- **Disable redirects entirely** — keep logging active without touching the 404 response.
 
-* Extract the downloaded ZIP file.
-* Copy the ```custom-404-pro``` folder to the ```wp-content/plugins``` directory.
-* Activate from the Plugins Section.
+### 404 Error Logging
 
-### Screenshots
+- **Automatic log capture** — every 404 is recorded with the full request path, referring URL, user agent, and timestamp.
+- **IP address logging** — optionally capture the visitor's IP. Disable it with one checkbox if privacy or GDPR is a concern; logged entries show `N/A` instead.
+- **Searchable, sortable log table** — filter by any column directly from the Logs admin page.
+- **Bulk actions** — delete selected logs, delete all logs, or export everything as a CSV file in one click.
 
-![Activate Plugin](screenshot-1.png "Activate Plugin")
-_Activate Plugin_
+### Email Notifications
 
-![404 Logs](screenshot-2.png "404 Logs")
-_404 Logs_
+- **Admin email alerts** — get notified at your site's admin email address whenever a 404 is logged.
+- **Email cooldown** — configure a quiet period between notifications (15 minutes, 30 minutes, 1 hour, 6 hours, or 24 hours). Once an email is sent, the plugin stays quiet until the cooldown expires — no inbox flooding from bot crawls or broken redirect loops.
 
-![Global Settings](screenshot-3.png "Global Settings")
-_Global Settings_
+### Compatibility
 
-### Support
+- **Multisite** — tables and settings are provisioned per-site on activation and cleaned up per-site on uninstall.
+- **Polylang & WPML** — redirect targets resolve to the correct translated page for the visitor's active language automatically.
+- **Clean uninstall** — all database tables are dropped when the plugin is removed. No orphaned data left behind.
 
-Please open [issues on Github](https://github.com/kunalnagar/custom-404-pro/issues) ONLY. I will not be using the WordPress.org Support Ticket System.
+---
 
-### Rate
+## Installation
 
-Please feel free to star on Github or [leave a rating](https://wordpress.org/plugins/custom-404-pro/).
+1. Download the plugin ZIP from [WordPress.org](https://wordpress.org/plugins/custom-404-pro/) or clone this repository.
+2. Copy the `custom-404-pro` folder to `wp-content/plugins/`.
+3. Activate the plugin from the **Plugins** screen in the WordPress admin.
+4. Navigate to **Custom 404 Pro → Settings** to configure your redirect and notification preferences.
 
-### Donate
+> **Important:** If you ever want to remove the plugin, use **Deactivate → Delete** from the Plugins screen. Do not delete the plugin folder directly — that bypasses the uninstall routine and leaves database tables behind.
 
-Like the plugin? Show your support by donating [here](https://www.paypal.me/kunalnagar/10) (PayPal)
+---
 
-### Changelog
+## Settings Reference
 
-You can find the full changelog [here](https://wordpress.org/plugins/custom-404-pro/changelog/)
+### Redirect Tab
+
+| Setting | Description |
+|---------|-------------|
+| Mode | `None` (logging only), `WordPress Page`, or `URL` |
+| Page | The WordPress page to redirect to (visible when Mode = WordPress Page) |
+| URL | The external URL to redirect to (visible when Mode = URL) |
+
+### General Tab
+
+| Setting | Options | Default | Description |
+|---------|---------|---------|-------------|
+| Email | On / Off | Off | Send an admin notification email on each logged 404 |
+| Email Notification Cooldown | 15 min / 30 min / 1 hour / 6 hours / 24 hours | 1 hour | Minimum time between notification emails |
+| Logging Status | Enabled / Disabled | Disabled | Whether 404 events are captured to the log table |
+| Log IP | On / Off | On | Whether to record the visitor's IP address |
+| Redirect Code | 301 / 302 / 307 / 308 | 302 | HTTP status code used for the redirect |
+
+---
+
+## Screenshots
+
+| | |
+|--|--|
+| ![Activate Plugin](screenshot-1.png) | _Activate the plugin from the WordPress admin_ |
+| ![404 Logs](screenshot-2.png) | _Sortable, searchable log table with bulk actions_ |
+| ![Settings](screenshot-3.png) | _Redirect and notification settings_ |
+
+---
+
+## Frequently Asked Questions
+
+**Why is the 404 redirect not working?**
+
+Some themes (notably Divi) intercept the request before the `template_redirect` hook fires. Try switching to a default theme to confirm the plugin is working, then re-enable your theme and check for conflicts with theme-level 404 handling.
+
+**Why are my settings not saving after reinstallation?**
+
+Always use **Deactivate → Delete** from the Plugins screen — never remove the plugin folder manually. Manual removal skips the uninstall routine, leaving old database tables in place. When the plugin is reinstalled, it detects the existing tables and skips seeding defaults, so you end up with stale data.
+
+**Can I disable email notifications without disabling logging?**
+
+Yes. Uncheck **Email** in General settings. Logging continues independently.
+
+**How does the email cooldown work?**
+
+After an email notification is sent, a transient is set in the WordPress object cache for the duration of the configured cooldown period. Any 404 that fires during that window skips the email send entirely. The next email goes out after the cooldown expires.
+
+**Is this plugin GDPR-friendly?**
+
+You can disable IP logging with the **Log IP** checkbox under General settings. When disabled, the IP column in all log entries records `N/A`. No IP data is stored or emailed.
+
+---
+
+## Support
+
+Open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/issues). The WordPress.org support forum is not monitored.
+
+## Rate & Review
+
+If the plugin is useful to you, a [rating on WordPress.org](https://wordpress.org/plugins/custom-404-pro/) or a GitHub star goes a long way.
+
+## Donate
+
+Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/10).
+
+---
+
+## Changelog
+
+See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
+
+### 3.12.9
+- Add email notification cooldown to prevent inbox flooding. Configurable from 15 minutes to 24 hours (default: 1 hour).
+
+### 3.12.8
+- Fix IP logging toggle not persisting correctly due to positional row access.
+
+### 3.12.7
+- Fix WPML/Polylang settings overwriting each other when using per-language domains.
+
+### 3.12.6
+- Add `load_plugin_textdomain` support for translations.
+
+### 3.12.5
+- Add Polylang and WPML support for the 404 redirect page.
+
+### 3.12.4
+- Enforce full WordPress coding standards: PHPDoc comments, input sanitization, file naming convention.
+
+### 3.12.3
+- Improve codebase to meet WordPress coding standards.
+
+### 3.12.2
+- Fix PHP 8.2+ dynamic property deprecation warnings.
+
+### 3.12.1
+- Security: Remediate SQL injection and CSRF vulnerabilities (CVE-2025-9947).
+- Update tested up to WordPress 6.9.4.
+
+### 3.12.0
+- Support WordPress 6.6.
+
+### 3.3.0
+- Add Multisite support.
+
+### 3.2.0
+- Export logs as CSV.
+- Validate URL format when URL redirect mode is selected.
+
+### 3.1.0
+- IP logging is now optional.
+
+### 3.0.0
+- Complete rewrite with a new logging mechanism and improved architecture.
+
+---
+
+## License
+
+[GPLv2 or later](LICENSE.txt)

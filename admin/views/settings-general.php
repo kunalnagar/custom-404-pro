@@ -11,6 +11,7 @@ $send_email          = $options['send_email'] ?? false;
 $logging_enabled     = $options['logging_enabled'] ?? false;
 $redirect_error_code = isset( $options['redirect_error_code'] ) ? (int) $options['redirect_error_code'] : 302;
 $log_ip              = $options['log_ip'] ?? true;
+$email_cooldown      = isset( $options['email_cooldown'] ) ? (int) $options['email_cooldown'] : 3600;
 ?>
 <div class="wrap">
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -22,6 +23,21 @@ $log_ip              = $options['log_ip'] ?? true;
 					<input type="checkbox" id="c4p_log_email" name="send_email" <?php echo (bool) $send_email ? 'checked' : ''; ?> />
 					<p class="description">
 						If you check this, <b>and logging is enabled</b>, an email will be sent on every error log on the admin's email account. If you're just starting out, it is recommended you uncheck this. Enable it based on your error volume to avoid flooding of your email inbox.
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th>Email Notification Cooldown</th>
+				<td>
+					<select name="email_cooldown">
+						<option value="900" <?php echo 900 === $email_cooldown ? 'selected' : ''; ?>>15 minutes</option>
+						<option value="1800" <?php echo 1800 === $email_cooldown ? 'selected' : ''; ?>>30 minutes</option>
+						<option value="3600" <?php echo 3600 === $email_cooldown ? 'selected' : ''; ?>>1 hour</option>
+						<option value="21600" <?php echo 21600 === $email_cooldown ? 'selected' : ''; ?>>6 hours</option>
+						<option value="86400" <?php echo 86400 === $email_cooldown ? 'selected' : ''; ?>>24 hours</option>
+					</select>
+					<p class="description">
+						After a notification email is sent, no further emails will be sent until this cooldown period expires. This prevents your inbox from being flooded during high-traffic or bot-targeted events.
 					</p>
 				</td>
 			</tr>

@@ -66,6 +66,7 @@ class Helpers {
 			'logging_enabled'     => false,
 			'redirect_error_code' => 302,
 			'log_ip'              => true,
+			'email_cooldown'      => 3600,
 		);
 	}
 
