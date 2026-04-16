@@ -40,10 +40,22 @@ class PluginClass {
 	 * Existing installations that update without deactivating/reactivating will
 	 * not trigger register_activation_hook. This hook ensures the migration runs
 	 * automatically on the first page load of the new version.
+	 *
+	 * Gated behind a stored db version so the SHOW TABLES check does not fire
+	 * on every page load once the migration has been completed.
+	 *
+	 * @since 3.12.9
 	 */
 	public function maybe_migrate_legacy_options() {
+		if ( defined( 'CUSTOM_404_PRO_VERSION' ) &&
+			get_option( 'custom_404_pro_db_version' ) === CUSTOM_404_PRO_VERSION ) {
+			return;
+		}
 		include_once plugin_dir_path( __FILE__ ) . 'class-activateclass.php';
 		ActivateClass::maybe_migrate_legacy_options();
+		if ( defined( 'CUSTOM_404_PRO_VERSION' ) ) {
+			update_option( 'custom_404_pro_db_version', CUSTOM_404_PRO_VERSION );
+		}
 	}
 
 	/**

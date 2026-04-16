@@ -13,15 +13,35 @@ class UninstallClass {
 	/**
 	 * Removes all plugin data on uninstall.
 	 *
-	 * Drops the logs table and deletes the settings entry from wp_options.
-	 * The legacy custom_404_pro_options table is also dropped if it still exists
-	 * (e.g. the migration had not run before uninstall).
+	 * On Multisite, data is removed from every site in the network. On single-site
+	 * installs the cleanup runs once for the current site.
 	 */
 	public static function uninstall() {
+		if ( is_multisite() ) {
+			$sites = get_sites( array( 'fields' => 'ids' ) );
+			foreach ( $sites as $blog_id ) {
+				switch_to_blog( $blog_id );
+				self::cleanup_site();
+				restore_current_blog();
+			}
+		} else {
+			self::cleanup_site();
+		}
+	}
+
+	/**
+	 * Removes all plugin data for the current site.
+	 *
+	 * Drops the logs table, deletes the settings and db-version entries from
+	 * wp_options, and drops the legacy options table if the migration had not
+	 * run before uninstall.
+	 */
+	private static function cleanup_site() {
 		global $wpdb;
 
-		// Remove plugin settings from wp_options.
+		// Remove plugin settings and migration marker from wp_options.
 		delete_option( Helpers::OPTION_KEY );
+		delete_option( 'custom_404_pro_db_version' );
 
 		// Drop the logs table.
 		$table_logs = $wpdb->prefix . 'custom_404_pro_logs';

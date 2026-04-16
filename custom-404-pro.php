@@ -18,6 +18,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+define( 'CUSTOM_404_PRO_VERSION', '3.12.9' );
+
 /**
  * Runs on plugin activation.
  */

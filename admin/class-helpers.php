@@ -54,6 +54,7 @@ class Helpers {
 	/**
 	 * Returns the default values for all plugin settings.
 	 *
+	 * @since 3.12.9
 	 * @return array
 	 */
 	public function defaults(): array {
@@ -71,6 +72,7 @@ class Helpers {
 	/**
 	 * Returns all plugin settings, falling back to defaults for any missing keys.
 	 *
+	 * @since 3.12.9
 	 * @return array
 	 */
 	public function get_settings(): array {
@@ -84,6 +86,7 @@ class Helpers {
 	/**
 	 * Returns a single setting value by key.
 	 *
+	 * @since 3.12.9
 	 * @param string $key Setting key.
 	 * @return mixed Setting value, or the default for that key if not set.
 	 */
@@ -98,6 +101,7 @@ class Helpers {
 	 * Only the keys present in $new_settings are updated; all other settings
 	 * retain their current values.
 	 *
+	 * @since 3.12.9
 	 * @param array $new_settings Key/value pairs to update.
 	 * @return bool True on success, false on failure.
 	 */
@@ -155,10 +159,8 @@ class Helpers {
 	 * @param array $log_ids Array of post IDs to delete.
 	 */
 	public function delete_old_logs( $log_ids ) {
-		if ( current_user_can( 'manage_options' ) ) {
-			foreach ( $log_ids as $id ) {
-				wp_delete_post( $id, true );
-			}
+		foreach ( $log_ids as $id ) {
+			wp_delete_post( $id, true );
 		}
 	}
 
