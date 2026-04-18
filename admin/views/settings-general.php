@@ -37,7 +37,7 @@ $email_cooldown      = isset( $options['email_cooldown'] ) ? (int) $options['ema
 						<option value="86400" <?php echo 86400 === $email_cooldown ? 'selected' : ''; ?>>24 hours</option>
 					</select>
 					<p class="description">
-						After a notification email is sent, no further emails will be sent until this cooldown period expires. This prevents your inbox from being flooded during high-traffic or bot-targeted events.
+						Only applies when <b>Email</b> is enabled. After a notification email is sent, no further emails will be sent for the selected duration. This prevents inbox flooding during bot crawls or traffic spikes.
 					</p>
 				</td>
 			</tr>

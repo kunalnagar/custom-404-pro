@@ -138,7 +138,7 @@ class AdminClass {
 			$allowed_codes             = array( 301, 302, 307, 308 );
 			$field_redirect_error_code = in_array( $field_redirect_error_code, $allowed_codes, true ) ? $field_redirect_error_code : 302;
 			$allowed_cooldowns         = array( 900, 1800, 3600, 21600, 86400 );
-			$raw_cooldown              = isset( $_POST['email_cooldown'] ) ? absint( $_POST['email_cooldown'] ) : HOUR_IN_SECONDS;
+			$raw_cooldown              = isset( $_POST['email_cooldown'] ) ? absint( wp_unslash( $_POST['email_cooldown'] ) ) : HOUR_IN_SECONDS;
 			$field_email_cooldown      = in_array( $raw_cooldown, $allowed_cooldowns, true ) ? $raw_cooldown : HOUR_IN_SECONDS;
 			$this->helpers->update_settings(
 				array(
@@ -238,6 +238,7 @@ class AdminClass {
 	/**
 	 * Logs a 404 event and optionally sends a notification email.
 	 *
+	 * @since 3.13.0 Added $email_cooldown parameter.
 	 * @param bool $is_email        Whether to send a notification email.
 	 * @param int  $email_cooldown  Cooldown period in seconds between notification emails.
 	 */
@@ -272,6 +273,7 @@ class AdminClass {
 	 * Returns true when a cooldown transient is set, meaning an email was already
 	 * sent within the configured cooldown window and another should not be sent yet.
 	 *
+	 * @since 3.13.0
 	 * @return bool True if cooldown is active, false if an email may be sent.
 	 */
 	public function is_email_on_cooldown(): bool {
