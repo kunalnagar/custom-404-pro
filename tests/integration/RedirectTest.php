@@ -223,10 +223,14 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	 * The cooldown transient should be set after a notification email is sent.
 	 */
 	public function test_email_cooldown_transient_is_set_after_notification_sent() {
-		$this->helpers->update_option( 'logging_enabled', '1' );
-		$this->helpers->update_option( 'send_email', '1' );
-		$this->helpers->update_option( 'mode', 'url' );
-		$this->helpers->update_option( 'mode_url', 'https://example.com' );
+		$this->helpers->update_settings(
+			array(
+				'logging_enabled' => true,
+				'send_email'      => true,
+				'mode'            => 'url',
+				'mode_url'        => 'https://example.com',
+			)
+		);
 
 		$this->assertFalse(
 			get_transient( 'custom_404_pro_email_cooldown' ),
@@ -247,10 +251,14 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	 * Uses a wp_mail filter to count how many times wp_mail() is invoked.
 	 */
 	public function test_email_not_sent_during_active_cooldown() {
-		$this->helpers->update_option( 'logging_enabled', '1' );
-		$this->helpers->update_option( 'send_email', '1' );
-		$this->helpers->update_option( 'mode', 'url' );
-		$this->helpers->update_option( 'mode_url', 'https://example.com' );
+		$this->helpers->update_settings(
+			array(
+				'logging_enabled' => true,
+				'send_email'      => true,
+				'mode'            => 'url',
+				'mode_url'        => 'https://example.com',
+			)
+		);
 
 		// Pre-set the cooldown transient to simulate a recent send.
 		set_transient( 'custom_404_pro_email_cooldown', true, HOUR_IN_SECONDS );
@@ -273,10 +281,14 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	 * Exactly one email should be sent on the first 404, and none on the second.
 	 */
 	public function test_only_one_email_sent_across_two_consecutive_404s() {
-		$this->helpers->update_option( 'logging_enabled', '1' );
-		$this->helpers->update_option( 'send_email', '1' );
-		$this->helpers->update_option( 'mode', 'url' );
-		$this->helpers->update_option( 'mode_url', 'https://example.com' );
+		$this->helpers->update_settings(
+			array(
+				'logging_enabled' => true,
+				'send_email'      => true,
+				'mode'            => 'url',
+				'mode_url'        => 'https://example.com',
+			)
+		);
 
 		$mail_count = 0;
 		$counter    = function ( $args ) use ( &$mail_count ) {
