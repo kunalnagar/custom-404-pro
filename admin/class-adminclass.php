@@ -114,13 +114,14 @@ class AdminClass {
 	 */
 	public function form_settings_global_redirect() {
 		$nonce = isset( $_POST['form-settings-global-redirect'] ) ? sanitize_text_field( wp_unslash( $_POST['form-settings-global-redirect'] ) ) : '';
-		if ( wp_verify_nonce( $nonce, 'form-settings-global-redirect' ) && check_admin_referer( 'form-settings-global-redirect', 'form-settings-global-redirect' ) && current_user_can( 'manage_options' ) ) {
+		if ( check_admin_referer( 'form-settings-global-redirect', 'form-settings-global-redirect' ) && current_user_can( 'manage_options' ) ) {
 			$mode = isset( $_POST['mode'] ) ? sanitize_text_field( wp_unslash( $_POST['mode'] ) ) : '';
 			$page = isset( $_POST['mode_page'] ) ? sanitize_text_field( wp_unslash( $_POST['mode_page'] ) ) : '';
 			$url  = isset( $_POST['mode_url'] ) ? sanitize_text_field( wp_unslash( $_POST['mode_url'] ) ) : '';
 			self::update_mode( $mode, $page, $url );
 			$message = rawurlencode( 'Saved!' );
 			wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=global-redirect&c4pmessage=' . $message . '&c4pmessageType=success' ) );
+			exit;
 		}
 	}
 
@@ -129,7 +130,7 @@ class AdminClass {
 	 */
 	public function form_settings_general() {
 		$nonce = isset( $_POST['form-settings-general'] ) ? sanitize_text_field( wp_unslash( $_POST['form-settings-general'] ) ) : '';
-		if ( wp_verify_nonce( $nonce, 'form-settings-general' ) && check_admin_referer( 'form-settings-general', 'form-settings-general' ) && current_user_can( 'manage_options' ) ) {
+		if ( check_admin_referer( 'form-settings-general', 'form-settings-general' ) && current_user_can( 'manage_options' ) ) {
 			$send_email                = isset( $_POST['send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['send_email'] ) ) : '';
 			$logging_enabled           = isset( $_POST['logging_enabled'] ) ? sanitize_text_field( wp_unslash( $_POST['logging_enabled'] ) ) : '';
 			$log_ip                    = isset( $_POST['log_ip'] ) ? sanitize_text_field( wp_unslash( $_POST['log_ip'] ) ) : '';
@@ -146,6 +147,7 @@ class AdminClass {
 			);
 			$message = rawurlencode( 'Saved!' );
 			wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=general&c4pmessage=' . $message . '&c4pmessageType=success' ) );
+			exit;
 		}
 	}
 
@@ -163,14 +165,17 @@ class AdminClass {
 						$this->helpers->delete_logs( $path );
 						$message = rawurlencode( 'Log(s) successfully deleted!' );
 						wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
+						exit;
 					} else {
 						$message = rawurlencode( 'Please select a few logs to delete and try again.' );
 						wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=warning' ) );
+						exit;
 					}
 				} elseif ( 'c4p-logs--delete-all' === $action && wp_verify_nonce( $nonce, 'bulk-logs' ) ) {
 					$this->helpers->delete_logs( 'all' );
 					$message = rawurlencode( 'All Logs successfully deleted!' );
 					wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
+					exit;
 				} elseif ( 'c4p-logs--export-csv' === $action && wp_verify_nonce( $nonce, 'bulk-logs' ) ) {
 					$this->helpers->export_logs_csv();
 				}
@@ -190,9 +195,13 @@ class AdminClass {
 			if ( 'page' === ( $options['mode'] ?? '' ) ) {
 				$page_id = $this->resolve_multilingual_page_id( (int) ( $options['mode_page'] ?? 0 ) );
 				$page    = get_post( $page_id );
-				wp_safe_redirect( $page->guid, (int) ( $options['redirect_error_code'] ?? 302 ) );
+				if ( $page ) {
+					wp_safe_redirect( $page->guid, (int) ( $options['redirect_error_code'] ?? 302 ) );
+					exit;
+				}
 			} elseif ( 'url' === ( $options['mode'] ?? '' ) ) {
 				wp_safe_redirect( $options['mode_url'] ?? '', (int) ( $options['redirect_error_code'] ?? 302 ) );
+				exit;
 			}
 		}
 	}
