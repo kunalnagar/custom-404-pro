@@ -35,6 +35,30 @@ class PluginClass {
 	}
 
 	/**
+	 * Runs the legacy options table migration on first load after an upgrade.
+	 *
+	 * Existing installations that update without deactivating/reactivating will
+	 * not trigger register_activation_hook. This hook ensures the migration runs
+	 * automatically on the first page load of the new version.
+	 *
+	 * Gated behind a stored db version so the SHOW TABLES check does not fire
+	 * on every page load once the migration has been completed.
+	 *
+	 * @since 3.12.9
+	 */
+	public function maybe_migrate_legacy_options() {
+		if ( defined( 'CUSTOM_404_PRO_VERSION' ) &&
+			get_option( 'custom_404_pro_db_version' ) === CUSTOM_404_PRO_VERSION ) {
+			return;
+		}
+		include_once plugin_dir_path( __FILE__ ) . 'class-activateclass.php';
+		ActivateClass::maybe_migrate_legacy_options();
+		if ( defined( 'CUSTOM_404_PRO_VERSION' ) ) {
+			update_option( 'custom_404_pro_db_version', CUSTOM_404_PRO_VERSION );
+		}
+	}
+
+	/**
 	 * Loads the plugin text domain for translation.
 	 */
 	public function load_textdomain() {
@@ -46,6 +70,7 @@ class PluginClass {
 	 */
 	private function define_admin_hooks() {
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+		add_action( 'plugins_loaded', array( $this, 'maybe_migrate_legacy_options' ) );
 		add_action( 'admin_menu', array( $this->plugin_admin, 'create_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_styles' ) );
