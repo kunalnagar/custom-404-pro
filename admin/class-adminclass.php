@@ -201,12 +201,14 @@ class AdminClass {
 				$page_id = $this->resolve_multilingual_page_id( (int) ( $options['mode_page'] ?? 0 ) );
 				$page    = get_post( $page_id );
 				if ( $page ) {
-					wp_safe_redirect( $page->guid, (int) ( $options['redirect_error_code'] ?? 302 ) );
-					exit;
+					if ( wp_safe_redirect( $page->guid, (int) ( $options['redirect_error_code'] ?? 302 ) ) ) {
+						exit;
+					}
 				}
 			} elseif ( 'url' === ( $options['mode'] ?? '' ) ) {
-				wp_safe_redirect( $options['mode_url'] ?? '', (int) ( $options['redirect_error_code'] ?? 302 ) );
-				exit;
+				if ( wp_safe_redirect( $options['mode_url'] ?? '', (int) ( $options['redirect_error_code'] ?? 302 ) ) ) {
+					exit;
+				}
 			}
 		}
 	}
