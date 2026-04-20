@@ -14,6 +14,18 @@ $GLOBALS['_test_filters']                 = array();
 $GLOBALS['_test_actions']                 = array();
 $GLOBALS['_load_plugin_textdomain_calls'] = array();
 $GLOBALS['_test_options']                 = array();
+$GLOBALS['_test_transients']              = array();
+
+// WordPress time constants.
+if ( ! defined( 'MINUTE_IN_SECONDS' ) ) {
+	define( 'MINUTE_IN_SECONDS', 60 );
+}
+if ( ! defined( 'HOUR_IN_SECONDS' ) ) {
+	define( 'HOUR_IN_SECONDS', 3600 );
+}
+if ( ! defined( 'DAY_IN_SECONDS' ) ) {
+	define( 'DAY_IN_SECONDS', 86400 );
+}
 
 /**
  * Stub for WordPress apply_filters().
@@ -197,6 +209,46 @@ function add_option( string $option, $value ) {
  */
 function delete_option( string $option ): bool {
 	unset( $GLOBALS['_test_options'][ $option ] );
+	return true;
+}
+
+/**
+ * Stub for WordPress get_transient().
+ *
+ * Returns the value stored in the test transient registry, or false if not set.
+ *
+ * @param string $transient Transient name.
+ * @return mixed Stored value, or false if not set.
+ */
+function get_transient( string $transient ) {
+	return $GLOBALS['_test_transients'][ $transient ] ?? false;
+}
+
+/**
+ * Stub for WordPress set_transient().
+ *
+ * Stores a value in the test transient registry.
+ *
+ * @param string $transient  Transient name.
+ * @param mixed  $value      Value to store.
+ * @param int    $expiration Ignored in unit tests.
+ * @return bool Always true.
+ */
+function set_transient( string $transient, $value, int $expiration = 0 ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	$GLOBALS['_test_transients'][ $transient ] = $value;
+	return true;
+}
+
+/**
+ * Stub for WordPress delete_transient().
+ *
+ * Removes a value from the test transient registry.
+ *
+ * @param string $transient Transient name.
+ * @return bool Always true.
+ */
+function delete_transient( string $transient ): bool {
+	unset( $GLOBALS['_test_transients'][ $transient ] );
 	return true;
 }
 

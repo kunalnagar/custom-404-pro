@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, redirect, custom 404, error page, logging
 Requires at least: 3.0.1
 Tested up to: 6.9.4
-Stable tag: 3.12.9
+Stable tag: 3.13.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -81,6 +81,9 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 3. General settings — logging, email notifications, IP recording, and redirect status code
 
 == Changelog ==
+
+= 3.13.0 =
+* Add configurable email notification cooldown to prevent inbox flooding on high 404 traffic (15 min / 30 min / 1 hr / 6 hr / 24 hr)
 
 = 3.12.9 =
 * Migrate plugin settings from a custom database table to native wp_options for better compatibility and performance

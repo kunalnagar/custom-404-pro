@@ -137,12 +137,16 @@ class AdminClass {
 			$field_redirect_error_code = isset( $_POST['redirect_error_code'] ) ? absint( wp_unslash( $_POST['redirect_error_code'] ) ) : 302;
 			$allowed_codes             = array( 301, 302, 307, 308 );
 			$field_redirect_error_code = in_array( $field_redirect_error_code, $allowed_codes, true ) ? $field_redirect_error_code : 302;
+			$allowed_cooldowns         = array( 900, 1800, 3600, 21600, 86400 );
+			$raw_cooldown              = isset( $_POST['email_cooldown'] ) ? absint( wp_unslash( $_POST['email_cooldown'] ) ) : HOUR_IN_SECONDS;
+			$field_email_cooldown      = in_array( $raw_cooldown, $allowed_cooldowns, true ) ? $raw_cooldown : HOUR_IN_SECONDS;
 			$this->helpers->update_settings(
 				array(
 					'send_email'          => ( 'on' === $send_email ),
 					'logging_enabled'     => ( 'enabled' === $logging_enabled ),
 					'log_ip'              => ( 'on' === $log_ip ),
 					'redirect_error_code' => $field_redirect_error_code,
+					'email_cooldown'      => $field_email_cooldown,
 				)
 			);
 			$message = rawurlencode( 'Saved!' );
@@ -190,18 +194,21 @@ class AdminClass {
 		if ( is_404() ) {
 			$options = $this->helpers->get_settings();
 			if ( ! empty( $options['logging_enabled'] ) ) {
-				self::custom_404_pro_log( $options['send_email'] ?? '' );
+				$email_cooldown = isset( $options['email_cooldown'] ) ? (int) $options['email_cooldown'] : HOUR_IN_SECONDS;
+				self::custom_404_pro_log( $options['send_email'] ?? '', $email_cooldown );
 			}
 			if ( 'page' === ( $options['mode'] ?? '' ) ) {
 				$page_id = $this->resolve_multilingual_page_id( (int) ( $options['mode_page'] ?? 0 ) );
 				$page    = get_post( $page_id );
 				if ( $page ) {
-					wp_safe_redirect( $page->guid, (int) ( $options['redirect_error_code'] ?? 302 ) );
-					exit;
+					if ( wp_safe_redirect( $page->guid, (int) ( $options['redirect_error_code'] ?? 302 ) ) ) {
+						exit;
+					}
 				}
 			} elseif ( 'url' === ( $options['mode'] ?? '' ) ) {
-				wp_safe_redirect( $options['mode_url'] ?? '', (int) ( $options['redirect_error_code'] ?? 302 ) );
-				exit;
+				if ( wp_safe_redirect( $options['mode_url'] ?? '', (int) ( $options['redirect_error_code'] ?? 302 ) ) ) {
+					exit;
+				}
 			}
 		}
 	}
@@ -233,9 +240,11 @@ class AdminClass {
 	/**
 	 * Logs a 404 event and optionally sends a notification email.
 	 *
-	 * @param bool $is_email Whether to send a notification email.
+	 * @since 3.13.0 Added $email_cooldown parameter.
+	 * @param bool $is_email        Whether to send a notification email.
+	 * @param int  $email_cooldown  Cooldown period in seconds between notification emails.
 	 */
-	private function custom_404_pro_log( $is_email ) {
+	private function custom_404_pro_log( $is_email, $email_cooldown = HOUR_IN_SECONDS ) {
 		global $wpdb;
 		if ( empty( $this->helpers->get_setting( 'log_ip' ) ) ) {
 			$ip = 'N/A';
@@ -254,9 +263,23 @@ class AdminClass {
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 		$sql_save   = $wpdb->prepare( 'INSERT INTO ' . $wpdb->prefix . $this->helpers->table_logs . ' (ip, path, referer, user_agent) VALUES (%s, %s, %s, %s)', $ip, $path, $referer, $user_agent ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( $sql_save ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-		if ( ! empty( $is_email ) ) {
+		if ( ! empty( $is_email ) && ! $this->is_email_on_cooldown() ) {
 			self::custom_404_pro_send_mail( $ip, $path, $referer, $user_agent );
+			set_transient( 'custom_404_pro_email_cooldown', true, $email_cooldown );
 		}
+	}
+
+	/**
+	 * Checks whether the email notification cooldown is currently active.
+	 *
+	 * Returns true when a cooldown transient is set, meaning an email was already
+	 * sent within the configured cooldown window and another should not be sent yet.
+	 *
+	 * @since 3.13.0
+	 * @return bool True if cooldown is active, false if an email may be sent.
+	 */
+	public function is_email_on_cooldown(): bool {
+		return (bool) get_transient( 'custom_404_pro_email_cooldown' );
 	}
 
 	/**

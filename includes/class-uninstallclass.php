@@ -39,9 +39,10 @@ class UninstallClass {
 	private static function cleanup_site() {
 		global $wpdb;
 
-		// Remove plugin settings and migration marker from wp_options.
+		// Remove plugin settings, migration marker, and transients from wp_options.
 		delete_option( Helpers::OPTION_KEY );
 		delete_option( 'custom_404_pro_db_version' );
+		delete_transient( 'custom_404_pro_email_cooldown' );
 
 		// Drop the logs table.
 		$table_logs = $wpdb->prefix . 'custom_404_pro_logs';
