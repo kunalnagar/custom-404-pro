@@ -20,10 +20,15 @@ $max_count   = isset( $options['log_retention_count'] ) ? (int) $options['log_re
 
 	<p>
 		<?php
-		/* translators: %d: number of log rows */
-		printf( esc_html__( 'Total log entries: %d', 'custom-404-pro' ), $total_count );
+		echo esc_html(
+			sprintf(
+				/* translators: %d: number of log rows */
+				__( 'Total log entries: %d', 'custom-404-pro' ),
+				(int) $total_count
+			)
+		);
 		if ( $max_count > 0 ) {
-			echo ' / ' . esc_html( $max_count );
+			echo ' / ' . (int) $max_count;
 		}
 		?>
 	</p>
@@ -32,11 +37,13 @@ $max_count   = isset( $options['log_retention_count'] ) ? (int) $options['log_re
 		<div class="notice notice-warning inline">
 			<p>
 				<?php
-				printf(
-					/* translators: 1: current log count, 2: max log count */
-					esc_html__( 'Log table is at %1$d of %2$d rows (90%% threshold reached). Consider pruning or raising the Max Log Count setting.', 'custom-404-pro' ),
-					$total_count,
-					$max_count
+				echo esc_html(
+					sprintf(
+						/* translators: 1: current log count, 2: max log count */
+						__( 'Log table is at %1$d of %2$d rows (90%% threshold reached). Consider pruning or raising the Max Log Count setting.', 'custom-404-pro' ),
+						(int) $total_count,
+						(int) $max_count
+					)
 				);
 				?>
 			</p>
