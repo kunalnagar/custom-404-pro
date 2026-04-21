@@ -120,8 +120,9 @@ class AdminClass {
 			$url  = isset( $_POST['mode_url'] ) ? sanitize_text_field( wp_unslash( $_POST['mode_url'] ) ) : '';
 			self::update_mode( $mode, $page, $url );
 			$message = rawurlencode( 'Saved!' );
-			wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=global-redirect&c4pmessage=' . $message . '&c4pmessageType=success' ) );
-			exit;
+			if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=global-redirect&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
+				exit;
+			}
 		}
 	}
 
@@ -154,8 +155,9 @@ class AdminClass {
 				)
 			);
 			$message = rawurlencode( 'Saved!' );
-			wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=general&c4pmessage=' . $message . '&c4pmessageType=success' ) );
-			exit;
+			if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=general&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
+				exit;
+			}
 		}
 	}
 
@@ -172,18 +174,21 @@ class AdminClass {
 						$path = is_array( $_REQUEST['path'] ) ? array_map( 'absint', $_REQUEST['path'] ) : absint( $_REQUEST['path'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						$this->helpers->delete_logs( $path );
 						$message = rawurlencode( 'Log(s) successfully deleted!' );
-						wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
-						exit;
+						if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
+							exit;
+						}
 					} else {
 						$message = rawurlencode( 'Please select a few logs to delete and try again.' );
-						wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=warning' ) );
-						exit;
+						if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=warning' ) ) ) {
+							exit;
+						}
 					}
 				} elseif ( 'c4p-logs--delete-all' === $action && wp_verify_nonce( $nonce, 'bulk-logs' ) ) {
 					$this->helpers->delete_logs( 'all' );
 					$message = rawurlencode( 'All Logs successfully deleted!' );
-					wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) );
-					exit;
+					if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
+						exit;
+					}
 				} elseif ( 'c4p-logs--export-csv' === $action && wp_verify_nonce( $nonce, 'bulk-logs' ) ) {
 					$this->helpers->export_logs_csv();
 				} elseif ( 'c4p-logs--prune' === $action && wp_verify_nonce( $nonce, 'c4p-logs--prune' ) ) {
