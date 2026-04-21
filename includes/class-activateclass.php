@@ -23,6 +23,11 @@ class ActivateClass {
 		if ( defined( 'CUSTOM_404_PRO_VERSION' ) ) {
 			update_option( 'custom_404_pro_db_version', CUSTOM_404_PRO_VERSION );
 		}
+
+		// Schedule the daily log-pruning cron event if it is not already registered.
+		if ( ! wp_next_scheduled( 'custom_404_pro_prune_logs' ) ) {
+			wp_schedule_event( time(), 'daily', 'custom_404_pro_prune_logs' );
+		}
 	}
 
 	/**

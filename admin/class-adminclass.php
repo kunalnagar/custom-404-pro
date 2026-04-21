@@ -140,6 +140,8 @@ class AdminClass {
 			$allowed_cooldowns         = array( 900, 1800, 3600, 21600, 86400 );
 			$raw_cooldown              = isset( $_POST['email_cooldown'] ) ? absint( wp_unslash( $_POST['email_cooldown'] ) ) : HOUR_IN_SECONDS;
 			$field_email_cooldown      = in_array( $raw_cooldown, $allowed_cooldowns, true ) ? $raw_cooldown : HOUR_IN_SECONDS;
+			$log_retention_count = isset( $_POST['log_retention_count'] ) ? absint( wp_unslash( $_POST['log_retention_count'] ) ) : 0;
+			$log_retention_days  = isset( $_POST['log_retention_days'] ) ? absint( wp_unslash( $_POST['log_retention_days'] ) ) : 0;
 			$this->helpers->update_settings(
 				array(
 					'send_email'          => ( 'on' === $send_email ),
@@ -147,6 +149,8 @@ class AdminClass {
 					'log_ip'              => ( 'on' === $log_ip ),
 					'redirect_error_code' => $field_redirect_error_code,
 					'email_cooldown'      => $field_email_cooldown,
+					'log_retention_count' => $log_retention_count,
+					'log_retention_days'  => $log_retention_days,
 				)
 			);
 			$message = rawurlencode( 'Saved!' );
@@ -182,6 +186,12 @@ class AdminClass {
 					exit;
 				} elseif ( 'c4p-logs--export-csv' === $action && wp_verify_nonce( $nonce, 'bulk-logs' ) ) {
 					$this->helpers->export_logs_csv();
+				} elseif ( 'c4p-logs--prune' === $action && wp_verify_nonce( $nonce, 'c4p-logs--prune' ) ) {
+					$deleted = $this->helpers->prune_logs();
+					$message = rawurlencode( sprintf( 'Pruned %d log row(s).', $deleted ) );
+					if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
+						exit;
+					}
 				}
 			}
 		}
@@ -280,6 +290,18 @@ class AdminClass {
 	 */
 	public function is_email_on_cooldown(): bool {
 		return (bool) get_transient( 'custom_404_pro_email_cooldown' );
+	}
+
+	/**
+	 * WP-Cron callback: prunes log entries according to retention settings.
+	 *
+	 * Must be public so it can be registered via add_action().
+	 *
+	 * @since 3.14.0
+	 * @return int Total rows deleted.
+	 */
+	public function run_scheduled_log_prune(): int {
+		return $this->helpers->prune_logs();
 	}
 
 	/**

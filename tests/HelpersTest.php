@@ -60,10 +60,26 @@ class HelpersTest extends TestCase {
 	 */
 	public function test_defaults_contains_all_required_keys() {
 		$helpers  = new Helpers();
-		$required = array( 'mode', 'mode_page', 'mode_url', 'send_email', 'logging_enabled', 'redirect_error_code', 'log_ip', 'email_cooldown' );
+		$required = array( 'mode', 'mode_page', 'mode_url', 'send_email', 'logging_enabled', 'redirect_error_code', 'log_ip', 'email_cooldown', 'log_retention_count', 'log_retention_days' );
 		foreach ( $required as $key ) {
 			$this->assertArrayHasKey( $key, $helpers->defaults(), "defaults() should contain key '{$key}'." );
 		}
+	}
+
+	/**
+	 * Asserts that log_retention_count defaults to 0 (disabled).
+	 */
+	public function test_defaults_log_retention_count_is_zero() {
+		$helpers = new Helpers();
+		$this->assertSame( 0, $helpers->defaults()['log_retention_count'] );
+	}
+
+	/**
+	 * Asserts that log_retention_days defaults to 0 (disabled).
+	 */
+	public function test_defaults_log_retention_days_is_zero() {
+		$helpers = new Helpers();
+		$this->assertSame( 0, $helpers->defaults()['log_retention_days'] );
 	}
 
 	/**

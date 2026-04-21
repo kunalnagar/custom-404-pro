@@ -27,6 +27,14 @@ Take full control of your WordPress 404 experience. Custom 404 Pro lets you redi
 - **Admin email alerts** — get notified at your site's admin email address whenever a 404 is logged.
 - **Email cooldown** — configure a quiet period between notifications (15 minutes, 30 minutes, 1 hour, 6 hours, or 24 hours). Once an email is sent, the plugin stays quiet until the cooldown expires — no inbox flooding from bot crawls or broken redirect loops.
 
+### Log Retention
+
+- **Max Log Count** — set a hard cap on how many rows the log table can hold. When the table exceeds the limit, the oldest rows are automatically deleted to bring it back down. Set to `0` to disable (no limit).
+- **Max Log Age (days)** — automatically delete log entries older than a given number of days. Set to `0` to keep logs forever.
+- **Daily background cleanup** — a WP-Cron event runs once per day and applies both retention rules automatically. No manual intervention required.
+- **On-demand pruning** — a **Prune Logs Now** button on the Logs page lets you trigger a cleanup immediately without waiting for the next cron run.
+- Both limits default to `0` — existing installs see no behaviour change until retention is explicitly configured.
+
 ### Compatibility
 
 - **Multisite** — tables and settings are provisioned per-site on activation and cleaned up per-site on uninstall.
@@ -65,6 +73,8 @@ Take full control of your WordPress 404 experience. Custom 404 Pro lets you redi
 | Logging Status | Enabled / Disabled | Disabled | Whether 404 events are captured to the log table |
 | Log IP | On / Off | On | Whether to record the visitor's IP address |
 | Redirect Code | 301 / 302 / 307 / 308 | 302 | HTTP status code used for the redirect |
+| Max Log Count | Any integer ≥ 0 | 0 (disabled) | Delete oldest rows when table exceeds this count; 0 = no limit |
+| Max Log Age (days) | Any integer ≥ 0 | 0 (disabled) | Delete rows older than this many days; 0 = keep forever |
 
 ---
 
@@ -120,7 +130,10 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
 
-### 3.12.9
+### 3.14.0
+- Add configurable log retention policy: cap by row count, by age (days), or both. Includes a daily WP-Cron cleanup job and an on-demand Prune Logs Now button on the Logs page.
+
+### 3.13.0
 - Add email notification cooldown to prevent inbox flooding. Configurable from 15 minutes to 24 hours (default: 1 hour).
 
 ### 3.12.8

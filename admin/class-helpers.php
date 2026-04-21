@@ -67,6 +67,8 @@ class Helpers {
 			'redirect_error_code' => 302,
 			'log_ip'              => true,
 			'email_cooldown'      => 3600,
+			'log_retention_count' => 0,
+			'log_retention_days'  => 0,
 		);
 	}
 
@@ -227,6 +229,58 @@ class Helpers {
 			$result = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		}
 		return $result;
+	}
+
+	/**
+	 * Returns the total number of rows in the logs table.
+	 *
+	 * @since 3.14.0
+	 * @return int Total log row count.
+	 */
+	public function get_logs_count(): int {
+		global $wpdb;
+		$result = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . $this->table_logs ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		return (int) $result;
+	}
+
+	/**
+	 * Prunes log entries according to the configured retention settings.
+	 *
+	 * Two independent passes are run:
+	 *   1. Count pass: if log_retention_count > 0 and the table exceeds that cap,
+	 *      the oldest rows (by `created` timestamp) are deleted until only
+	 *      log_retention_count rows remain.
+	 *   2. Age pass: if log_retention_days > 0, all rows older than that many days
+	 *      are deleted.
+	 *
+	 * Returns the total number of rows deleted across both passes.
+	 *
+	 * @since 3.14.0
+	 * @return int Total rows deleted.
+	 */
+	public function prune_logs(): int {
+		global $wpdb;
+		$options  = $this->get_settings();
+		$deleted  = 0;
+		$table    = $wpdb->prefix . $this->table_logs;
+
+		$max_count = isset( $options['log_retention_count'] ) ? (int) $options['log_retention_count'] : 0;
+		if ( $max_count > 0 ) {
+			$total  = $this->get_logs_count();
+			$excess = $total - $max_count;
+			if ( $excess > 0 ) {
+				$query    = $wpdb->prepare( 'DELETE FROM ' . $table . ' ORDER BY created ASC LIMIT %d', $excess ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$deleted += (int) $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+			}
+		}
+
+		$max_days = isset( $options['log_retention_days'] ) ? (int) $options['log_retention_days'] : 0;
+		if ( $max_days > 0 ) {
+			$query    = $wpdb->prepare( 'DELETE FROM ' . $table . ' WHERE created < DATE_SUB(NOW(), INTERVAL %d DAY)', $max_days ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$deleted += (int) $wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		}
+
+		return $deleted;
 	}
 
 	/**

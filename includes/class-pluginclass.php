@@ -79,5 +79,6 @@ class PluginClass {
 		add_action( 'admin_notices', array( $this->plugin_admin, 'custom_404_pro_notices' ) );
 		add_action( 'admin_post_form-settings-global-redirect', array( $this->plugin_admin, 'form_settings_global_redirect' ) );
 		add_action( 'admin_post_form-settings-general', array( $this->plugin_admin, 'form_settings_general' ) );
+		add_action( 'custom_404_pro_prune_logs', array( $this->plugin_admin, 'run_scheduled_log_prune' ) );
 	}
 }
