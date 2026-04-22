@@ -15,6 +15,8 @@ class DeactivateClass {
 	 *
 	 * Unschedules the daily log-pruning cron event. On multisite, this fires
 	 * for the main site only; per-site events on sub-sites will expire naturally.
+	 *
+	 * @since 3.14.0
 	 */
 	public static function deactivate() {
 		$timestamp = wp_next_scheduled( 'custom_404_pro_prune_logs' );

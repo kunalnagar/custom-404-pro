@@ -53,6 +53,9 @@ class PluginClass {
 		}
 		include_once plugin_dir_path( __FILE__ ) . 'class-activateclass.php';
 		ActivateClass::maybe_migrate_legacy_options();
+		if ( ! wp_next_scheduled( 'custom_404_pro_prune_logs' ) ) {
+			wp_schedule_event( time(), 'daily', 'custom_404_pro_prune_logs' );
+		}
 		if ( defined( 'CUSTOM_404_PRO_VERSION' ) ) {
 			update_option( 'custom_404_pro_db_version', CUSTOM_404_PRO_VERSION );
 		}

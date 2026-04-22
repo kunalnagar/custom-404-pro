@@ -12,6 +12,7 @@ $helpers     = Helpers::singleton();
 $options     = $helpers->get_settings();
 $total_count = $helpers->get_logs_count();
 $max_count   = isset( $options['log_retention_count'] ) ? (int) $options['log_retention_count'] : 0;
+$max_days    = isset( $options['log_retention_days'] ) ? (int) $options['log_retention_days'] : 0;
 
 ?>
 
@@ -50,11 +51,13 @@ $max_count   = isset( $options['log_retention_count'] ) ? (int) $options['log_re
 		</div>
 	<?php endif; ?>
 
+	<?php if ( $max_count > 0 || $max_days > 0 ) : ?>
 	<p>
 		<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=c4p-main&action=c4p-logs--prune' ), 'c4p-logs--prune' ) ); ?>" class="button">
 			<?php esc_html_e( 'Prune Logs Now', 'custom-404-pro' ); ?>
 		</a>
 	</p>
+	<?php endif; ?>
 
 	<form id="form_logs" method="GET">
 		<!-- For plugins, we also need to ensure that the form posts back to our current page -->
