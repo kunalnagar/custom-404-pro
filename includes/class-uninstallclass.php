@@ -43,6 +43,7 @@ class UninstallClass {
 		delete_option( Helpers::OPTION_KEY );
 		delete_option( 'custom_404_pro_db_version' );
 		delete_transient( 'custom_404_pro_email_cooldown' );
+		wp_unschedule_hook( 'custom_404_pro_prune_logs' );
 
 		// Drop the logs table.
 		$table_logs = $wpdb->prefix . 'custom_404_pro_logs';

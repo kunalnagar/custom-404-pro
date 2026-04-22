@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, redirect, custom 404, error page, logging
 Requires at least: 3.0.1
 Tested up to: 6.9.4
-Stable tag: 3.13.0
+Stable tag: 3.14.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -31,7 +31,7 @@ When logging is enabled, the plugin records every 404 hit to a database table so
 * User agent
 * Timestamp
 
-Logs are searchable and can be deleted individually, in bulk, or all at once. They can also be exported as a CSV file.
+Logs are searchable and can be deleted individually, in bulk, or all at once. They can also be exported as a CSV file. A configurable retention policy lets you automatically cap the table by row count, by age, or both — with a daily background cleanup and an on-demand Prune Now button.
 
 = Email Notifications =
 
@@ -81,6 +81,9 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 3. General settings — logging, email notifications, IP recording, and redirect status code
 
 == Changelog ==
+
+= 3.14.0 =
+* Add configurable log retention policy: cap by row count, by age (days), or both. Includes a daily WP-Cron cleanup job and an on-demand Prune Logs Now button on the Logs page.
 
 = 3.13.0 =
 * Add configurable email notification cooldown to prevent inbox flooding on high 404 traffic (15 min / 30 min / 1 hr / 6 hr / 24 hr)

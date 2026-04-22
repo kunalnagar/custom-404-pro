@@ -152,4 +152,88 @@ class C404P_Integration_HelpersDbTest extends WP_UnitTestCase {
 		$count = (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . $this->helpers->table_logs ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 		$this->assertSame( 1, $count );
 	}
+
+	// -------------------------------------------------------------------------
+	// Log retention helpers
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Inserts a log row with a backdated `created` timestamp.
+	 *
+	 * @param string $path     Request path for the log entry.
+	 * @param int    $days_ago How many days ago to backdate the entry.
+	 */
+	private function make_old_log( string $path, int $days_ago ) {
+		global $wpdb;
+		$query = $wpdb->prepare(
+			'INSERT INTO ' . $wpdb->prefix . $this->helpers->table_logs . ' (ip, path, referer, user_agent, created) VALUES (%s, %s, %s, %s, DATE_SUB(NOW(), INTERVAL %d DAY))', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			'127.0.0.1',
+			$path,
+			'',
+			'PHPUnit',
+			$days_ago
+		);
+		$wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+	}
+
+	// -------------------------------------------------------------------------
+	// get_logs_count()
+	// -------------------------------------------------------------------------
+
+	/**
+	 * get_logs_count() should return the total number of rows in the table.
+	 */
+	public function test_get_logs_count_returns_correct_total() {
+		$this->helpers->create_logs( array( $this->make_log( '/a' ), $this->make_log( '/b' ) ), false );
+		$this->assertSame( 2, $this->helpers->get_logs_count() );
+	}
+
+	// -------------------------------------------------------------------------
+	// prune_logs()
+	// -------------------------------------------------------------------------
+
+	/**
+	 * prune_logs() should be a no-op when both retention settings are 0.
+	 */
+	public function test_prune_logs_is_noop_when_both_settings_are_zero() {
+		$this->helpers->update_settings( array( 'log_retention_count' => 0, 'log_retention_days' => 0 ) );
+		$this->helpers->create_logs( array( $this->make_log( '/a' ), $this->make_log( '/b' ), $this->make_log( '/c' ) ), false );
+		$deleted = $this->helpers->prune_logs();
+		$this->assertSame( 0, $deleted );
+		$this->assertSame( 3, $this->helpers->get_logs_count() );
+	}
+
+	/**
+	 * prune_logs() should delete the oldest rows when the count cap is exceeded.
+	 */
+	public function test_prune_logs_deletes_oldest_rows_when_count_limit_exceeded() {
+		$this->helpers->update_settings( array( 'log_retention_count' => 2, 'log_retention_days' => 0 ) );
+		$this->helpers->create_logs( array( $this->make_log( '/a' ), $this->make_log( '/b' ), $this->make_log( '/c' ) ), false );
+		$deleted = $this->helpers->prune_logs();
+		$this->assertSame( 1, $deleted );
+		$this->assertSame( 2, $this->helpers->get_logs_count() );
+	}
+
+	/**
+	 * prune_logs() should delete rows older than the configured age limit.
+	 */
+	public function test_prune_logs_deletes_rows_older_than_age_limit() {
+		$this->helpers->update_settings( array( 'log_retention_count' => 0, 'log_retention_days' => 30 ) );
+		$this->make_old_log( '/old-a', 31 );
+		$this->make_old_log( '/old-b', 35 );
+		$this->helpers->create_logs( array( $this->make_log( '/recent' ) ), false );
+		$deleted = $this->helpers->prune_logs();
+		$this->assertSame( 2, $deleted );
+		$this->assertSame( 1, $this->helpers->get_logs_count() );
+	}
+
+	/**
+	 * prune_logs() should return 0 when the count is within the configured limit.
+	 */
+	public function test_prune_logs_returns_zero_when_count_within_limit() {
+		$this->helpers->update_settings( array( 'log_retention_count' => 10, 'log_retention_days' => 0 ) );
+		$this->helpers->create_logs( array( $this->make_log( '/a' ), $this->make_log( '/b' ) ), false );
+		$deleted = $this->helpers->prune_logs();
+		$this->assertSame( 0, $deleted );
+	}
 }

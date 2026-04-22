@@ -53,6 +53,9 @@ class PluginClass {
 		}
 		include_once plugin_dir_path( __FILE__ ) . 'class-activateclass.php';
 		ActivateClass::maybe_migrate_legacy_options();
+		if ( ! wp_next_scheduled( 'custom_404_pro_prune_logs' ) ) {
+			wp_schedule_event( time(), 'daily', 'custom_404_pro_prune_logs' );
+		}
 		if ( defined( 'CUSTOM_404_PRO_VERSION' ) ) {
 			update_option( 'custom_404_pro_db_version', CUSTOM_404_PRO_VERSION );
 		}
@@ -79,5 +82,6 @@ class PluginClass {
 		add_action( 'admin_notices', array( $this->plugin_admin, 'custom_404_pro_notices' ) );
 		add_action( 'admin_post_form-settings-global-redirect', array( $this->plugin_admin, 'form_settings_global_redirect' ) );
 		add_action( 'admin_post_form-settings-general', array( $this->plugin_admin, 'form_settings_general' ) );
+		add_action( 'custom_404_pro_prune_logs', array( $this->plugin_admin, 'run_scheduled_log_prune' ) );
 	}
 }

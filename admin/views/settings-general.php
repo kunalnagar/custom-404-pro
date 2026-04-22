@@ -12,6 +12,8 @@ $logging_enabled     = $options['logging_enabled'] ?? false;
 $redirect_error_code = isset( $options['redirect_error_code'] ) ? (int) $options['redirect_error_code'] : 302;
 $log_ip              = $options['log_ip'] ?? true;
 $email_cooldown      = isset( $options['email_cooldown'] ) ? (int) $options['email_cooldown'] : 3600;
+$log_retention_count = isset( $options['log_retention_count'] ) ? (int) $options['log_retention_count'] : 0;
+$log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options['log_retention_days'] : 0;
 ?>
 <div class="wrap">
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -81,6 +83,24 @@ $email_cooldown      = isset( $options['email_cooldown'] ) ? (int) $options['ema
 					</select>
 					<p class="description">
 						When a 404 occurs and a redirect mode has been set, it will be performed using this status code.
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th>Max Log Count</th>
+				<td>
+					<input type="number" name="log_retention_count" value="<?php echo esc_attr( $log_retention_count ); ?>" min="0" step="1" />
+					<p class="description">
+						Maximum number of log rows to keep. When the table exceeds this limit, the oldest rows are deleted automatically during the daily cleanup. Set to <b>0</b> to disable (no limit).
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th>Max Log Age (days)</th>
+				<td>
+					<input type="number" name="log_retention_days" value="<?php echo esc_attr( $log_retention_days ); ?>" min="0" step="1" />
+					<p class="description">
+						Delete log entries older than this many days during the daily cleanup. Set to <b>0</b> to disable (keep forever).
 					</p>
 				</td>
 			</tr>
