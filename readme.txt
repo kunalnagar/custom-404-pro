@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, redirect, custom 404, error page, logging
 Requires at least: 3.0.1
 Tested up to: 6.9.4
-Stable tag: 3.14.0
+Stable tag: 3.14.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -81,6 +81,9 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 3. General settings — logging, email notifications, IP recording, and redirect status code
 
 == Changelog ==
+
+= 3.14.1 =
+* Fix page redirect using stale post GUID instead of current permalink, causing silent redirect failures on sites with changed domains, HTTP→HTTPS migrations, or staging-to-production deployments
 
 = 3.14.0 =
 * Add configurable log retention policy: cap by row count, by age (days), or both. Includes a daily WP-Cron cleanup job and an on-demand Prune Logs Now button on the Logs page.

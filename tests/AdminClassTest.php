@@ -35,12 +35,17 @@ class AdminClassTest extends TestCase {
 	}
 
 	/**
-	 * Resets multilingual stubs, filter registry, and transient store before each test.
+	 * Resets multilingual stubs, filter registry, redirect captures, and transient store before each test.
 	 */
 	protected function setUp(): void {
 		parent::setUp();
 		$GLOBALS['_test_filters']        = array();
 		$GLOBALS['_test_transients']     = array();
+		$GLOBALS['_test_options']        = array();
+		$GLOBALS['_test_is_404']         = false;
+		$GLOBALS['_test_permalinks']     = array();
+		$GLOBALS['_test_redirect_url']   = null;
+		$GLOBALS['_test_redirect_status'] = null;
 		$GLOBALS['_pll_get_post_return'] = false;
 		unset( $GLOBALS['_pll_current_language'] );
 		unset( $GLOBALS['_pll_default_language'] );
@@ -148,6 +153,84 @@ class AdminClassTest extends TestCase {
 		$GLOBALS['_pll_get_post_return']  = false; // pll_get_post returns false → no translation.
 		$admin = new AdminClass();
 		$this->assertSame( 20, $this->normalize( $admin, 20 ) );
+	}
+
+	// ------------------------------------------------------------------
+	// custom_404_pro_redirect — page mode
+	// ------------------------------------------------------------------
+
+	/**
+	 * Helper: seed settings into the test options store.
+	 *
+	 * @param array $settings Settings to merge into defaults.
+	 */
+	private function seed_settings( array $settings ): void {
+		$defaults = array(
+			'mode'               => '',
+			'mode_page'          => '0',
+			'mode_url'           => '',
+			'redirect_error_code' => 302,
+			'logging_enabled'    => false,
+			'send_email'         => false,
+			'log_ip'             => true,
+			'email_cooldown'     => HOUR_IN_SECONDS,
+			'max_log_count'      => 0,
+			'max_log_age'        => 0,
+		);
+		update_option( Helpers::OPTION_KEY, array_merge( $defaults, $settings ) );
+	}
+
+	/**
+	 * Asserts that page mode redirects to the URL returned by get_permalink(), not any other value.
+	 */
+	public function test_redirect_page_mode_uses_get_permalink() {
+		$GLOBALS['_test_is_404']          = true;
+		$GLOBALS['_test_permalinks'][42]  = 'https://example.com/custom-404/';
+		$this->seed_settings( array( 'mode' => 'page', 'mode_page' => '42' ) );
+
+		$admin = new AdminClass();
+		$admin->custom_404_pro_redirect();
+
+		$this->assertSame(
+			'https://example.com/custom-404/',
+			$GLOBALS['_test_redirect_url'],
+			'Redirect URL must come from get_permalink(), not post->guid or any other property.'
+		);
+	}
+
+	/**
+	 * Asserts that no redirect fires in page mode when get_permalink() returns false
+	 * (e.g. the configured page ID no longer exists).
+	 */
+	public function test_redirect_page_mode_does_not_redirect_when_permalink_is_false() {
+		$GLOBALS['_test_is_404']         = true;
+		$GLOBALS['_test_permalinks'][99] = false; // page deleted / unpublished
+		$this->seed_settings( array( 'mode' => 'page', 'mode_page' => '99' ) );
+
+		$admin = new AdminClass();
+		$admin->custom_404_pro_redirect();
+
+		$this->assertNull(
+			$GLOBALS['_test_redirect_url'],
+			'No redirect should fire when get_permalink() returns false.'
+		);
+	}
+
+	/**
+	 * Asserts that no redirect fires when the current request is not a 404.
+	 */
+	public function test_redirect_page_mode_does_not_fire_when_not_404() {
+		$GLOBALS['_test_is_404']         = false;
+		$GLOBALS['_test_permalinks'][42] = 'https://example.com/custom-404/';
+		$this->seed_settings( array( 'mode' => 'page', 'mode_page' => '42' ) );
+
+		$admin = new AdminClass();
+		$admin->custom_404_pro_redirect();
+
+		$this->assertNull(
+			$GLOBALS['_test_redirect_url'],
+			'No redirect should fire for non-404 requests.'
+		);
 	}
 
 	// ------------------------------------------------------------------

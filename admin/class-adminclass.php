@@ -213,10 +213,10 @@ class AdminClass {
 				self::custom_404_pro_log( $options['send_email'] ?? '', $email_cooldown );
 			}
 			if ( 'page' === ( $options['mode'] ?? '' ) ) {
-				$page_id = $this->resolve_multilingual_page_id( (int) ( $options['mode_page'] ?? 0 ) );
-				$page    = get_post( $page_id );
-				if ( $page ) {
-					if ( wp_safe_redirect( $page->guid, (int) ( $options['redirect_error_code'] ?? 302 ) ) ) {
+				$page_id   = $this->resolve_multilingual_page_id( (int) ( $options['mode_page'] ?? 0 ) );
+				$permalink = get_permalink( $page_id );
+				if ( $permalink ) {
+					if ( wp_safe_redirect( $permalink, (int) ( $options['redirect_error_code'] ?? 302 ) ) ) {
 						exit;
 					}
 				}
