@@ -130,6 +130,9 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
 
+### 3.14.1
+- Fix page redirect using stale post GUID instead of current permalink, causing silent redirect failures on sites with changed domains, HTTP→HTTPS migrations, or staging-to-production deployments.
+
 ### 3.14.0
 - Add configurable log retention policy: cap by row count, by age (days), or both. Includes a daily WP-Cron cleanup job and an on-demand Prune Logs Now button on the Logs page.
 
