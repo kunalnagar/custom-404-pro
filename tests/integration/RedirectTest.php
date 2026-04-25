@@ -106,6 +106,7 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	 */
 	public function allow_test_hosts( $hosts ) {
 		$hosts[] = 'example.com';
+		$hosts[] = 'example.org'; // WP test environment site domain.
 		return $hosts;
 	}
 
@@ -158,9 +159,9 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Page mode should redirect to the GUID of the configured WordPress page.
+	 * Page mode should redirect to the current permalink of the configured WordPress page.
 	 */
-	public function test_redirect_sends_page_guid_in_page_mode() {
+	public function test_redirect_page_mode_uses_current_permalink() {
 		$page_id = self::factory()->post->create(
 			array(
 				'post_type'   => 'page',
@@ -168,13 +169,46 @@ class C404P_Integration_RedirectTest extends WP_UnitTestCase {
 				'post_title'  => 'Custom 404 Page',
 			)
 		);
-		$page    = get_post( $page_id );
 
 		$this->helpers->update_settings( array( 'mode' => 'page', 'mode_page' => (string) $page_id ) );
 
 		$this->admin->custom_404_pro_redirect();
 
-		$this->assertSame( $page->guid, $this->redirect_url );
+		$this->assertSame( get_permalink( $page_id ), $this->redirect_url );
+	}
+
+	/**
+	 * Page mode should redirect to the current permalink even when the post GUID
+	 * is stale (e.g. after a domain migration or HTTP→HTTPS upgrade).
+	 *
+	 * This is the regression test for the bug reported against Genesis themes:
+	 * the old code used $page->guid which is never updated after post creation,
+	 * causing wp_safe_redirect() to reject the cross-domain URL silently.
+	 */
+	public function test_redirect_page_mode_uses_permalink_not_stale_guid() {
+		global $wpdb;
+
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+				'post_title'  => 'Custom 404 Page',
+			)
+		);
+
+		// Simulate a stale GUID left over from a domain migration.
+		$stale_guid = 'http://old-domain.example.com/?page_id=' . $page_id;
+		$wpdb->update( $wpdb->posts, array( 'guid' => $stale_guid ), array( 'ID' => $page_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		clean_post_cache( $page_id );
+
+		$this->helpers->update_settings( array( 'mode' => 'page', 'mode_page' => (string) $page_id ) );
+
+		$this->admin->custom_404_pro_redirect();
+
+		$expected_url = get_permalink( $page_id );
+		$this->assertNotNull( $this->redirect_url, 'A redirect should fire in page mode.' );
+		$this->assertSame( $expected_url, $this->redirect_url, 'Redirect should use get_permalink(), not the stale GUID.' );
+		$this->assertNotSame( $stale_guid, $this->redirect_url, 'Redirect must not use the stale GUID.' );
 	}
 
 	/**

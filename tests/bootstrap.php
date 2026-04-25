@@ -15,6 +15,10 @@ $GLOBALS['_test_actions']                 = array();
 $GLOBALS['_load_plugin_textdomain_calls'] = array();
 $GLOBALS['_test_options']                 = array();
 $GLOBALS['_test_transients']              = array();
+$GLOBALS['_test_is_404']                  = false;
+$GLOBALS['_test_permalinks']              = array();
+$GLOBALS['_test_redirect_url']            = null;
+$GLOBALS['_test_redirect_status']         = null;
 
 // WordPress time constants.
 if ( ! defined( 'MINUTE_IN_SECONDS' ) ) {
@@ -250,6 +254,45 @@ function set_transient( string $transient, $value, int $expiration = 0 ) { // ph
 function delete_transient( string $transient ): bool {
 	unset( $GLOBALS['_test_transients'][ $transient ] );
 	return true;
+}
+
+/**
+ * Stub for WordPress is_404().
+ *
+ * Returns the value of $GLOBALS['_test_is_404']; defaults to false.
+ *
+ * @return bool
+ */
+function is_404(): bool {
+	return $GLOBALS['_test_is_404'] ?? false;
+}
+
+/**
+ * Stub for WordPress get_permalink().
+ *
+ * Returns the value from $GLOBALS['_test_permalinks'][$post_id], or false if not set.
+ *
+ * @param int $post_id Post ID.
+ * @return string|false
+ */
+function get_permalink( $post_id = 0 ) {
+	return $GLOBALS['_test_permalinks'][ $post_id ] ?? false;
+}
+
+/**
+ * Stub for WordPress wp_safe_redirect().
+ *
+ * Captures the redirect URL and status in globals and returns false so that
+ * the gated exit( ) in custom_404_pro_redirect() does not terminate the process.
+ *
+ * @param string $location Redirect URL.
+ * @param int    $status   HTTP status code.
+ * @return bool Always false.
+ */
+function wp_safe_redirect( string $location, int $status = 302 ): bool {
+	$GLOBALS['_test_redirect_url']    = $location;
+	$GLOBALS['_test_redirect_status'] = $status;
+	return false;
 }
 
 require_once dirname( __DIR__ ) . '/admin/class-helpers.php';
