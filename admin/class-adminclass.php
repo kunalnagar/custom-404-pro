@@ -29,10 +29,10 @@ class AdminClass {
 	 */
 	public function create_menu() {
 		if ( current_user_can( 'manage_options' ) ) {
-			add_menu_page( 'Custom 404 Pro', 'Custom 404 Pro', 'manage_options', 'c4p-main', array( $this, 'page_logs' ), 'dashicons-chart-bar' );
-			add_submenu_page( 'c4p-main', 'Logs', 'Logs', 'manage_options', 'c4p-main', array( $this, 'page_logs' ) );
-			add_submenu_page( 'c4p-main', 'Settings', 'Settings', 'manage_options', 'c4p-settings', array( $this, 'page_settings' ) );
-			add_submenu_page( 'c4p-main', 'About', 'About', 'manage_options', 'c4p-about', array( $this, 'page_about' ) );
+			add_menu_page( esc_html__( 'Custom 404 Pro', 'custom-404-pro' ), esc_html__( 'Custom 404 Pro', 'custom-404-pro' ), 'manage_options', 'c4p-main', array( $this, 'page_logs' ), 'dashicons-chart-bar' );
+			add_submenu_page( 'c4p-main', esc_html__( 'Logs', 'custom-404-pro' ), esc_html__( 'Logs', 'custom-404-pro' ), 'manage_options', 'c4p-main', array( $this, 'page_logs' ) );
+			add_submenu_page( 'c4p-main', esc_html__( 'Settings', 'custom-404-pro' ), esc_html__( 'Settings', 'custom-404-pro' ), 'manage_options', 'c4p-settings', array( $this, 'page_settings' ) );
+			add_submenu_page( 'c4p-main', esc_html__( 'About', 'custom-404-pro' ), esc_html__( 'About', 'custom-404-pro' ), 'manage_options', 'c4p-about', array( $this, 'page_about' ) );
 		}
 	}
 
@@ -119,7 +119,7 @@ class AdminClass {
 			$page = isset( $_POST['mode_page'] ) ? sanitize_text_field( wp_unslash( $_POST['mode_page'] ) ) : '';
 			$url  = isset( $_POST['mode_url'] ) ? sanitize_text_field( wp_unslash( $_POST['mode_url'] ) ) : '';
 			self::update_mode( $mode, $page, $url );
-			$message = rawurlencode( 'Saved!' );
+			$message = rawurlencode( __( 'Saved!', 'custom-404-pro' ) );
 			if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=global-redirect&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
 				exit;
 			}
@@ -154,7 +154,7 @@ class AdminClass {
 					'log_retention_days'  => $log_retention_days,
 				)
 			);
-			$message = rawurlencode( 'Saved!' );
+			$message = rawurlencode( __( 'Saved!', 'custom-404-pro' ) );
 			if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-settings&tab=general&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
 				exit;
 			}
@@ -173,19 +173,19 @@ class AdminClass {
 					if ( array_key_exists( 'path', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						$path = is_array( $_REQUEST['path'] ) ? array_map( 'absint', $_REQUEST['path'] ) : absint( $_REQUEST['path'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						$this->helpers->delete_logs( $path );
-						$message = rawurlencode( 'Log(s) successfully deleted!' );
+						$message = rawurlencode( __( 'Log(s) successfully deleted!', 'custom-404-pro' ) );
 						if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
 							exit;
 						}
 					} else {
-						$message = rawurlencode( 'Please select a few logs to delete and try again.' );
+						$message = rawurlencode( __( 'Please select a few logs to delete and try again.', 'custom-404-pro' ) );
 						if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=warning' ) ) ) {
 							exit;
 						}
 					}
 				} elseif ( 'c4p-logs--delete-all' === $action && wp_verify_nonce( $nonce, 'bulk-logs' ) ) {
 					$this->helpers->delete_logs( 'all' );
-					$message = rawurlencode( 'All Logs successfully deleted!' );
+					$message = rawurlencode( __( 'All Logs successfully deleted!', 'custom-404-pro' ) );
 					if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
 						exit;
 					}
@@ -193,7 +193,13 @@ class AdminClass {
 					$this->helpers->export_logs_csv();
 				} elseif ( 'c4p-logs--prune' === $action && wp_verify_nonce( $nonce, 'c4p-logs--prune' ) ) {
 					$deleted = $this->helpers->prune_logs();
-					$message = rawurlencode( sprintf( 'Pruned %d log row(s).', $deleted ) );
+					$message = rawurlencode(
+						sprintf(
+							/* translators: %d: number of log rows pruned */
+							_n( 'Pruned %d log row.', 'Pruned %d log rows.', $deleted, 'custom-404-pro' ),
+							$deleted
+						)
+					);
 					if ( wp_safe_redirect( admin_url( 'admin.php?page=c4p-main&c4pmessage=' . $message . '&c4pmessageType=success' ) ) ) {
 						exit;
 					}
@@ -328,32 +334,33 @@ class AdminClass {
 		}
 		$headers[] = 'From: Site Admin <' . $admin_email . '>' . "\r\n";
 		$headers[] = 'Content-Type: text/html; charset=UTF-8';
-		$message   = '<p>Here are the 404 Log Details:</p>';
+		$message   = '<p>' . __( 'Here are the 404 Log Details:', 'custom-404-pro' ) . '</p>';
 		$message  .= '<table>';
 		$message  .= '<tr>';
-		$message  .= '<th>Site</th>';
+		$message  .= '<th>' . __( 'Site', 'custom-404-pro' ) . '</th>';
 		$message  .= '<td>' . $current_site_name . '</td>';
 		$message  .= '</tr>';
 		$message  .= '<tr>';
-		$message  .= '<th>User IP</th>';
+		$message  .= '<th>' . __( 'User IP', 'custom-404-pro' ) . '</th>';
 		$message  .= '<td>' . $ip . '</td>';
 		$message  .= '</tr>';
 		$message  .= '<tr>';
-		$message  .= '<th>404 Path</th>';
+		$message  .= '<th>' . __( '404 Path', 'custom-404-pro' ) . '</th>';
 		$message  .= '<td>' . $path . '</td>';
 		$message  .= '</tr>';
 		$message  .= '<tr>';
-		$message  .= '<th>Referer</th>';
+		$message  .= '<th>' . __( 'Referer', 'custom-404-pro' ) . '</th>';
 		$message  .= '<td>' . $referer . '</td>';
 		$message  .= '</tr>';
 		$message  .= '<tr>';
-		$message  .= '<th>User Agent</th>';
+		$message  .= '<th>' . __( 'User Agent', 'custom-404-pro' ) . '</th>';
 		$message  .= '<td>' . $user_agent . '</td>';
 		$message  .= '</tr>';
 		$message  .= '</table>';
 		wp_mail(
 			$admin_email,
-			'404 Error on Site',
+			/* translators: email subject sent to the site admin when a 404 is logged */
+			__( '404 Error on Site', 'custom-404-pro' ),
 			$message,
 			$headers
 		);

@@ -51,3 +51,36 @@ jobs:
         run: composer install --no-progress
       - name: Run PHPUnit
         run: composer test
+
+  validate-translations:
+    name: Validate Translation Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install gettext tools
+        run: sudo apt-get install -y gettext
+      - name: Validate .po format specifiers
+        run: |
+          shopt -s nullglob
+          po_files=(languages/*.po)
+          if [ ${#po_files[@]} -eq 0 ]; then
+            echo "No .po files found, skipping."
+            exit 0
+          fi
+          for f in "${po_files[@]}"; do
+            echo "Checking format specifiers: $f"
+            msgfmt --check-format -o /dev/null "$f"
+          done
+      - name: Scan for dangerous content in translations
+        run: |
+          shopt -s nullglob
+          po_files=(languages/*.po)
+          if [ ${#po_files[@]} -eq 0 ]; then
+            echo "No .po files found, skipping."
+            exit 0
+          fi
+          if grep -h "^msgstr" "${po_files[@]}" | grep -iE "<script|javascript:|onerror=|onload=|<iframe|eval\("; then
+            echo "ERROR: Potentially dangerous content found in translation msgstr entries."
+            exit 1
+          fi
+          echo "No dangerous patterns found."

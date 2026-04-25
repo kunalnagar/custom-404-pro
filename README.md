@@ -112,6 +112,51 @@ You can disable IP logging with the **Log IP** checkbox under General settings. 
 
 ---
 
+## Contributing Translations
+
+All user-facing strings use the text domain `custom-404-pro`. A Gettext template (`languages/custom-404-pro.pot`) is shipped with every release.
+
+### Via translate.wordpress.org (recommended)
+
+The easiest path — no git, no tooling, just a browser:
+
+1. Create or log in to a [WordPress.org account](https://login.wordpress.org/).
+2. Go to [translate.wordpress.org/projects/wp-plugins/custom-404-pro/](https://translate.wordpress.org/projects/wp-plugins/custom-404-pro/).
+3. Select your locale and click **Translate**.
+4. Submit suggestions for any untranslated strings.
+5. A Translation Editor reviews and approves. Once a locale reaches **90% translated**, WordPress.org packages it and delivers it automatically to all users running that locale — no pull request needed.
+
+This is the primary channel for community translations and the one most translators already use.
+
+### Via pull request (for developers)
+
+If you want to contribute `.po`/`.mo` files directly to the repository:
+
+1. Copy `languages/custom-404-pro.pot` and rename it using the WordPress locale code, e.g. `languages/custom-404-pro-fr_FR.po`.
+2. Open the `.po` file in [Poedit](https://poedit.net/) and fill in the `msgstr` fields.
+3. Save — Poedit compiles the `.mo` binary automatically. Or compile manually:
+   ```bash
+   msgfmt custom-404-pro-fr_FR.po -o custom-404-pro-fr_FR.mo
+   ```
+4. Open a pull request adding both the `.po` and `.mo` files to `languages/`.
+
+### Updating the .pot template
+
+If you add new translatable strings to the plugin source, regenerate the template. This requires a running [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) environment:
+
+```bash
+npx wp-env start
+composer makepot
+```
+
+### Security note for reviewers
+
+All translation PRs are checked by the `validate-translations` CI job:
+- `msgfmt --check-format` validates format specifiers — catches cases where a translator removes `%d` or `%s`, which would cause a PHP `sprintf()` error at runtime
+- A grep scan rejects `msgstr` lines containing `<script`, `javascript:`, `onerror=`, `<iframe`, or `eval(` — guarding the handful of description strings rendered via `wp_kses_post( __() )`
+
+---
+
 ## Support
 
 Open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/issues). The WordPress.org support forum is not monitored.
@@ -129,6 +174,9 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 ## Changelog
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
+
+### 3.15.0
+- Add full translation support: all user-facing strings are now wrapped in i18n functions and a `.pot` template is shipped with the plugin. Includes a CI job to validate `.po` files contributed by translators.
 
 ### 3.14.1
 - Fix page redirect using stale post GUID instead of current permalink, causing silent redirect failures on sites with changed domains, HTTP→HTTPS migrations, or staging-to-production deployments.
