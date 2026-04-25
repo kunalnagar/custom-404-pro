@@ -17,7 +17,7 @@ $max_days    = isset( $options['log_retention_days'] ) ? (int) $options['log_ret
 ?>
 
 <div class="wrap">
-	<h2>Logs</h2>
+	<h2><?php esc_html_e( 'Logs', 'custom-404-pro' ); ?></h2>
 
 	<p>
 		<?php
@@ -64,7 +64,7 @@ $max_days    = isset( $options['log_retention_days'] ) ? (int) $options['log_ret
 		<input type="hidden" name="page" value="<?php echo esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['page'] ?? '' ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>" />
 		<!-- Now we can render the completed list table -->
 		<p class="search-box">
-			<label class="screen-reader-text" for="search_id-search-input">Search</label>
+			<label class="screen-reader-text" for="search_id-search-input"><?php esc_html_e( 'Search', 'custom-404-pro' ); ?></label>
 			<input id="search_id-search-input" type="text" name="s" value="
 			<?php
 			if ( array_key_exists( 's', $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -72,7 +72,7 @@ $max_days    = isset( $options['log_retention_days'] ) ? (int) $options['log_ret
 			}
 			?>
 			" autocomplete="off" />
-			<input id="search-submit" class="button" type="submit" name="" value="Search" />
+			<input id="search-submit" class="button" type="submit" name="" value="<?php echo esc_attr__( 'Search', 'custom-404-pro' ); ?>" />
 		</p>
 		<?php $logs_table->display(); ?>
 	</form>

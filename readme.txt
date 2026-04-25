@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, redirect, custom 404, error page, logging
 Requires at least: 3.0.1
 Tested up to: 6.9.4
-Stable tag: 3.14.1
+Stable tag: 3.15.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -81,6 +81,9 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 3. General settings — logging, email notifications, IP recording, and redirect status code
 
 == Changelog ==
+
+= 3.15.0 =
+* Add full translation support: all user-facing strings are now wrapped in i18n functions and a .pot template is shipped with the plugin. Includes a CI job to validate .po files contributed by community translators.
 
 = 3.14.1 =
 * Fix page redirect using stale post GUID instead of current permalink, causing silent redirect failures on sites with changed domains, HTTP→HTTPS migrations, or staging-to-production deployments

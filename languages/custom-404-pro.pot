@@ -1,0 +1,342 @@
+# Copyright (C) 2026 Kunal Nagar
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom 404 Pro 3.15.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/custom-404-pro\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-04-22T05:47:54+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: custom-404-pro\n"
+
+#. Plugin Name of the plugin
+#: custom-404-pro.php
+#: admin/class-adminclass.php:32
+msgid "Custom 404 Pro"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: custom-404-pro.php
+msgid "https://wordpress.org/plugins/custom-404-pro/"
+msgstr ""
+
+#. Description of the plugin
+#: custom-404-pro.php
+msgid "Override the default 404 page with any page or a custom URL from the Admin Panel."
+msgstr ""
+
+#. Author of the plugin
+#: custom-404-pro.php
+msgid "Kunal Nagar"
+msgstr ""
+
+#. Author URI of the plugin
+#: custom-404-pro.php
+msgid "https://www.kunalnagar.in"
+msgstr ""
+
+#: admin/class-adminclass.php:33
+#: admin/views/logs.php:20
+msgid "Logs"
+msgstr ""
+
+#: admin/class-adminclass.php:34
+#: admin/views/settings.php:14
+msgid "Settings"
+msgstr ""
+
+#: admin/class-adminclass.php:35
+msgid "About"
+msgstr ""
+
+#: admin/class-adminclass.php:122
+#: admin/class-adminclass.php:157
+msgid "Saved!"
+msgstr ""
+
+#: admin/class-adminclass.php:176
+msgid "Log(s) successfully deleted!"
+msgstr ""
+
+#: admin/class-adminclass.php:181
+msgid "Please select a few logs to delete and try again."
+msgstr ""
+
+#: admin/class-adminclass.php:188
+msgid "All Logs successfully deleted!"
+msgstr ""
+
+#. translators: %d: number of log rows pruned
+#: admin/class-adminclass.php:199
+#, php-format
+msgid "Pruned %d log row."
+msgid_plural "Pruned %d log rows."
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin/class-adminclass.php:337
+msgid "Here are the 404 Log Details:"
+msgstr ""
+
+#: admin/class-adminclass.php:340
+msgid "Site"
+msgstr ""
+
+#: admin/class-adminclass.php:344
+msgid "User IP"
+msgstr ""
+
+#: admin/class-adminclass.php:348
+msgid "404 Path"
+msgstr ""
+
+#: admin/class-adminclass.php:352
+#: admin/class-logsclass.php:149
+msgid "Referer"
+msgstr ""
+
+#: admin/class-adminclass.php:356
+#: admin/class-logsclass.php:150
+msgid "User Agent"
+msgstr ""
+
+#. translators: email subject sent to the site admin when a 404 is logged
+#: admin/class-adminclass.php:363
+msgid "404 Error on Site"
+msgstr ""
+
+#: admin/class-logsclass.php:147
+msgid "IP"
+msgstr ""
+
+#: admin/class-logsclass.php:148
+msgid "Path"
+msgstr ""
+
+#: admin/class-logsclass.php:151
+msgid "Created"
+msgstr ""
+
+#: admin/class-logsclass.php:206
+#: admin/class-logsclass.php:234
+msgid "Delete"
+msgstr ""
+
+#: admin/class-logsclass.php:235
+msgid "Delete All"
+msgstr ""
+
+#: admin/class-logsclass.php:236
+msgid "Export All (.csv)"
+msgstr ""
+
+#: admin/views/about.php:23
+msgid "Custom 404 Pro Info"
+msgstr ""
+
+#: admin/views/about.php:28
+msgid "About the Author"
+msgstr ""
+
+#: admin/views/about.php:45
+msgid "Like the plugin?"
+msgstr ""
+
+#: admin/views/about.php:59
+msgid "Plugin Info"
+msgstr ""
+
+#: admin/views/about.php:62
+msgid "Name:"
+msgstr ""
+
+#: admin/views/about.php:68
+msgid "Version:"
+msgstr ""
+
+#: admin/views/about.php:74
+msgid "Author:"
+msgstr ""
+
+#: admin/views/about.php:80
+msgid "Email:"
+msgstr ""
+
+#: admin/views/about.php:86
+msgid "Need help?"
+msgstr ""
+
+#: admin/views/about.php:88
+msgid "Create an Issue"
+msgstr ""
+
+#. translators: %d: number of log rows
+#: admin/views/logs.php:27
+#, php-format
+msgid "Total log entries: %d"
+msgstr ""
+
+#. translators: 1: current log count, 2: max log count
+#: admin/views/logs.php:44
+#, php-format
+msgid "Log table is at %1$d of %2$d rows (90%% threshold reached). Consider pruning or raising the Max Log Count setting."
+msgstr ""
+
+#: admin/views/logs.php:57
+msgid "Prune Logs Now"
+msgstr ""
+
+#: admin/views/logs.php:67
+#: admin/views/logs.php:75
+msgid "Search"
+msgstr ""
+
+#: admin/views/settings-general.php:23
+msgid "Email"
+msgstr ""
+
+#: admin/views/settings-general.php:29
+msgid "If you check this, <b>and logging is enabled</b>, an email will be sent on every error log on the admin's email account. If you're just starting out, it is recommended you uncheck this. Enable it based on your error volume to avoid flooding of your email inbox."
+msgstr ""
+
+#: admin/views/settings-general.php:39
+msgid "Email Notification Cooldown"
+msgstr ""
+
+#: admin/views/settings-general.php:42
+msgid "15 minutes"
+msgstr ""
+
+#: admin/views/settings-general.php:43
+msgid "30 minutes"
+msgstr ""
+
+#: admin/views/settings-general.php:44
+msgid "1 hour"
+msgstr ""
+
+#: admin/views/settings-general.php:45
+msgid "6 hours"
+msgstr ""
+
+#: admin/views/settings-general.php:46
+msgid "24 hours"
+msgstr ""
+
+#: admin/views/settings-general.php:51
+msgid "Only applies when <b>Email</b> is enabled. After a notification email is sent, no further emails will be sent for the selected duration. This prevents inbox flooding during bot crawls or traffic spikes."
+msgstr ""
+
+#: admin/views/settings-general.php:61
+msgid "Logging Status"
+msgstr ""
+
+#: admin/views/settings-general.php:65
+msgid "Enabled"
+msgstr ""
+
+#: admin/views/settings-general.php:68
+msgid "Disabled"
+msgstr ""
+
+#: admin/views/settings-general.php:74
+msgid "If logging status is <b>Enabled</b>, the plugin will capture logs. If the logging status is <b>Disabled</b>, the plugin will stop capturing logs. Please note that your previous logs will <b>NOT</b> be deleted. You may do so from the <b>Logs</b> page."
+msgstr ""
+
+#: admin/views/settings-general.php:84
+msgid "Log IP"
+msgstr ""
+
+#: admin/views/settings-general.php:90
+msgid "By default, the IP address of the 404 user agent is captured. If you would like to disable this for privacy reasons, please uncheck this box. When no IP is recorded, it will appear as <b>N/A</b> in the Logs Table as well as the email."
+msgstr ""
+
+#: admin/views/settings-general.php:100
+msgid "Redirect Code"
+msgstr ""
+
+#: admin/views/settings-general.php:113
+msgid "When a 404 occurs and a redirect mode has been set, it will be performed using this status code."
+msgstr ""
+
+#: admin/views/settings-general.php:118
+msgid "Max Log Count"
+msgstr ""
+
+#: admin/views/settings-general.php:124
+msgid "Maximum number of log rows to keep. When the table exceeds this limit, the oldest rows are deleted automatically during the daily cleanup. Set to <b>0</b> to disable (no limit)."
+msgstr ""
+
+#: admin/views/settings-general.php:134
+msgid "Max Log Age (days)"
+msgstr ""
+
+#: admin/views/settings-general.php:140
+msgid "Delete log entries older than this many days during the daily cleanup. Set to <b>0</b> to disable (keep forever)."
+msgstr ""
+
+#: admin/views/settings-general.php:153
+#: admin/views/settings-global-redirect.php:90
+msgid "Save Changes"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:28
+msgid "Mode"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:31
+msgid "None"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:33
+msgid "WordPress Page"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:36
+msgid "URL"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:42
+msgid "<b>WordPress Page:</b> Select any WordPress page as a redirect page."
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:52
+msgid "<b>URL:</b> Redirect chosen error requests to a specific URL"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:62
+msgid "Select a Page"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:65
+msgid "None (Default Error Page)"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:73
+msgid "The Default error page will be replaced by the page you choose in this list."
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:78
+msgid "Enter a URL"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:82
+msgid "Enter a valid URL, for e.g. https://google.com"
+msgstr ""
+
+#: admin/views/settings-global-redirect.php:97
+msgid "<b>Note: </b>To revert back to the default setting, please choose <b>None</b> from the list and <b>Save Changes</b>."
+msgstr ""
+
+#: admin/views/settings.php:17
+msgid "Redirect"
+msgstr ""
+
+#: admin/views/settings.php:20
+msgid "General"
+msgstr ""

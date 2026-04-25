@@ -20,12 +20,12 @@ $c4p_author_output = wp_kses(
 
 
 <div class="wrap">
-	<h2>Custom 404 Pro Info</h2><br>
+	<h2><?php esc_html_e( 'Custom 404 Pro Info', 'custom-404-pro' ); ?></h2><br>
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
 			<div id="post-body-content">
 				<div class="postbox">
-					<h3 class="hndle"><span>About the Author</span></h3>
+					<h3 class="hndle"><span><?php esc_html_e( 'About the Author', 'custom-404-pro' ); ?></span></h3>
 					<div class="inside">
 						<div class="c4p-clearfix">
 							<div class="c4p-left">
@@ -42,7 +42,7 @@ $c4p_author_output = wp_kses(
 			</div>
 			<div id="postbox-container-1" class="postbox-container">
 				<div class="postbox">
-					<h3 class="hndle ui-sortable-handle">Like the plugin?</h3>
+					<h3 class="hndle ui-sortable-handle"><?php esc_html_e( 'Like the plugin?', 'custom-404-pro' ); ?></h3>
 					<div class="inside">
 						<div class="misc-pub-section">
 							<form action="https://www.paypal.com/donate" method="post" target="_top">
@@ -56,36 +56,36 @@ $c4p_author_output = wp_kses(
 					</div>
 				</div>
 				<div class="postbox">
-					<h3 class="hndle ui-sortable-handle">Plugin Info</h3>
+					<h3 class="hndle ui-sortable-handle"><?php esc_html_e( 'Plugin Info', 'custom-404-pro' ); ?></h3>
 					<div class="inside">
 						<div class="misc-pub-section">
-							<label>Name:</label>
+							<label><?php esc_html_e( 'Name:', 'custom-404-pro' ); ?></label>
 							<span>
 							<b><?php echo esc_html( $plugin_data['Title'] ); ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
-							<label>Version:</label>
+							<label><?php esc_html_e( 'Version:', 'custom-404-pro' ); ?></label>
 							<span>
 							<b><?php echo esc_html( $plugin_data['Version'] ); ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
-							<label>Author:</label>
+							<label><?php esc_html_e( 'Author:', 'custom-404-pro' ); ?></label>
 							<span>
 							<b><?php echo $c4p_author_output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already passed through wp_kses() above ?></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
-							<label>Email:</label>
+							<label><?php esc_html_e( 'Email:', 'custom-404-pro' ); ?></label>
 							<span>
 							<b><a href="mailto:hireme@kunalnagar.in">hireme@kunalnagar.in</a></b>
 							</span>
 						</div>
 						<div class="misc-pub-section">
-							<label>Need help?</label>
+							<label><?php esc_html_e( 'Need help?', 'custom-404-pro' ); ?></label>
 							<span>
-							<b><a href="https://github.com/kunalnagar/custom-404-pro/issues">Create an Issue</a></b>
+							<b><a href="https://github.com/kunalnagar/custom-404-pro/issues"><?php esc_html_e( 'Create an Issue', 'custom-404-pro' ); ?></a></b>
 							</span>
 						</div>
 					</div>

@@ -12,7 +12,8 @@
     "scripts": {
         "lint": "phpcs",
         "test": "phpunit",
-        "test:integration": "phpunit -c phpunit-integration.xml"
+        "test:integration": "phpunit -c phpunit-integration.xml",
+        "makepot": "npx wp-env run cli wp i18n make-pot /var/www/html/wp-content/plugins/custom-404-pro /var/www/html/wp-content/plugins/custom-404-pro/languages/custom-404-pro.pot --domain=custom-404-pro --exclude=vendor,tests,node_modules"
     },
     "config": {
         "allow-plugins": {

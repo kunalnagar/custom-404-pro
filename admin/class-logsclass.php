@@ -144,11 +144,11 @@ class LogsClass extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'         => "<input type='checkbox' />",
-			'ip'         => 'IP',
-			'path'       => 'Path',
-			'referer'    => 'Referer',
-			'user_agent' => 'User Agent',
-			'created'    => 'Created',
+			'ip'         => esc_html__( 'IP', 'custom-404-pro' ),
+			'path'       => esc_html__( 'Path', 'custom-404-pro' ),
+			'referer'    => esc_html__( 'Referer', 'custom-404-pro' ),
+			'user_agent' => esc_html__( 'User Agent', 'custom-404-pro' ),
+			'created'    => esc_html__( 'Created', 'custom-404-pro' ),
 		);
 		return $columns;
 	}
@@ -203,7 +203,7 @@ class LogsClass extends WP_List_Table {
 		$nonce     = wp_create_nonce( 'c4p-logs--delete' );
 		$page_slug = isset( $_REQUEST['page'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$actions   = array(
-			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s&_wpnonce=%s">Delete</a>', esc_html( $page_slug ), 'c4p-logs--delete', $item['id'], $nonce ),
+			'c4p-logs--delete' => sprintf( '<a href="?page=%s&action=%s&path=%s&_wpnonce=%s">%s</a>', esc_html( $page_slug ), 'c4p-logs--delete', $item['id'], $nonce, esc_html__( 'Delete', 'custom-404-pro' ) ),
 		);
 		return sprintf(
 			'%1$s %2$s',
@@ -231,9 +231,9 @@ class LogsClass extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'c4p-logs--delete'     => 'Delete',
-			'c4p-logs--delete-all' => 'Delete All',
-			'c4p-logs--export-csv' => 'Export All (.csv)',
+			'c4p-logs--delete'     => esc_html__( 'Delete', 'custom-404-pro' ),
+			'c4p-logs--delete-all' => esc_html__( 'Delete All', 'custom-404-pro' ),
+			'c4p-logs--export-csv' => esc_html__( 'Export All (.csv)', 'custom-404-pro' ),
 		);
 		return $actions;
 	}

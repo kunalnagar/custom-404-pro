@@ -20,56 +20,84 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 		<table class="form-table">
 			<tbody>
 			<tr>
-				<th>Email</th>
+				<th><?php esc_html_e( 'Email', 'custom-404-pro' ); ?></th>
 				<td>
 					<input type="checkbox" id="c4p_log_email" name="send_email" <?php echo (bool) $send_email ? 'checked' : ''; ?> />
 					<p class="description">
-						If you check this, <b>and logging is enabled</b>, an email will be sent on every error log on the admin's email account. If you're just starting out, it is recommended you uncheck this. Enable it based on your error volume to avoid flooding of your email inbox.
+						<?php
+						echo wp_kses_post(
+							__(
+								'If you check this, <b>and logging is enabled</b>, an email will be sent on every error log on the admin\'s email account. If you\'re just starting out, it is recommended you uncheck this. Enable it based on your error volume to avoid flooding of your email inbox.',
+								'custom-404-pro'
+							)
+						);
+						?>
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<th>Email Notification Cooldown</th>
+				<th><?php esc_html_e( 'Email Notification Cooldown', 'custom-404-pro' ); ?></th>
 				<td>
 					<select name="email_cooldown">
-						<option value="900" <?php echo 900 === $email_cooldown ? 'selected' : ''; ?>>15 minutes</option>
-						<option value="1800" <?php echo 1800 === $email_cooldown ? 'selected' : ''; ?>>30 minutes</option>
-						<option value="3600" <?php echo 3600 === $email_cooldown ? 'selected' : ''; ?>>1 hour</option>
-						<option value="21600" <?php echo 21600 === $email_cooldown ? 'selected' : ''; ?>>6 hours</option>
-						<option value="86400" <?php echo 86400 === $email_cooldown ? 'selected' : ''; ?>>24 hours</option>
+						<option value="900" <?php echo 900 === $email_cooldown ? 'selected' : ''; ?>><?php esc_html_e( '15 minutes', 'custom-404-pro' ); ?></option>
+						<option value="1800" <?php echo 1800 === $email_cooldown ? 'selected' : ''; ?>><?php esc_html_e( '30 minutes', 'custom-404-pro' ); ?></option>
+						<option value="3600" <?php echo 3600 === $email_cooldown ? 'selected' : ''; ?>><?php esc_html_e( '1 hour', 'custom-404-pro' ); ?></option>
+						<option value="21600" <?php echo 21600 === $email_cooldown ? 'selected' : ''; ?>><?php esc_html_e( '6 hours', 'custom-404-pro' ); ?></option>
+						<option value="86400" <?php echo 86400 === $email_cooldown ? 'selected' : ''; ?>><?php esc_html_e( '24 hours', 'custom-404-pro' ); ?></option>
 					</select>
 					<p class="description">
-						Only applies when <b>Email</b> is enabled. After a notification email is sent, no further emails will be sent for the selected duration. This prevents inbox flooding during bot crawls or traffic spikes.
+						<?php
+						echo wp_kses_post(
+							__(
+								'Only applies when <b>Email</b> is enabled. After a notification email is sent, no further emails will be sent for the selected duration. This prevents inbox flooding during bot crawls or traffic spikes.',
+								'custom-404-pro'
+							)
+						);
+						?>
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<th>Logging Status</th>
+				<th><?php esc_html_e( 'Logging Status', 'custom-404-pro' ); ?></th>
 				<td>
 					<select name="logging_enabled">
 						<option value="enabled" <?php echo (bool) $logging_enabled ? 'selected' : ''; ?>>
-							Enabled
+							<?php esc_html_e( 'Enabled', 'custom-404-pro' ); ?>
 						</option>
 						<option value="disabled" <?php echo ! (bool) $logging_enabled ? 'selected' : ''; ?>>
-							Disabled
+							<?php esc_html_e( 'Disabled', 'custom-404-pro' ); ?>
 						</option>
 					</select>
 					<p class="description">
-						If logging status is <b>Enabled</b>, the plugin will capture logs. If the logging status is <b>Disabled</b>, the plugin will stop capturing logs. Please note that your previous logs will <b>NOT</b> be deleted. You may do so from the <b>Logs</b> page.
+						<?php
+						echo wp_kses_post(
+							__(
+								'If logging status is <b>Enabled</b>, the plugin will capture logs. If the logging status is <b>Disabled</b>, the plugin will stop capturing logs. Please note that your previous logs will <b>NOT</b> be deleted. You may do so from the <b>Logs</b> page.',
+								'custom-404-pro'
+							)
+						);
+						?>
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<th>Log IP</th>
+				<th><?php esc_html_e( 'Log IP', 'custom-404-pro' ); ?></th>
 				<td>
 					<input type="checkbox" id="c4p_log_ip" name="log_ip" <?php echo (bool) $log_ip ? 'checked' : ''; ?> />
 					<p class="description">
-						By default, the IP address of the 404 user agent is captured. If you would like to disable this for privacy reasons, please uncheck this box. When no IP is recorded, it will appear as <b>N/A</b> in the Logs Table as well as the email.
+						<?php
+						echo wp_kses_post(
+							__(
+								'By default, the IP address of the 404 user agent is captured. If you would like to disable this for privacy reasons, please uncheck this box. When no IP is recorded, it will appear as <b>N/A</b> in the Logs Table as well as the email.',
+								'custom-404-pro'
+							)
+						);
+						?>
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<th>Redirect Code</th>
+				<th><?php esc_html_e( 'Redirect Code', 'custom-404-pro' ); ?></th>
 				<td>
 					<select name="redirect_error_code">
 						<option value="301" <?php echo 301 === $redirect_error_code ? 'selected' : ''; ?>>301
@@ -82,25 +110,39 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 						</option>
 					</select>
 					<p class="description">
-						When a 404 occurs and a redirect mode has been set, it will be performed using this status code.
+						<?php esc_html_e( 'When a 404 occurs and a redirect mode has been set, it will be performed using this status code.', 'custom-404-pro' ); ?>
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<th>Max Log Count</th>
+				<th><?php esc_html_e( 'Max Log Count', 'custom-404-pro' ); ?></th>
 				<td>
 					<input type="number" name="log_retention_count" value="<?php echo esc_attr( $log_retention_count ); ?>" min="0" step="1" />
 					<p class="description">
-						Maximum number of log rows to keep. When the table exceeds this limit, the oldest rows are deleted automatically during the daily cleanup. Set to <b>0</b> to disable (no limit).
+						<?php
+						echo wp_kses_post(
+							__(
+								'Maximum number of log rows to keep. When the table exceeds this limit, the oldest rows are deleted automatically during the daily cleanup. Set to <b>0</b> to disable (no limit).',
+								'custom-404-pro'
+							)
+						);
+						?>
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<th>Max Log Age (days)</th>
+				<th><?php esc_html_e( 'Max Log Age (days)', 'custom-404-pro' ); ?></th>
 				<td>
 					<input type="number" name="log_retention_days" value="<?php echo esc_attr( $log_retention_days ); ?>" min="0" step="1" />
 					<p class="description">
-						Delete log entries older than this many days during the daily cleanup. Set to <b>0</b> to disable (keep forever).
+						<?php
+						echo wp_kses_post(
+							__(
+								'Delete log entries older than this many days during the daily cleanup. Set to <b>0</b> to disable (keep forever).',
+								'custom-404-pro'
+							)
+						);
+						?>
 					</p>
 				</td>
 			</tr>
@@ -108,7 +150,7 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 		</table>
 		<p class="submit">
 			<input type="hidden" name="action" value="form-settings-general"/>
-			<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php echo esc_attr__( 'Save Changes', 'custom-404-pro' ); ?>">
 			<?php wp_nonce_field( 'form-settings-general', 'form-settings-general' ); ?>
 		</p>
 	</form>

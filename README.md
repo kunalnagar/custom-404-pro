@@ -112,6 +112,33 @@ You can disable IP logging with the **Log IP** checkbox under General settings. 
 
 ---
 
+## Contributing Translations
+
+All user-facing strings in the plugin are wrapped in WordPress i18n functions and use the text domain `custom-404-pro`. A Gettext template file (`languages/custom-404-pro.pot`) is shipped with every release.
+
+### Creating a new translation
+
+1. Copy `languages/custom-404-pro.pot` and rename it using the WordPress locale code, e.g. `languages/custom-404-pro-fr_FR.po`.
+2. Open the `.po` file in [Poedit](https://poedit.net/) or [Loco Translate](https://wordpress.org/plugins/loco-translate/) and fill in the `msgstr` fields.
+3. Save — Poedit automatically compiles the `.mo` binary alongside the `.po`. If using a text editor, compile manually: `msgfmt custom-404-pro-fr_FR.po -o custom-404-pro-fr_FR.mo`
+4. Open a pull request adding both the `.po` and `.mo` files to the `languages/` directory.
+
+### Updating the .pot template
+
+If you add new translatable strings, regenerate the template (requires a running [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) environment):
+
+```bash
+composer makepot
+```
+
+### Security note for reviewers
+
+All translation PRs run through a CI job (`validate-translations`) that:
+- Validates format specifiers with `msgfmt --check-format` (prevents runtime `sprintf()` errors if a translator omits `%d` or similar)
+- Scans `msgstr` lines for dangerous patterns (`<script`, `javascript:`, `onerror=`, `<iframe`, `eval(`)
+
+---
+
 ## Support
 
 Open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/issues). The WordPress.org support forum is not monitored.
@@ -129,6 +156,9 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 ## Changelog
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
+
+### 3.15.0
+- Add full translation support: all user-facing strings are now wrapped in i18n functions and a `.pot` template is shipped with the plugin. Includes a CI job to validate `.po` files contributed by translators.
 
 ### 3.14.1
 - Fix page redirect using stale post GUID instead of current permalink, causing silent redirect failures on sites with changed domains, HTTP→HTTPS migrations, or staging-to-production deployments.
