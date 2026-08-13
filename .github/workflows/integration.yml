@@ -3,14 +3,17 @@ name: Integration Tests
 on:
   push:
     branches: [master]
+  # Not restricted to PRs targeting master: a stacked PR whose base is another
+  # feature branch must still run the full suite before it is merged.
   pull_request:
-    branches: [master]
   workflow_dispatch:
 
 jobs:
   integration:
     name: Integration (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
     runs-on: ubuntu-latest
+    # Jobs flagged experimental track unreleased core and must not block a merge.
+    continue-on-error: ${{ matrix.experimental || false }}
 
     services:
       mysql:
@@ -30,12 +33,21 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Oldest combination we still support.
           - php: '8.1'
             wp: '6.4'
+          # The release readme.txt declares as "Tested up to". Pinned explicitly
+          # so this coverage survives 'latest' moving on to the next release.
           - php: '8.1'
-            wp: 'latest'
+            wp: '7.1'
           - php: '8.3'
             wp: 'latest'
+          - php: '8.4'
+            wp: 'latest'
+          # Trunk. Allowed to fail: it tracks unreleased core changes.
+          - php: '8.3'
+            wp: 'nightly'
+            experimental: true
 
     steps:
       - uses: actions/checkout@v4
