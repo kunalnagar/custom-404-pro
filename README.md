@@ -175,6 +175,12 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
 
+### 3.15.3
+- Fix Logs table sorting: sorting by IP, Path, Referer or User Agent produced invalid SQL and returned a database error. Only the Created column sorted correctly.
+- Fix searching and then sorting the Logs table: `ORDER BY` was emitted before `WHERE`, breaking the query.
+- Fix Logs table pagination reading the entire log table into memory on every page view; pagination is now applied in SQL.
+- Escape log values rendered in the Logs table.
+
 ### 3.15.2
 - Confirm compatibility with WordPress 7.1.
 - Declare accurate `Requires at least` (5.0) and `Requires PHP` (7.4) values in the plugin header.

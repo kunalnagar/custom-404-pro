@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, redirect, custom 404, error page, logging
 Requires at least: 5.0
 Tested up to: 7.1
-Stable tag: 3.15.2
+Stable tag: 3.15.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -86,6 +86,14 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 Confirms compatibility with WordPress 7.1. The declared minimum WordPress version has been corrected from 3.0.1 to 5.0 to match what the plugin actually supports.
 
 == Changelog ==
+
+= 3.15.3 =
+* Fix Logs table sorting. The sortable column headers submit `ip`, `path`, `referer` and `user_agent`, but the query builder only recognised the short legacy keys `i`, `p`, `r` and `u`. Unrecognised columns fell through and appended a bare sort direction, producing invalid SQL, so every column except Created returned a database error instead of results.
+* Fix searching and then sorting the Logs table. The ORDER BY clause was appended before WHERE, which is invalid SQL, so any search combined with a sort broke the query entirely.
+* Fix Logs table pagination reading the whole log table into memory on every page view. It selected every row and then discarded all but the current page in PHP. Pagination is now applied in SQL, so the screen stays responsive on sites with large log tables.
+* Sort directions and column names are now resolved against a whitelist rather than interpolated into the query.
+* Log rows are now ordered by a total sort, so paging through a column with repeated values (a burst of 404s recorded in the same second, for example) can no longer show the same entry on two pages while never showing another at all.
+* Escape log values rendered in the Logs table and give each row checkbox an accessible label.
 
 = 3.15.2 =
 * Confirm compatibility with WordPress 7.1
