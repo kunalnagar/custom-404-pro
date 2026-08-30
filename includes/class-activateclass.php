@@ -53,30 +53,53 @@ class ActivateClass {
 	}
 
 	/**
-	 * Creates the plugin logs table.
+	 * Creates or upgrades the plugin logs table.
 	 *
 	 * The legacy options table is no longer created here — settings are stored
 	 * in wp_options under the Helpers::OPTION_KEY key.
 	 *
+	 * Schema notes:
+	 *   - `id` is bigint because this table records one row per 404 hit. The
+	 *     previous mediumint(9) ran out of AUTO_INCREMENT values at 8,388,607
+	 *     rows, after which every insert failed silently on a busy site.
+	 *   - `created` is indexed because the retention policy added in 3.14.0
+	 *     both sorts and filters on it. Without the index each daily prune ran
+	 *     a full table scan.
+	 *   - dbDelta parses this string with a strict format: two spaces after
+	 *     PRIMARY KEY, and one field or key per line. Reformatting it will make
+	 *     dbDelta reissue ALTER statements on every run.
+	 *   - Column types are lowercase because WordPress 6.4 and earlier compare
+	 *     the declared type against MySQL's reported type case-sensitively.
+	 *     Declaring `TIMESTAMP` there made dbDelta report "changed type from
+	 *     timestamp to TIMESTAMP" forever and reissue the ALTER on every call.
+	 *     Newer core normalises the case; the older behaviour is still within
+	 *     our supported range, so match MySQL and stay lowercase.
+	 *
 	 * @since 3.12.9
+	 * @since 3.16.0 Widened `id` to bigint and added an index on `created`.
+	 * @return array Map of changes dbDelta applied. Empty when the schema was
+	 *               already up to date, which is what the idempotency test
+	 *               asserts — a non-empty result on a second call would mean
+	 *               the plugin reissues ALTER TABLE on every upgrade check.
 	 */
-	public static function create_tables() {
+	public static function create_tables(): array {
 		global $wpdb;
 		$helpers         = Helpers::singleton();
 		$table_logs      = $wpdb->prefix . $helpers->table_logs;
 		$charset_collate = $wpdb->get_charset_collate();
 		$sql_logs        = "CREATE TABLE $table_logs (
-    		id mediumint(9) NOT NULL AUTO_INCREMENT,
-    		ip text,
-    		path text,
-    		referer text,
-    		user_agent text,
-    		created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    		updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    	  	PRIMARY KEY (id)
-    	) $charset_collate;";
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			ip text,
+			path text,
+			referer text,
+			user_agent text,
+			created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id),
+			KEY created (created)
+		) $charset_collate;";
 		include_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $sql_logs );
+		return (array) dbDelta( $sql_logs );
 	}
 
 	/**
