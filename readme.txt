@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, redirect, custom 404, error page, logging
 Requires at least: 5.0
 Tested up to: 7.1
-Stable tag: 3.15.5
+Stable tag: 3.15.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -86,6 +86,12 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 Confirms compatibility with WordPress 7.1. The declared minimum WordPress version has been corrected from 3.0.1 to 5.0 to match what the plugin actually supports.
 
 == Changelog ==
+
+= 3.15.6 =
+* Fix the admin stylesheet and script being served with a hardcoded cache-busting version of 3.2.0. Because the value never changed, browsers kept serving cached copies of both files across every update since that release. They are now versioned with the current plugin version.
+* Accessibility: associate every field on the Settings screens with its label, so screen readers announce each control instead of reading an unlabelled input.
+* Remove a leftover console.warn() debug call from the admin JavaScript.
+* Remove two unused variables in the settings form handlers.
 
 = 3.15.5 =
 * Security: neutralize spreadsheet formula injection in the CSV log export. The Referer and User Agent columns are supplied by whoever triggered the 404, and were written to the export unescaped, so a crafted request could plant a formula that executed when an administrator opened the file in Excel, LibreOffice or Google Sheets.

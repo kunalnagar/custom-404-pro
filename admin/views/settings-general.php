@@ -20,7 +20,7 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 		<table class="form-table">
 			<tbody>
 			<tr>
-				<th><?php esc_html_e( 'Email', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_log_email"><?php esc_html_e( 'Email', 'custom-404-pro' ); ?></label></th>
 				<td>
 					<input type="checkbox" id="c4p_log_email" name="send_email" <?php echo (bool) $send_email ? 'checked' : ''; ?> />
 					<p class="description">
@@ -36,9 +36,9 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 				</td>
 			</tr>
 			<tr>
-				<th><?php esc_html_e( 'Email Notification Cooldown', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_email_cooldown"><?php esc_html_e( 'Email Notification Cooldown', 'custom-404-pro' ); ?></label></th>
 				<td>
-					<select name="email_cooldown">
+					<select id="c4p_email_cooldown" name="email_cooldown">
 						<option value="900" <?php echo 900 === $email_cooldown ? 'selected' : ''; ?>><?php esc_html_e( '15 minutes', 'custom-404-pro' ); ?></option>
 						<option value="1800" <?php echo 1800 === $email_cooldown ? 'selected' : ''; ?>><?php esc_html_e( '30 minutes', 'custom-404-pro' ); ?></option>
 						<option value="3600" <?php echo 3600 === $email_cooldown ? 'selected' : ''; ?>><?php esc_html_e( '1 hour', 'custom-404-pro' ); ?></option>
@@ -58,9 +58,9 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 				</td>
 			</tr>
 			<tr>
-				<th><?php esc_html_e( 'Logging Status', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_logging_enabled"><?php esc_html_e( 'Logging Status', 'custom-404-pro' ); ?></label></th>
 				<td>
-					<select name="logging_enabled">
+					<select id="c4p_logging_enabled" name="logging_enabled">
 						<option value="enabled" <?php echo (bool) $logging_enabled ? 'selected' : ''; ?>>
 							<?php esc_html_e( 'Enabled', 'custom-404-pro' ); ?>
 						</option>
@@ -81,7 +81,7 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 				</td>
 			</tr>
 			<tr>
-				<th><?php esc_html_e( 'Log IP', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_log_ip"><?php esc_html_e( 'Log IP', 'custom-404-pro' ); ?></label></th>
 				<td>
 					<input type="checkbox" id="c4p_log_ip" name="log_ip" <?php echo (bool) $log_ip ? 'checked' : ''; ?> />
 					<p class="description">
@@ -97,9 +97,9 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 				</td>
 			</tr>
 			<tr>
-				<th><?php esc_html_e( 'Redirect Code', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_redirect_error_code"><?php esc_html_e( 'Redirect Code', 'custom-404-pro' ); ?></label></th>
 				<td>
-					<select name="redirect_error_code">
+					<select id="c4p_redirect_error_code" name="redirect_error_code">
 						<option value="301" <?php echo 301 === $redirect_error_code ? 'selected' : ''; ?>>301
 						</option>
 						<option value="302" <?php echo 302 === $redirect_error_code ? 'selected' : ''; ?>>302
@@ -115,9 +115,9 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 				</td>
 			</tr>
 			<tr>
-				<th><?php esc_html_e( 'Max Log Count', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_log_retention_count"><?php esc_html_e( 'Max Log Count', 'custom-404-pro' ); ?></label></th>
 				<td>
-					<input type="number" name="log_retention_count" value="<?php echo esc_attr( $log_retention_count ); ?>" min="0" step="1" />
+					<input type="number" id="c4p_log_retention_count" name="log_retention_count" value="<?php echo esc_attr( $log_retention_count ); ?>" min="0" step="1" />
 					<p class="description">
 						<?php
 						echo wp_kses_post(
@@ -131,9 +131,9 @@ $log_retention_days  = isset( $options['log_retention_days'] ) ? (int) $options[
 				</td>
 			</tr>
 			<tr>
-				<th><?php esc_html_e( 'Max Log Age (days)', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_log_retention_days"><?php esc_html_e( 'Max Log Age (days)', 'custom-404-pro' ); ?></label></th>
 				<td>
-					<input type="number" name="log_retention_days" value="<?php echo esc_attr( $log_retention_days ); ?>" min="0" step="1" />
+					<input type="number" id="c4p_log_retention_days" name="log_retention_days" value="<?php echo esc_attr( $log_retention_days ); ?>" min="0" step="1" />
 					<p class="description">
 						<?php
 						echo wp_kses_post(

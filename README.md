@@ -175,6 +175,11 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
 
+### 3.15.6
+- Fix admin CSS/JS being served with a hardcoded `3.2.0` cache-busting version, leaving browsers on stale assets across updates.
+- Accessibility: associate every Settings field with its label.
+- Remove a leftover `console.warn()` debug call from the admin JavaScript.
+
 ### 3.15.5
 - Security: neutralize spreadsheet formula injection (CSV injection) in the CSV log export, reachable via the attacker-controlled Referer and User Agent columns.
 - Security: escape every value interpolated into the 404 notification email.
