@@ -318,6 +318,12 @@ class AdminClass {
 	/**
 	 * Sends a 404 notification email to the admin.
 	 *
+	 * Every interpolated value is escaped. The path, referer and user agent all
+	 * come straight off the request that triggered the 404, so an attacker
+	 * chooses their contents; unescaped they would render as live markup inside
+	 * the admin's HTML mail client.
+	 *
+	 * @since 3.15.5 Escapes all interpolated values.
 	 * @param string $ip         User IP address.
 	 * @param string $path       Requested 404 path.
 	 * @param string $referer    HTTP referer.
@@ -334,27 +340,27 @@ class AdminClass {
 		}
 		$headers[] = 'From: Site Admin <' . $admin_email . '>' . "\r\n";
 		$headers[] = 'Content-Type: text/html; charset=UTF-8';
-		$message   = '<p>' . __( 'Here are the 404 Log Details:', 'custom-404-pro' ) . '</p>';
+		$message   = '<p>' . esc_html__( 'Here are the 404 Log Details:', 'custom-404-pro' ) . '</p>';
 		$message  .= '<table>';
 		$message  .= '<tr>';
-		$message  .= '<th>' . __( 'Site', 'custom-404-pro' ) . '</th>';
-		$message  .= '<td>' . $current_site_name . '</td>';
+		$message  .= '<th>' . esc_html__( 'Site', 'custom-404-pro' ) . '</th>';
+		$message  .= '<td>' . esc_html( $current_site_name ) . '</td>';
 		$message  .= '</tr>';
 		$message  .= '<tr>';
-		$message  .= '<th>' . __( 'User IP', 'custom-404-pro' ) . '</th>';
-		$message  .= '<td>' . $ip . '</td>';
+		$message  .= '<th>' . esc_html__( 'User IP', 'custom-404-pro' ) . '</th>';
+		$message  .= '<td>' . esc_html( $ip ) . '</td>';
 		$message  .= '</tr>';
 		$message  .= '<tr>';
-		$message  .= '<th>' . __( '404 Path', 'custom-404-pro' ) . '</th>';
-		$message  .= '<td>' . $path . '</td>';
+		$message  .= '<th>' . esc_html__( '404 Path', 'custom-404-pro' ) . '</th>';
+		$message  .= '<td>' . esc_html( $path ) . '</td>';
 		$message  .= '</tr>';
 		$message  .= '<tr>';
-		$message  .= '<th>' . __( 'Referer', 'custom-404-pro' ) . '</th>';
-		$message  .= '<td>' . $referer . '</td>';
+		$message  .= '<th>' . esc_html__( 'Referer', 'custom-404-pro' ) . '</th>';
+		$message  .= '<td>' . esc_html( $referer ) . '</td>';
 		$message  .= '</tr>';
 		$message  .= '<tr>';
-		$message  .= '<th>' . __( 'User Agent', 'custom-404-pro' ) . '</th>';
-		$message  .= '<td>' . $user_agent . '</td>';
+		$message  .= '<th>' . esc_html__( 'User Agent', 'custom-404-pro' ) . '</th>';
+		$message  .= '<td>' . esc_html( $user_agent ) . '</td>';
 		$message  .= '</tr>';
 		$message  .= '</table>';
 		wp_mail(

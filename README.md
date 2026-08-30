@@ -175,6 +175,11 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
 
+### 3.15.5
+- Security: neutralize spreadsheet formula injection (CSV injection) in the CSV log export, reachable via the attacker-controlled Referer and User Agent columns.
+- Security: escape every value interpolated into the 404 notification email.
+- CSV export now uses RFC 4180 quoting, streams in batches, and no longer emits PHP 8.4 deprecation notices into the downloaded file.
+
 ### 3.15.4
 - Fix Logs table sorting: sorting by IP, Path, Referer or User Agent produced invalid SQL and returned a database error. Only the Created column sorted correctly.
 - Fix searching and then sorting the Logs table: `ORDER BY` was emitted before `WHERE`, breaking the query.
