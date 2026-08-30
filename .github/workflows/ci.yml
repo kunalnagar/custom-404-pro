@@ -3,8 +3,9 @@ name: CI
 on:
   push:
     branches: [master]
+  # Not restricted to PRs targeting master: a stacked PR whose base is another
+  # feature branch must still run the full suite before it is merged.
   pull_request:
-    branches: [master]
 
 jobs:
   lint-syntax:
@@ -39,7 +40,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: ['7.4', '8.0', '8.1', '8.2', '8.3']
+        # 7.4 is the floor declared in the plugin header; 8.4 is what sites
+        # running WordPress 7.1 are increasingly shipping on.
+        php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
     steps:
       - uses: actions/checkout@v4
       - name: Setup PHP ${{ matrix.php }}

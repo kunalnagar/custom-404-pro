@@ -2,9 +2,9 @@
 Contributors: kunalnagar
 Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, redirect, custom 404, error page, logging
-Requires at least: 3.0.1
-Tested up to: 7.0
-Stable tag: 3.15.1
+Requires at least: 5.0
+Tested up to: 7.1
+Stable tag: 3.15.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -80,7 +80,16 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 2. Global Redirect settings — choose a WordPress page or a custom URL
 3. General settings — logging, email notifications, IP recording, and redirect status code
 
+== Upgrade Notice ==
+
+= 3.15.2 =
+Confirms compatibility with WordPress 7.1. The declared minimum WordPress version has been corrected from 3.0.1 to 5.0 to match what the plugin actually supports.
+
 == Changelog ==
+
+= 3.15.2 =
+* Confirm compatibility with WordPress 7.1
+* Declare "Requires at least" (5.0) and "Requires PHP" (7.4) in the plugin header so WordPress can block updates on sites that cannot run the plugin. The readme previously advertised WordPress 3.0.1 support, which the code has not supported for several releases.
 
 = 3.15.1 =
 * Confirm compatibility with WordPress 7.0

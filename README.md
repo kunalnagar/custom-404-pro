@@ -175,6 +175,13 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
 
+### 3.15.2
+- Confirm compatibility with WordPress 7.1.
+- Declare accurate `Requires at least` (5.0) and `Requires PHP` (7.4) values in the plugin header.
+
+### 3.15.1
+- Confirm compatibility with WordPress 7.0.
+
 ### 3.15.0
 - Add full translation support: all user-facing strings are now wrapped in i18n functions and a `.pot` template is shipped with the plugin. Includes a CI job to validate `.po` files contributed by translators.
 
