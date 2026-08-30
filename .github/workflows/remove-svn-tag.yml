@@ -52,7 +52,10 @@ jobs:
           fi
 
           # Guard 2: never touch the version the plugin is currently serving.
-          STABLE=$(curl -fsSL "${BASE}/trunk/readme.txt" | grep -m1 '^Stable tag:' | awk '{print $3}')
+          # Read to a file rather than piping: `grep -m1` closes the pipe as
+          # soon as it matches, which makes curl exit 23 under `pipefail`.
+          curl -fsSL "${BASE}/trunk/readme.txt" -o trunk-readme.txt
+          STABLE=$(awk '/^Stable tag:/ {print $3; exit}' trunk-readme.txt)
           echo "Current stable tag on trunk: ${STABLE}"
           if [ "$TAG" = "$STABLE" ]; then
             echo "::error::Refusing to delete ${TAG}: it is the current stable release."
@@ -68,7 +71,8 @@ jobs:
           # Guard 4: only remove a tag whose contents disagree with its name.
           # A correctly published tag declares its own version; this one does
           # not, which is precisely what makes it safe and necessary to remove.
-          INNER=$(svn cat "${TAG_URL}/readme.txt" | grep -m1 '^Stable tag:' | awk '{print $3}')
+          svn cat "${TAG_URL}/readme.txt" > tag-readme.txt
+          INNER=$(awk '/^Stable tag:/ {print $3; exit}' tag-readme.txt)
           echo "Tag ${TAG} declares version: ${INNER}"
           if [ "$INNER" = "$TAG" ]; then
             echo "::error::Refusing to delete ${TAG}: it correctly declares its own version, so it is a legitimate release."
