@@ -263,4 +263,34 @@ class AdminClassTest extends TestCase {
 		$admin = new AdminClass();
 		$this->assertFalse( $admin->is_email_on_cooldown() );
 	}
+
+	// ------------------------------------------------------------------
+	// Asset cache busting
+	// ------------------------------------------------------------------
+
+	/**
+	 * Admin assets must be versioned with the plugin version so that each
+	 * release invalidates the browser cache. This was pinned to a hardcoded
+	 * '3.2.0' for many releases, leaving users on stale CSS and JS.
+	 */
+	public function test_asset_version_tracks_the_plugin_version() {
+		$this->assertSame( CUSTOM_404_PRO_VERSION, AdminClass::asset_version() );
+	}
+
+	/**
+	 * The asset version must no longer be the stale hardcoded value.
+	 */
+	public function test_asset_version_is_not_the_stale_hardcoded_value() {
+		$this->assertNotSame( '3.2.0', AdminClass::asset_version() );
+	}
+
+	/**
+	 * asset_version() must be callable statically from the enqueue callbacks.
+	 */
+	public function test_asset_version_is_public_static() {
+		$ref    = new ReflectionClass( AdminClass::class );
+		$method = $ref->getMethod( 'asset_version' );
+		$this->assertTrue( $method->isPublic(), 'asset_version must be public' );
+		$this->assertTrue( $method->isStatic(), 'asset_version must be static' );
+	}
 }

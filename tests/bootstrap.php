@@ -31,6 +31,16 @@ if ( ! defined( 'DAY_IN_SECONDS' ) ) {
 	define( 'DAY_IN_SECONDS', 86400 );
 }
 
+// Mirror the plugin version constant, read from the plugin file rather than
+// hardcoded, so version-dependent behaviour (asset cache busting, the db-version
+// upgrade gate) is testable without loading WordPress.
+if ( ! defined( 'CUSTOM_404_PRO_VERSION' ) ) {
+	$_c404p_main = file_get_contents( dirname( __DIR__ ) . '/custom-404-pro.php' );
+	preg_match( "/define\(\s*'CUSTOM_404_PRO_VERSION',\s*'([^']+)'\s*\)/", $_c404p_main, $_c404p_match );
+	define( 'CUSTOM_404_PRO_VERSION', $_c404p_match[1] ?? '0.0.0' );
+	unset( $_c404p_main, $_c404p_match );
+}
+
 /**
  * Stub for WordPress apply_filters().
  *

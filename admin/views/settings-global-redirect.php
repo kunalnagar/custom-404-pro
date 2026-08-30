@@ -25,7 +25,7 @@ if ( 'page' === $redirect_mode ) {
 		<table class="form-table">
 			<tbody>
 			<tr>
-				<th><?php esc_html_e( 'Mode', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_mode"><?php esc_html_e( 'Mode', 'custom-404-pro' ); ?></label></th>
 				<td>
 					<select id="c4p_mode" name="mode">
 						<option value=""><?php esc_html_e( 'None', 'custom-404-pro' ); ?></option>
@@ -59,9 +59,9 @@ if ( 'page' === $redirect_mode ) {
 				</td>
 			</tr>
 			<tr id="c4p_page" class="select-page">
-				<th><?php esc_html_e( 'Select a Page', 'custom-404-pro' ); ?></th>
+				<th><label for="c4p_mode_page"><?php esc_html_e( 'Select a Page', 'custom-404-pro' ); ?></label></th>
 				<td>
-					<select name="mode_page">
+					<select id="c4p_mode_page" name="mode_page">
 						<option value=""><?php esc_html_e( 'None (Default Error Page)', 'custom-404-pro' ); ?></option>
 		<?php foreach ( $wp_pages as $wp_page ) : ?>
 							<option value="<?php echo esc_attr( $wp_page->ID ); ?>" <?php echo ( $wp_page->ID === (int) $redirect_mode_page ) ? 'selected' : ''; ?>>
@@ -75,7 +75,7 @@ if ( 'page' === $redirect_mode ) {
 				</td>
 			</tr>
 			<tr id="c4p_url" class="select-url">
-				<th><?php esc_html_e( 'Enter a URL', 'custom-404-pro' ); ?></th>
+				<th><label for="mode_url"><?php esc_html_e( 'Enter a URL', 'custom-404-pro' ); ?></label></th>
 				<td>
 					<input id="mode_url" name="mode_url" type="url" class="regular-text" value="<?php echo esc_url( $redirect_mode_url ); ?>" autocomplete="off" <?php echo ( ! empty( $redirect_mode_url ) ) ? 'required = "required"' : ''; ?>>
 					<p class="description">
