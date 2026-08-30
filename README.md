@@ -175,6 +175,12 @@ Like the plugin? [Buy me a coffee via PayPal](https://www.paypal.me/kunalnagar/1
 
 See [WordPress.org changelog](https://wordpress.org/plugins/custom-404-pro/changelog/) for the full history.
 
+### 3.16.0
+- Add an index on the logs table `created` column, used by the retention policy added in 3.14.0.
+- Widen the logs table `id` column to `bigint`; the previous `mediumint` silently stopped accepting rows at 8,388,607 entries.
+- Fix schema and cron setup being skipped for users who update without deactivating first.
+- Schema upgrades now run only on admin, cron or WP-CLI requests, never on a front-end page load.
+
 ### 3.15.6
 - Fix admin CSS/JS being served with a hardcoded `3.2.0` cache-busting version, leaving browsers on stale assets across updates.
 - Accessibility: associate every Settings field with its label.

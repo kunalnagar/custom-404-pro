@@ -35,30 +35,79 @@ class PluginClass {
 	}
 
 	/**
-	 * Runs the legacy options table migration on first load after an upgrade.
+	 * Brings an existing installation up to date on first load after an upgrade.
 	 *
-	 * Existing installations that update without deactivating/reactivating will
-	 * not trigger register_activation_hook. This hook ensures the migration runs
-	 * automatically on the first page load of the new version.
+	 * Users who update the plugin without deactivating it first never trigger
+	 * register_activation_hook, so everything the activation path sets up has to
+	 * be repeated here: the table schema, the legacy options migration, and the
+	 * daily prune cron event.
 	 *
-	 * Gated behind a stored db version so the SHOW TABLES check does not fire
-	 * on every page load once the migration has been completed.
+	 * The routine is gated twice.
+	 *
+	 * First on request context. Applying schema changes means an ALTER TABLE,
+	 * which on a very large logs table takes seconds and blocks the request that
+	 * triggers it. Restricting it to admin, cron and WP-CLI requests means an
+	 * administrator absorbs that cost on their own page load rather than a
+	 * random visitor hitting a 404. The plugin's redirect and logging paths do
+	 * not depend on the new schema, so a front-end request that skips the
+	 * upgrade still behaves correctly.
+	 *
+	 * Then on a stored db version, so it runs once per released version rather
+	 * than on every request. On Multisite the option is per-site, so each site
+	 * in the network upgrades independently on its own first admin request.
 	 *
 	 * @since 3.12.9
+	 * @since 3.16.0 Runs dbDelta so schema changes reach existing installs, and
+	 *               no longer runs on front-end requests.
 	 */
-	public function maybe_migrate_legacy_options() {
-		if ( defined( 'CUSTOM_404_PRO_VERSION' ) &&
-			get_option( 'custom_404_pro_db_version' ) === CUSTOM_404_PRO_VERSION ) {
+	public function maybe_upgrade() {
+		if ( ! defined( 'CUSTOM_404_PRO_VERSION' ) ) {
 			return;
 		}
+		if ( get_option( 'custom_404_pro_db_version' ) === CUSTOM_404_PRO_VERSION ) {
+			return;
+		}
+		if ( ! self::is_upgrade_context() ) {
+			return;
+		}
+
 		include_once plugin_dir_path( __FILE__ ) . 'class-activateclass.php';
+
+		// Applies any schema changes (new columns, indexes) to existing tables.
+		ActivateClass::create_tables();
 		ActivateClass::maybe_migrate_legacy_options();
+
 		if ( ! wp_next_scheduled( 'custom_404_pro_prune_logs' ) ) {
 			wp_schedule_event( time(), 'daily', 'custom_404_pro_prune_logs' );
 		}
-		if ( defined( 'CUSTOM_404_PRO_VERSION' ) ) {
-			update_option( 'custom_404_pro_db_version', CUSTOM_404_PRO_VERSION );
+
+		update_option( 'custom_404_pro_db_version', CUSTOM_404_PRO_VERSION );
+	}
+
+	/**
+	 * Whether the current request is one that may carry out a schema upgrade.
+	 *
+	 * @since 3.16.0
+	 * @return bool True for admin, cron and WP-CLI requests.
+	 */
+	public static function is_upgrade_context(): bool {
+		if ( is_admin() ) {
+			return true;
 		}
+		if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
+			return true;
+		}
+		return defined( 'WP_CLI' ) && WP_CLI;
+	}
+
+	/**
+	 * Backwards-compatible alias for maybe_upgrade().
+	 *
+	 * @deprecated 3.16.0 Use maybe_upgrade() instead. The routine now covers
+	 *             schema upgrades as well as the legacy options migration.
+	 */
+	public function maybe_migrate_legacy_options() {
+		$this->maybe_upgrade();
 	}
 
 	/**
@@ -73,7 +122,7 @@ class PluginClass {
 	 */
 	private function define_admin_hooks() {
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
-		add_action( 'plugins_loaded', array( $this, 'maybe_migrate_legacy_options' ) );
+		add_action( 'plugins_loaded', array( $this, 'maybe_upgrade' ) );
 		add_action( 'admin_menu', array( $this->plugin_admin, 'create_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->plugin_admin, 'enqueue_styles' ) );

@@ -31,6 +31,19 @@ require_once $_tests_dir . '/includes/functions.php';
  */
 function _c404p_manually_load_plugin() {
 	$plugin_dir = dirname( __DIR__, 2 );
+
+	// The main plugin file is not loaded here, so define the version constant
+	// from it directly. Without this the db-version upgrade gate short-circuits
+	// and every upgrade-path test silently passes against a no-op.
+	if ( ! defined( 'CUSTOM_404_PRO_VERSION' ) ) {
+		preg_match(
+			"/define\(\s*'CUSTOM_404_PRO_VERSION',\s*'([^']+)'\s*\)/",
+			file_get_contents( $plugin_dir . '/custom-404-pro.php' ),
+			$version_match
+		);
+		define( 'CUSTOM_404_PRO_VERSION', $version_match[1] ?? '0.0.0' );
+	}
+
 	require_once $plugin_dir . '/admin/class-helpers.php';
 	require_once $plugin_dir . '/admin/class-adminclass.php';
 	require_once $plugin_dir . '/admin/class-logsclass.php';

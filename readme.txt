@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/kunalnagar88/10
 Tags: 404, redirect, custom 404, error page, logging
 Requires at least: 5.0
 Tested up to: 7.1
-Stable tag: 3.15.6
+Stable tag: 3.16.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -82,10 +82,20 @@ Please open an issue on [GitHub](https://github.com/kunalnagar/custom-404-pro/is
 
 == Upgrade Notice ==
 
+= 3.16.0 =
+Adds an index to the 404 logs table and widens its ID column. The change is applied once, on the first WordPress admin page load after updating; front-end visitors never trigger it. On a table of a million rows this took about three seconds in testing. If your logs table is very large, consider setting a retention limit under Settings > General before updating.
+
 = 3.15.2 =
 Confirms compatibility with WordPress 7.1. The declared minimum WordPress version has been corrected from 3.0.1 to 5.0 to match what the plugin actually supports.
 
 == Changelog ==
+
+= 3.16.0 =
+* Add an index on the logs table `created` column. The retention policy added in 3.14.0 both sorts and filters on that column, so until now every daily cleanup ran a full table scan.
+* Widen the logs table `id` column from mediumint to bigint. The old column ran out of values at 8,388,607 rows, after which a busy site silently stopped recording new 404s.
+* Fix schema and cron setup being skipped for anyone who updates the plugin without deactivating it first. Only the activation hook applied them, and that hook does not run on an in-place update, so the daily cleanup event was never scheduled for existing installations.
+* Schema changes are applied on the first WordPress admin page load, cron run or WP-CLI command after updating, never on a front-end request, so no site visitor waits on the table rebuild.
+* Declare the logs table timestamp columns in lowercase. WordPress 6.4 and earlier compare column types case-sensitively, so the previous uppercase declaration made every upgrade check reapply the same unnecessary ALTER TABLE.
 
 = 3.15.6 =
 * Fix the admin stylesheet and script being served with a hardcoded cache-busting version of 3.2.0. Because the value never changed, browsers kept serving cached copies of both files across every update since that release. They are now versioned with the current plugin version.
